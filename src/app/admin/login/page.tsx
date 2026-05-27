@@ -1,10 +1,15 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { LogIn } from "lucide-react";
+import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Card, CardDescription, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { SCHOOL_NAME } from "@/lib/constants";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -20,7 +25,7 @@ export default function AdminLoginPage() {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password }),
       });
       const json = (await res.json()) as { error?: string };
       if (!res.ok) throw new Error(json.error ?? "Đăng nhập thất bại");
@@ -33,23 +38,39 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-100 px-4">
-      <Card className="w-full max-w-md">
-        <h1 className="text-2xl font-black">Đăng nhập quản trị</h1>
-        <p className="mt-2 text-sm text-slate-600">Dành cho cán bộ tuyển sinh của Trường THPT Võ Văn Kiệt.</p>
-        <div className="mt-6 space-y-4">
-          <input className="form-input" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="Email" />
-          <input
-            className="form-input"
-            type="password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            placeholder="Mật khẩu"
-            onKeyDown={(event) => {
-              if (event.key === "Enter") void login();
-            }}
+    <main className="flex min-h-screen items-center justify-center bg-[radial-gradient(circle_at_top,#dbeafe,transparent_32%),linear-gradient(135deg,#f8fafc,#e0f2fe)] px-4 py-10">
+      <Card className="w-full max-w-md shadow-xl">
+        <div className="flex flex-col items-center text-center">
+          <Image
+            src="/LogoVVK.png"
+            alt="Logo Trường THPT Võ Văn Kiệt"
+            width={72}
+            height={72}
+            className="h-18 w-18 rounded-full object-contain"
+            priority
           />
-          {error && <p className="rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}
+          <CardTitle className="mt-5 text-2xl">Đăng nhập quản trị</CardTitle>
+          <CardDescription className="mt-2">Dành cho cán bộ tuyển sinh của {SCHOOL_NAME}.</CardDescription>
+        </div>
+        <div className="mt-6 space-y-4">
+          <div>
+            <Label htmlFor="email">Email</Label>
+            <Input id="email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="admin@example.com" />
+          </div>
+          <div>
+            <Label htmlFor="password">Mật khẩu</Label>
+            <Input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              placeholder="Nhập mật khẩu"
+              onKeyDown={(event) => {
+                if (event.key === "Enter") void login();
+              }}
+            />
+          </div>
+          {error && <Alert variant="destructive">{error}</Alert>}
           <Button className="w-full" onClick={login} disabled={loading}>
             <LogIn size={16} /> {loading ? "Đang đăng nhập..." : "Đăng nhập"}
           </Button>

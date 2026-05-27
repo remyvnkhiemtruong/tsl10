@@ -42,7 +42,6 @@
     "zod": "latest"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.3.0",
     "@types/bcryptjs": "latest",
     "@types/node": "latest",
     "@types/pg": "^8.20.0",
@@ -54,7 +53,7 @@
     "eslint-config-next": "latest",
     "postcss": "latest",
     "prisma": "latest",
-    "tailwindcss": "latest",
+    "tailwindcss": "^3.4.17",
     "tsx": "latest",
     "typescript": "latest"
   },

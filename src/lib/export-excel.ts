@@ -40,14 +40,14 @@ export async function buildApplicationsWorkbook(applications: ApplicationExportR
     { header: "Môn lựa chọn", key: "selectedSubjects", width: 44 },
     { header: "Điểm KK", key: "bonusScore", width: 10 },
     { header: "Trạng thái", key: "status", width: 20 },
-    { header: "Ngày nộp", key: "submittedAt", width: 18 }
+    { header: "Ngày nộp", key: "submittedAt", width: 18 },
   ];
 
   sheet.getRow(1).font = { bold: true, color: { argb: "FFFFFFFF" } };
   sheet.getRow(1).fill = {
     type: "pattern",
     pattern: "solid",
-    fgColor: { argb: "FF1D4ED8" }
+    fgColor: { argb: "FF1D4ED8" },
   };
 
   for (const app of applications) {
@@ -65,13 +65,13 @@ export async function buildApplicationsWorkbook(applications: ApplicationExportR
       selectedSubjects: app.selectedSubjects,
       bonusScore: app.bonusScore,
       status: STATUS_LABELS[app.status] ?? app.status,
-      submittedAt: app.submittedAt ? new Date(app.submittedAt).toLocaleDateString("vi-VN") : ""
+      submittedAt: app.submittedAt ? new Date(app.submittedAt).toLocaleDateString("vi-VN") : "",
     });
   }
 
   sheet.autoFilter = {
     from: "A1",
-    to: "N1"
+    to: "N1",
   };
 
   return workbook;

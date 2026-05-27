@@ -58,7 +58,7 @@ export async function POST(request: Request) {
             bonusScore,
             commitmentAccepted: parsed.commitmentAccepted,
             priorities: {
-              create: parsed.priorities.map((type) => ({ type: type as PriorityType }))
+              create: parsed.priorities.map((type) => ({ type: type as PriorityType })),
             },
             awards: {
               create: parsed.awards.map((award) => ({
@@ -67,8 +67,8 @@ export async function POST(request: Request) {
                 level: award.level,
                 year: award.year,
                 prize: award.prize as Prize,
-                bonusScore: prizeScore(award.prize)
-              }))
+                bonusScore: prizeScore(award.prize),
+              })),
             },
             academicRecords: {
               create: parsed.academicRecords.map((record) => ({
@@ -83,8 +83,8 @@ export async function POST(request: Request) {
                 informatics: record.informatics,
                 note: record.note,
                 academicLevel: record.academicLevel,
-                conductLevel: record.conductLevel
-              }))
+                conductLevel: record.conductLevel,
+              })),
             },
             files: {
               create: parsed.uploadedFiles.map((file) => ({
@@ -95,11 +95,11 @@ export async function POST(request: Request) {
                 size: file.size,
                 storageKey: file.storageKey,
                 storageProvider: file.storageProvider ?? "LOCAL",
-                publicUrl: file.publicUrl || null
-              }))
+                publicUrl: file.publicUrl || null,
+              })),
             },
-            logs: { create: [{ action: "CREATED", note: "Học sinh nộp hồ sơ trực tuyến" }] }
-          }
+            logs: { create: [{ action: "CREATED", note: "Học sinh nộp hồ sơ trực tuyến" }] },
+          },
         });
 
         return NextResponse.json({ id: created.id, applicationCode: created.applicationCode });
@@ -120,9 +120,6 @@ export async function POST(request: Request) {
     if (error instanceof ZodError) {
       return NextResponse.json({ error: zodMessage(error) }, { status: 400 });
     }
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Không thể tạo hồ sơ" },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: error instanceof Error ? error.message : "Không thể tạo hồ sơ" }, { status: 400 });
   }
 }

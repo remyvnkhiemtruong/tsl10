@@ -1,12 +1,6 @@
 import type { Prisma } from "@prisma/client";
 import QRCode from "qrcode";
-import {
-  ACADEMIC_LEVEL_LABELS,
-  GENDER_LABELS,
-  PRIORITY_LABELS,
-  PRIZE_LABELS,
-  STATUS_LABELS
-} from "@/lib/constants";
+import { ACADEMIC_LEVEL_LABELS, GENDER_LABELS, PRIORITY_LABELS, PRIZE_LABELS, STATUS_LABELS } from "@/lib/constants";
 
 export type PdfApplication = Prisma.ApplicationGetPayload<{
   include: {
@@ -31,21 +25,14 @@ function date(value: Date | string | null | undefined) {
 }
 
 function rows(values: Array<[string, string]>) {
-  return values
-    .map(
-      ([label, value]) =>
-        `<tr><td class="label">${esc(label)}</td><td>${esc(value)}</td></tr>`
-    )
-    .join("");
+  return values.map(([label, value]) => `<tr><td class="label">${esc(label)}</td><td>${esc(value)}</td></tr>`).join("");
 }
 
 export async function buildApplicationPdfHtml(application: PdfApplication) {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
   const lookupUrl = `${appUrl}/tra-cuu?ma=${encodeURIComponent(application.applicationCode)}`;
   const qr = await QRCode.toDataURL(lookupUrl);
-  const priorityText = application.priorities
-    .map((priority) => PRIORITY_LABELS[priority.type] ?? priority.type)
-    .join("; ");
+  const priorityText = application.priorities.map((priority) => PRIORITY_LABELS[priority.type] ?? priority.type).join("; ");
   const awardText = application.awards
     .map((award) => `${award.competitionName} - ${PRIZE_LABELS[award.prize] ?? award.prize} (${award.bonusScore} điểm)`)
     .join("; ");
@@ -59,7 +46,6 @@ export async function buildApplicationPdfHtml(application: PdfApplication) {
     body { font-family: Arial, sans-serif; color: #111827; font-size: 13px; line-height: 1.45; }
     .page { width: 794px; margin: 0 auto; padding: 30px 36px; }
     .center { text-align: center; }
-    .right { text-align: right; }
     .bold { font-weight: 700; }
     h1 { font-size: 19px; margin: 18px 0 4px; }
     h2 { font-size: 14px; margin: 16px 0 8px; text-transform: uppercase; }
@@ -70,7 +56,6 @@ export async function buildApplicationPdfHtml(application: PdfApplication) {
     .no-border td { border: none; }
     .qr { width: 92px; height: 92px; }
     .sign { height: 76px; }
-    .muted { color: #475569; }
   </style>
 </head>
 <body>
@@ -79,7 +64,7 @@ export async function buildApplicationPdfHtml(application: PdfApplication) {
   <div class="center bold">Độc lập - Tự do - Hạnh phúc</div>
   <h1 class="center">ĐƠN ĐĂNG KÝ DỰ TUYỂN VÀO LỚP 10</h1>
   <div class="center">Năm học 2026 - 2027</div>
-  <p>Kính gửi: <b>Hiệu trưởng trường THPT Võ Văn Kiệt</b></p>
+  <p>Kính gửi: <b>Hiệu trưởng Trường THPT Võ Văn Kiệt</b></p>
 
   <h2>I. Thông tin học sinh</h2>
   <table>${rows([
@@ -88,14 +73,14 @@ export async function buildApplicationPdfHtml(application: PdfApplication) {
     ["Dân tộc", application.ethnicity],
     ["Nơi sinh", application.birthPlace],
     ["Số định danh/CCCD", application.citizenId],
-    ["Ngày cấp/Nơi cấp", `${date(application.issueDate)} ${application.issuePlace ?? ""}`]
+    ["Ngày cấp/Nơi cấp", `${date(application.issueDate)} ${application.issuePlace ?? ""}`],
   ])}</table>
 
   <h2>II. Thông tin học tập</h2>
   <p>Học sinh lớp 9 trường: <b>${esc(application.secondarySchool)}</b>, năm học ${esc(application.schoolYear)}.</p>
   <table>
     <tr><th>Lớp</th><th>Văn</th><th>Toán</th><th>Anh</th><th>KHTN</th><th>LS&ĐL</th><th>GDCD</th><th>Công nghệ</th><th>Tin học</th><th>Học lực</th><th>Hạnh kiểm</th></tr>
-    ${application.academicRecords
+    ${[...application.academicRecords]
       .sort((a, b) => a.grade - b.grade)
       .map(
         (record) =>
@@ -111,14 +96,14 @@ export async function buildApplicationPdfHtml(application: PdfApplication) {
     ["Số điện thoại học sinh", application.studentPhone ?? ""],
     ["Email", application.email ?? ""],
     ["Cha/mẹ/người giám hộ", application.guardianName],
-    ["Điện thoại liên hệ", application.guardianPhone]
+    ["Điện thoại liên hệ", application.guardianPhone],
   ])}</table>
 
   <h2>IV. Đối tượng ưu tiên, khuyến khích</h2>
   <table>${rows([
     ["Đối tượng ưu tiên/khác", priorityText || "Không"],
     ["Giải thưởng", awardText || "Không"],
-    ["Điểm khuyến khích", String(application.bonusScore)]
+    ["Điểm khuyến khích", String(application.bonusScore)],
   ])}</table>
 
   <h2>V. Nguyện vọng học các môn lựa chọn lớp 10</h2>
