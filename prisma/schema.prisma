@@ -1,0 +1,226 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+// PostgreSQL database. Use docker-compose.yml for local development.
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  SUPER_ADMIN
+  ADMISSION_OFFICER
+  VIEWER
+}
+
+enum ApplicationStatus {
+  CHO_KIEM_TRA
+  DANG_XU_LY
+  CAN_BO_SUNG
+  DA_TIEP_NHAN
+  HOP_LE
+  KHONG_HOP_LE
+  DA_DUYET_XET_TUYEN
+}
+
+enum Gender {
+  NAM
+  NU
+  KHAC
+}
+
+enum AcademicLevel {
+  TOT
+  KHA
+  DAT
+  CHUA_DAT
+}
+
+enum Prize {
+  GIAI_NHAT
+  GIAI_NHI
+  GIAI_BA
+}
+
+enum PriorityType {
+  CON_THUONG_BINH_LIET_SI
+  DAN_TOC_THIEU_SO
+  CHA_ME_DAN_TOC_THIEU_SO
+  VUNG_DAC_BIET_KHO_KHAN
+  HO_NGHEO
+  HO_CAN_NGHEO
+  MO_COI_CHA_HOAC_ME
+  MO_COI_CHA_LAN_ME
+}
+
+enum FileType {
+  PHOTO_4X6
+  HOC_BA_THCS
+  HOC_BA_LOP_6
+  HOC_BA_LOP_7
+  HOC_BA_LOP_8
+  HOC_BA_LOP_9
+  GIAY_KHAI_SINH
+  CCCD
+  MINH_CHUNG_UU_TIEN
+  MINH_CHUNG_KHUYEN_KHICH
+  HO_NGHEO_CAN_NGHEO
+  GIAY_TO_KHAC
+}
+
+enum FileStatus {
+  CHUA_KIEM_TRA
+  HOP_LE
+  KHONG_HOP_LE
+  CAN_BO_SUNG
+}
+
+enum LogAction {
+  CREATED
+  VIEWED
+  STATUS_UPDATED
+  FILE_REVIEWED
+  NOTE_UPDATED
+  REQUESTED_SUPPLEMENT
+  APPROVED
+  REJECTED
+}
+
+model User {
+  id           String           @id @default(cuid())
+  name         String
+  email        String           @unique
+  passwordHash String
+  role         Role             @default(ADMISSION_OFFICER)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  reviewedFiles UploadedFile[]  @relation("ReviewedBy")
+  logs         ApplicationLog[]
+}
+
+model Application {
+  id                 String            @id @default(cuid())
+  applicationCode    String            @unique
+  status             ApplicationStatus @default(CHO_KIEM_TRA)
+
+  fullName           String
+  dateOfBirth        DateTime
+  gender             Gender
+  ethnicity          String
+  birthPlace         String
+  citizenId          String            @unique
+  issueDate          DateTime?
+  issuePlace         String?
+
+  secondarySchool    String
+  schoolYear         String
+
+  permanentAddress   String
+  houseNumber        String?
+  hamlet             String?
+  ward               String?
+  province           String?
+  studentPhone       String?
+  email              String?
+  guardianName       String
+  guardianPhone      String
+
+  selectedOptionNumber Int
+  selectedSubjects   String
+  bonusScore         Float             @default(0)
+  commitmentAccepted Boolean           @default(false)
+  publicNote         String?
+  internalNote       String?
+  submittedAt        DateTime          @default(now())
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+
+  academicRecords    AcademicRecord[]
+  priorities         PriorityRecord[]
+  awards             AwardRecord[]
+  files              UploadedFile[]
+  logs               ApplicationLog[]
+
+  @@index([status])
+  @@index([fullName])
+  @@index([secondarySchool])
+  @@index([selectedOptionNumber])
+}
+
+model AcademicRecord {
+  id                String        @id @default(cuid())
+  applicationId     String
+  grade             Int
+  literature        Float?
+  math              Float?
+  english           Float?
+  naturalScience    Float?
+  historyGeography  Float?
+  civicEducation    Float?
+  technology        Float?
+  informatics       Float?
+  note              String?
+  academicLevel     AcademicLevel?
+  conductLevel      AcademicLevel?
+  application       Application   @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@unique([applicationId, grade])
+}
+
+model PriorityRecord {
+  id            String        @id @default(cuid())
+  applicationId String
+  type          PriorityType
+  description   String?
+  application   Application   @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+}
+
+model AwardRecord {
+  id              String        @id @default(cuid())
+  applicationId   String
+  competitionName String
+  field           String?
+  level           String?
+  year            Int?
+  prize           Prize
+  bonusScore      Float
+  application     Application   @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  files           UploadedFile[]
+}
+
+model UploadedFile {
+  id             String      @id @default(cuid())
+  applicationId  String?
+  awardRecordId  String?
+  fileType       FileType
+  originalName   String
+  storedName     String
+  mimeType       String
+  size           Int
+  storageKey     String
+  storageProvider String     @default("LOCAL")
+  publicUrl      String?
+  status         FileStatus  @default(CHUA_KIEM_TRA)
+  note           String?
+  uploadedAt     DateTime    @default(now())
+  reviewedAt     DateTime?
+  reviewedById   String?
+
+  application    Application? @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  awardRecord    AwardRecord? @relation(fields: [awardRecordId], references: [id], onDelete: SetNull)
+  reviewedBy     User?        @relation("ReviewedBy", fields: [reviewedById], references: [id])
+}
+
+model ApplicationLog {
+  id            String     @id @default(cuid())
+  applicationId String
+  userId        String?
+  action        LogAction
+  oldValue      String?
+  newValue      String?
+  note          String?
+  createdAt     DateTime   @default(now())
+
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  user          User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+}
