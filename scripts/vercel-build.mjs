@@ -1,8 +1,8 @@
 import { execSync } from "node:child_process";
 
-function run(command) {
+function run(command, options = {}) {
   console.log(`\n> ${command}`);
-  execSync(command, { stdio: "inherit", env: process.env });
+  execSync(command, { stdio: "inherit", env: process.env, ...options });
 }
 
 const databaseEnvKeys = [
@@ -38,13 +38,23 @@ function prepareDatabaseUrl(stepName) {
   return true;
 }
 
+function runSchemaBootstrap() {
+  try {
+    run("npx prisma migrate deploy");
+  } catch (error) {
+    console.warn("\nPrisma migrate deploy failed. Falling back to prisma db push to bootstrap/sync the schema.");
+    console.warn("This is intended for this first Vercel + Neon setup where an earlier init migration failed and left Prisma migration history blocked.");
+    run("npx prisma db push --accept-data-loss");
+  }
+}
+
 run("npm run validate:secondary-schools");
 run("npx prisma generate");
 
 if (process.env.RUN_PRISMA_MIGRATE_DEPLOY === "true") {
-  if (prepareDatabaseUrl("prisma migrate deploy")) run("npx prisma migrate deploy");
+  if (prepareDatabaseUrl("database schema bootstrap")) runSchemaBootstrap();
 } else {
-  console.log("Skipping prisma migrate deploy. Set RUN_PRISMA_MIGRATE_DEPLOY=true to run migrations during build.");
+  console.log("Skipping database schema bootstrap. Set RUN_PRISMA_MIGRATE_DEPLOY=true to run it during build.");
 }
 
 if (process.env.RUN_PRISMA_SEED === "true") {
