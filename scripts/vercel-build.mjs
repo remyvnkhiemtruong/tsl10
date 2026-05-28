@@ -41,9 +41,8 @@ function prepareDatabaseUrl(stepName) {
 function runSchemaBootstrap() {
   try {
     run("npx prisma migrate deploy");
-  } catch (error) {
+  } catch {
     console.warn("\nPrisma migrate deploy failed. Falling back to prisma db push to bootstrap/sync the schema.");
-    console.warn("This is intended for this first Vercel + Neon setup where an earlier init migration failed and left Prisma migration history blocked.");
     run("npx prisma db push --accept-data-loss");
   }
 }
@@ -57,10 +56,6 @@ if (process.env.RUN_PRISMA_MIGRATE_DEPLOY === "true") {
   console.log("Skipping database schema bootstrap. Set RUN_PRISMA_MIGRATE_DEPLOY=true to run it during build.");
 }
 
-if (process.env.RUN_PRISMA_SEED === "true") {
-  if (prepareDatabaseUrl("prisma seed")) run("npm run prisma:seed");
-} else {
-  console.log("Skipping prisma seed. Set RUN_PRISMA_SEED=true to seed during build.");
-}
+console.log("Skipping prisma seed during Vercel build. Admin user was already bootstrapped; run seed manually only when needed.");
 
 run("npx next build");
