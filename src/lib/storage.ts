@@ -23,21 +23,62 @@ export type StoredFileRef = {
   publicUrl?: string | null;
 };
 
+const IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png", ".webp", ".heic", ".heif"];
+const PDF_EXTENSIONS = [".pdf"];
+const ALL_ALLOWED_EXTENSIONS = [...IMAGE_EXTENSIONS, ...PDF_EXTENSIONS];
+const EXTRA_ALLOWED_MIME_TYPES = ["image/jpg", "image/webp", "image/heic", "image/heif"];
+
+function fileExtension(file: File) {
+  return path.extname(file.name || "").toLowerCase();
+}
+
+function isAllowedMimeType(type: string) {
+  return ALLOWED_MIME_TYPES.includes(type as (typeof ALLOWED_MIME_TYPES)[number]) || EXTRA_ALLOWED_MIME_TYPES.includes(type);
+}
+
+function isAllowedUploadFile(file: File) {
+  const ext = fileExtension(file);
+  if (isAllowedMimeType(file.type)) return true;
+  if (!file.type || file.type === "application/octet-stream") return ALL_ALLOWED_EXTENSIONS.includes(ext);
+  return ALL_ALLOWED_EXTENSIONS.includes(ext) && (file.type.startsWith("image/") || file.type === "application/pdf");
+}
+
+function isImageUpload(file: File) {
+  const ext = fileExtension(file);
+  return file.type.startsWith("image/") || IMAGE_EXTENSIONS.includes(ext);
+}
+
+function isPdfUpload(file: File) {
+  const ext = fileExtension(file);
+  return file.type === "application/pdf" || PDF_EXTENSIONS.includes(ext);
+}
+
+function inferredContentType(file: File) {
+  if (file.type && file.type !== "application/octet-stream") return file.type;
+  const ext = fileExtension(file);
+  if (ext === ".pdf") return "application/pdf";
+  if (ext === ".png") return "image/png";
+  if (ext === ".webp") return "image/webp";
+  if (ext === ".heic") return "image/heic";
+  if (ext === ".heif") return "image/heif";
+  return "image/jpeg";
+}
+
 export function assertAllowedFile(file: File, fileType: string) {
-  if (!ALLOWED_MIME_TYPES.includes(file.type as (typeof ALLOWED_MIME_TYPES)[number])) {
-    throw new Error("Định dạng file không hợp lệ. Chỉ chấp nhận JPG, JPEG, PNG hoặc PDF.");
+  if (!isAllowedUploadFile(file)) {
+    throw new Error("Định dạng file không hợp lệ. Chỉ chấp nhận JPG, JPEG, PNG, WEBP, HEIC hoặc PDF.");
   }
 
-  if (fileType === "PHOTO_4X6" && !file.type.startsWith("image/")) {
-    throw new Error("Ảnh 4x6 phải là file JPG, JPEG hoặc PNG.");
+  if (fileType === "PHOTO_4X6" && !isImageUpload(file)) {
+    throw new Error("Ảnh 4x6 phải là file ảnh JPG, JPEG, PNG, WEBP hoặc HEIC.");
   }
 
-  if (fileType === "HOC_BA_THCS" && file.type !== "application/pdf") {
+  if (fileType === "HOC_BA_THCS" && !isPdfUpload(file)) {
     throw new Error("Học bạ THCS dạng tổng hợp phải là file PDF.");
   }
 
-  if (fileType.startsWith("HOC_BA_LOP_") && !file.type.startsWith("image/")) {
-    throw new Error("Ảnh học bạ từng lớp phải là file JPG, JPEG hoặc PNG.");
+  if (fileType.startsWith("HOC_BA_LOP_") && !isImageUpload(file)) {
+    throw new Error("Ảnh học bạ từng lớp phải là file ảnh JPG, JPEG, PNG, WEBP hoặc HEIC.");
   }
 
   const maxMb = FILE_SIZE_LIMITS_MB[fileType] ?? Number(process.env.MAX_UPLOAD_MB ?? 25);
@@ -47,10 +88,13 @@ export function assertAllowedFile(file: File, fileType: string) {
 }
 
 function safeExtension(file: File) {
-  const ext = path.extname(file.name).toLowerCase();
-  if ([".jpg", ".jpeg", ".png", ".pdf"].includes(ext)) return ext;
-  if (file.type === "application/pdf") return ".pdf";
-  if (file.type === "image/png") return ".png";
+  const ext = fileExtension(file);
+  if (ALL_ALLOWED_EXTENSIONS.includes(ext)) return ext;
+  if (isPdfUpload(file)) return ".pdf";
+  if (inferredContentType(file) === "image/png") return ".png";
+  if (inferredContentType(file) === "image/webp") return ".webp";
+  if (inferredContentType(file) === "image/heic") return ".heic";
+  if (inferredContentType(file) === "image/heif") return ".heif";
   return ".jpg";
 }
 
@@ -92,7 +136,7 @@ export async function saveLocalFile(file: File, fileType: string): Promise<Saved
     fileType,
     originalName: file.name,
     storedName,
-    mimeType: file.type,
+    mimeType: inferredContentType(file),
     size: file.size,
     storageKey,
     storageProvider: "LOCAL"
@@ -109,12 +153,13 @@ export async function saveVercelBlobFile(file: File, fileType: string): Promise<
   }
 
   const ext = safeExtension(file);
+  const contentType = inferredContentType(file);
   const dateFolder = new Date().toISOString().slice(0, 10);
   const pathname = `admission-uploads/${fileType.toLowerCase()}/${dateFolder}/${Date.now()}-${randomUUID()}${ext}`;
   const blob = await put(pathname, file, {
     access: "private",
     addRandomSuffix: true,
-    contentType: file.type,
+    contentType,
     multipart: file.size > 10 * 1024 * 1024
   });
 
@@ -122,7 +167,7 @@ export async function saveVercelBlobFile(file: File, fileType: string): Promise<
     fileType,
     originalName: file.name,
     storedName: blob.pathname,
-    mimeType: file.type,
+    mimeType: contentType,
     size: file.size,
     storageKey: blob.pathname,
     storageProvider: "VERCEL_BLOB"
