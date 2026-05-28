@@ -1,12 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
-import { BarChart3, FileSpreadsheet, Files, LogOut } from "lucide-react";
+import { BarChart3, FileSpreadsheet, Files, LogOut, Megaphone, Settings } from "lucide-react";
 import { requireAdminPage } from "@/lib/auth";
 import { SCHOOL_NAME } from "@/lib/constants";
 
 const navItems = [
   { href: "/admin/dashboard", label: "Dashboard", icon: BarChart3 },
   { href: "/admin/ho-so", label: "Hồ sơ", icon: Files },
+  { href: "/admin/trung-tuyen", label: "Trúng tuyển", icon: Megaphone },
+  { href: "/admin/cau-hinh", label: "Cấu hình", icon: Settings },
   { href: "/api/admin/export/excel", label: "Xuất Excel", icon: FileSpreadsheet },
 ];
 

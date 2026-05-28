@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, Plus, Save, Trash2 } from "lucide-react";
 import { Field, controlErrorClass } from "@/components/admission/Field";
 import { ProvinceSelect } from "@/components/admission/ProvinceSelect";
+import { SecondarySchoolSelect } from "@/components/admission/SecondarySchoolSelect";
 import { WardSelect } from "@/components/admission/WardSelect";
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -58,6 +59,8 @@ export type AdminEditFormValue = {
   issueDate: string;
   issuePlace: string;
   secondarySchool: string;
+  secondarySchoolOldAddress: string;
+  secondarySchoolAddress: string;
   schoolYear: string;
   houseNumber: string;
   hamlet: string;
@@ -72,6 +75,7 @@ export type AdminEditFormValue = {
   selectedSubjects: string;
   priorities: string[];
   awards: AwardInput[];
+  additionalAwardsNote: string;
   academicRecords: AcademicRecordForm[];
   status: string;
   publicNote: string;
@@ -139,6 +143,7 @@ export function EditApplicationForm({ initial }: { initial: AdminEditFormValue }
   }
 
   function addAward() {
+    if (form.awards.length >= 1) return;
     update("awards", [
       ...form.awards,
       { competitionName: "", field: "", level: "", year: undefined, prize: "GIAI_BA" },
@@ -273,11 +278,19 @@ export function EditApplicationForm({ initial }: { initial: AdminEditFormValue }
       <Card>
         <CardTitle>Thông tin học tập và điểm</CardTitle>
         <div className="mt-5 grid gap-4 md:grid-cols-2">
-          <Field label="Trường THCS" error={fieldError("secondarySchool")}>
-            <Input
-              value={form.secondarySchool}
-              onChange={(event) => update("secondarySchool", event.target.value)}
-              className={controlErrorClass(Boolean(fieldError("secondarySchool")))}
+          <Field label="Trường THCS" error={fieldError("secondarySchool")} className="md:col-span-2">
+            <SecondarySchoolSelect
+              value={{
+                secondarySchool: form.secondarySchool,
+                secondarySchoolOldAddress: form.secondarySchoolOldAddress,
+                secondarySchoolAddress: form.secondarySchoolAddress,
+              }}
+              onChange={(school) => {
+                update("secondarySchool", school.secondarySchool);
+                update("secondarySchoolOldAddress", school.secondarySchoolOldAddress);
+                update("secondarySchoolAddress", school.secondarySchoolAddress);
+              }}
+              hasError={Boolean(fieldError("secondarySchool"))}
             />
           </Field>
           <Field label="Năm học lớp 9" error={fieldError("schoolYear")}>
@@ -464,8 +477,8 @@ export function EditApplicationForm({ initial }: { initial: AdminEditFormValue }
               <CardTitle className="text-base">Giải thưởng/khuyến khích</CardTitle>
               <CardDescription>Điểm C được tính lại theo giải thưởng đã nhập.</CardDescription>
             </div>
-            <Button onClick={addAward} variant="secondary">
-              <Plus size={16} /> Thêm giải
+            <Button onClick={addAward} variant="secondary" disabled={form.awards.length >= 1}>
+              <Plus size={16} /> {form.awards.length >= 1 ? "Đã chọn 01 giải" : "Thêm giải"}
             </Button>
           </div>
           {form.awards.map((award, index) => (
@@ -499,6 +512,13 @@ export function EditApplicationForm({ initial }: { initial: AdminEditFormValue }
               )}
             </div>
           ))}
+          <Field label="Ghi chú giải thưởng khác không tính điểm" error={fieldError("additionalAwardsNote")}>
+            <Textarea
+              value={form.additionalAwardsNote}
+              onChange={(event) => update("additionalAwardsNote", event.target.value)}
+              className={controlErrorClass(Boolean(fieldError("additionalAwardsNote")))}
+            />
+          </Field>
         </div>
 
         <div className="mt-6 grid gap-4 md:grid-cols-2">

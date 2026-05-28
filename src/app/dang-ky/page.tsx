@@ -1,5 +1,8 @@
+import { PublicFooter } from "@/components/PublicFooter";
 import { PublicHeader } from "@/components/PublicHeader";
 import { RegisterWizard } from "./RegisterWizard";
+
+export const dynamic = "force-dynamic";
 
 export default function RegisterPage() {
   return (
@@ -15,6 +18,7 @@ export default function RegisterPage() {
         </div>
         <RegisterWizard />
       </section>
+      <PublicFooter />
     </main>
   );
 }

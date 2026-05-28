@@ -3,6 +3,7 @@ import { PrismaClient, Role, Gender, AcademicLevel, ApplicationStatus, Prize, Pr
 import { PrismaPg } from "@prisma/adapter-pg";
 import bcrypt from "bcryptjs";
 import { SUBJECT_OPTIONS } from "../src/lib/constants";
+import { DEFAULT_SCHOOL_SETTINGS } from "../src/lib/school-contact";
 
 const connectionString =
   process.env.DATABASE_URL ?? "postgresql://postgres:postgres@localhost:5432/vvk_admission?schema=public";
@@ -44,6 +45,23 @@ async function main() {
     }
   });
   console.log(`Seeded admin user: ${email}`);
+
+  await prisma.schoolSetting.upsert({
+    where: { id: "default" },
+    update: {},
+    create: {
+      id: "default",
+      schoolContactJson: DEFAULT_SCHOOL_SETTINGS.contact,
+      leadershipContactsJson: DEFAULT_SCHOOL_SETTINGS.leadershipContacts,
+      publicLeadershipPhones: DEFAULT_SCHOOL_SETTINGS.publicLeadershipPhones,
+      registrationDeadline: new Date(DEFAULT_SCHOOL_SETTINGS.registrationDeadline),
+      admissionRound1PublishAt: new Date(DEFAULT_SCHOOL_SETTINGS.admissionRound1PublishAt),
+      admissionRound2PublishAt: new Date(DEFAULT_SCHOOL_SETTINGS.admissionRound2PublishAt),
+      personalResultLookupEnabled: DEFAULT_SCHOOL_SETTINGS.personalResultLookupEnabled,
+      registrationLockedNote: DEFAULT_SCHOOL_SETTINGS.registrationLockedNote,
+    },
+  });
+  console.log("Seeded school settings");
 
   if (process.env.SEED_SAMPLE_DATA !== "true") {
     console.log("Skipping sample applications. Set SEED_SAMPLE_DATA=true to seed demo data.");

@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { Field, controlErrorClass } from "@/components/admission/Field";
 import { ProvinceSelect } from "@/components/admission/ProvinceSelect";
+import { SecondarySchoolSelect } from "@/components/admission/SecondarySchoolSelect";
 import { WardSelect } from "@/components/admission/WardSelect";
 import { Alert } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
@@ -22,7 +23,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
-import { calculateAdmissionScoreDetails } from "@/lib/admission-score";
+import { Textarea } from "@/components/ui/textarea";
+import { calculateAdmissionScoreWithBonuses } from "@/lib/admission-score";
 import { WARD_OTHER_LABEL, WARD_OTHER_VALUE } from "@/lib/administrative-units";
 import { composePermanentAddress } from "@/lib/address";
 import {
@@ -68,6 +70,8 @@ type RegisterForm = {
   issueDate: string;
   issuePlace: string;
   secondarySchool: string;
+  secondarySchoolOldAddress: string;
+  secondarySchoolAddress: string;
   schoolYear: string;
   permanentAddress: string;
   houseNumber: string;
@@ -81,6 +85,7 @@ type RegisterForm = {
   guardianPhone: string;
   priorities: string[];
   awards: AwardInput[];
+  additionalAwardsNote: string;
   academicRecords: AcademicRecordForm[];
   selectedOptionNumber: number;
   selectedSubjects: string;
@@ -126,6 +131,8 @@ const initialForm: RegisterForm = {
   issueDate: "",
   issuePlace: "",
   secondarySchool: "",
+  secondarySchoolOldAddress: "",
+  secondarySchoolAddress: "",
   schoolYear: "2025 - 2026",
   permanentAddress: "",
   houseNumber: "",
@@ -139,6 +146,7 @@ const initialForm: RegisterForm = {
   guardianPhone: "",
   priorities: [],
   awards: [],
+  additionalAwardsNote: "",
   academicRecords: initialAcademic,
   selectedOptionNumber: 1,
   selectedSubjects: SUBJECT_OPTIONS[0].subjects,
@@ -147,11 +155,11 @@ const initialForm: RegisterForm = {
 
 const uploadDescriptions: Record<string, string> = {
   PHOTO_4X6: "Ảnh chân dung rõ mặt, JPG/JPEG/PNG, tối đa 5MB.",
-  HOC_BA_THCS: "Bản PDF đầy đủ học bạ THCS; có thể thay bằng đủ ảnh lớp 6, 7, 8, 9.",
-  HOC_BA_LOP_6: "Ảnh trang học bạ lớp 6 nếu không có PDF học bạ đầy đủ.",
-  HOC_BA_LOP_7: "Ảnh trang học bạ lớp 7 nếu không có PDF học bạ đầy đủ.",
-  HOC_BA_LOP_8: "Ảnh trang học bạ lớp 8 nếu không có PDF học bạ đầy đủ.",
-  HOC_BA_LOP_9: "Ảnh trang học bạ lớp 9 nếu không có PDF học bạ đầy đủ.",
+  HOC_BA_THCS: "Không bắt buộc upload học bạ; khuyến khích tải PDF để nhà trường kiểm tra nhanh hơn.",
+  HOC_BA_LOP_6: "Không bắt buộc; ảnh trang học bạ lớp 6 nếu phụ huynh muốn bổ sung minh chứng.",
+  HOC_BA_LOP_7: "Không bắt buộc; ảnh trang học bạ lớp 7 nếu phụ huynh muốn bổ sung minh chứng.",
+  HOC_BA_LOP_8: "Không bắt buộc; ảnh trang học bạ lớp 8 nếu phụ huynh muốn bổ sung minh chứng.",
+  HOC_BA_LOP_9: "Không bắt buộc; ảnh trang học bạ lớp 9 nếu phụ huynh muốn bổ sung minh chứng.",
   GIAY_KHAI_SINH: "Ảnh/PDF giấy khai sinh; có thể thay bằng CCCD/số định danh.",
   CCCD: "Ảnh/PDF CCCD hoặc giấy xác nhận số định danh; có thể thay bằng giấy khai sinh.",
   MINH_CHUNG_UU_TIEN: "Minh chứng cho diện ưu tiên/đối tượng khác đã chọn.",
@@ -219,11 +227,11 @@ export function RegisterWizard() {
   const [uploadErrors, setUploadErrors] = useState<FieldErrors>({});
   const [form, setForm] = useState<RegisterForm>(initialForm);
 
-  const bonusScore = form.awards.reduce((sum, award) => sum + (PRIZE_SCORES[award.prize] ?? 0), 0);
   const scoreDetails = useMemo(
-    () => calculateAdmissionScoreDetails(form.academicRecords, bonusScore),
-    [form.academicRecords, bonusScore]
+    () => calculateAdmissionScoreWithBonuses(form.academicRecords, form.priorities, form.awards),
+    [form.academicRecords, form.priorities, form.awards]
   );
+  const bonusScore = scoreDetails.bonusScore;
   const progress = useMemo(() => Math.round(((step + 1) / steps.length) * 100), [step]);
   const finalWard = form.ward === WARD_OTHER_VALUE ? form.wardOther.trim() : form.ward;
   const permanentAddress = composePermanentAddress({
@@ -269,6 +277,7 @@ export function RegisterWizard() {
   }
 
   function addAward() {
+    if (form.awards.length >= 1) return;
     update("awards", [
       ...form.awards,
       { competitionName: "", field: "", level: "", year: undefined, prize: "GIAI_BA" },
@@ -326,6 +335,7 @@ export function RegisterWizard() {
       if (guardianPhoneError) nextErrors.guardianPhone = guardianPhoneError;
     }
     if (targetStep === 3) {
+      if (form.awards.length > 1) nextErrors.awards = "Chỉ được chọn tối đa 01 giải thưởng để cộng điểm khuyến khích.";
       form.awards.forEach((award, index) => {
         if (!award.competitionName.trim()) nextErrors[`awards.${index}.competitionName`] = "Mỗi giải thưởng cần có tên cuộc thi/giải thưởng.";
       });
@@ -347,30 +357,9 @@ export function RegisterWizard() {
     const fileTypes = new Set(files.map((file) => file.fileType));
     const nextErrors: FieldErrors = {};
     if (!fileTypes.has("PHOTO_4X6")) nextErrors["uploadedFiles.PHOTO_4X6"] = "Cần tải ảnh 4x6.";
-    if (!fileTypes.has("HOC_BA_THCS")) {
-      const missingGrades = [6, 7, 8, 9].filter((grade) => !fileTypes.has(`HOC_BA_LOP_${grade}`));
-      if (missingGrades.length > 0) {
-        nextErrors["uploadedFiles.HOC_BA_THCS"] = "Cần tải học bạ THCS dạng PDF hoặc đủ ảnh học bạ lớp 6, 7, 8, 9.";
-        for (const grade of missingGrades) {
-          nextErrors[`uploadedFiles.HOC_BA_LOP_${grade}`] = `Thiếu học bạ lớp ${grade} nếu không nộp PDF học bạ THCS.`;
-        }
-      }
-    }
     if (!fileTypes.has("GIAY_KHAI_SINH") && !fileTypes.has("CCCD")) {
       nextErrors["uploadedFiles.GIAY_KHAI_SINH"] = "Cần tải giấy khai sinh hoặc CCCD/số định danh.";
       nextErrors["uploadedFiles.CCCD"] = "Cần tải CCCD/số định danh hoặc giấy khai sinh.";
-    }
-    if (form.priorities.length > 0 && !fileTypes.has("MINH_CHUNG_UU_TIEN")) {
-      nextErrors["uploadedFiles.MINH_CHUNG_UU_TIEN"] = "Cần tải minh chứng ưu tiên/đối tượng khác.";
-    }
-    if (
-      (form.priorities.includes("HO_NGHEO") || form.priorities.includes("HO_CAN_NGHEO")) &&
-      !fileTypes.has("HO_NGHEO_CAN_NGHEO")
-    ) {
-      nextErrors["uploadedFiles.HO_NGHEO_CAN_NGHEO"] = "Cần tải giấy xác nhận hộ nghèo/cận nghèo.";
-    }
-    if (form.awards.length > 0 && !fileTypes.has("MINH_CHUNG_KHUYEN_KHICH")) {
-      nextErrors["uploadedFiles.MINH_CHUNG_KHUYEN_KHICH"] = "Cần tải minh chứng điểm khuyến khích.";
     }
     return nextErrors;
   }
@@ -458,7 +447,7 @@ export function RegisterWizard() {
   }
 
   function markedRequired(fileType: string) {
-    if (["PHOTO_4X6", "HOC_BA_THCS", "GIAY_KHAI_SINH", "CCCD"].includes(fileType)) return true;
+    if (["PHOTO_4X6", "GIAY_KHAI_SINH", "CCCD"].includes(fileType)) return true;
     if (fileType === "MINH_CHUNG_UU_TIEN" && form.priorities.length > 0) return true;
     if (fileType === "HO_NGHEO_CAN_NGHEO" && (form.priorities.includes("HO_NGHEO") || form.priorities.includes("HO_CAN_NGHEO"))) return true;
     if (fileType === "MINH_CHUNG_KHUYEN_KHICH" && form.awards.length > 0) return true;
@@ -595,13 +584,21 @@ export function RegisterWizard() {
         {step === 1 && (
           <section className="space-y-5">
             <div className="grid gap-4 md:grid-cols-2">
-              <Field label="Trường THCS" error={fieldError("secondarySchool")}>
-                <Input
-                  value={form.secondarySchool}
-                  onChange={(event) => update("secondarySchool", event.target.value)}
-                  className={controlErrorClass(Boolean(fieldError("secondarySchool")))}
-                />
-              </Field>
+          <Field label="Trường THCS" error={fieldError("secondarySchool")} className="md:col-span-2">
+            <SecondarySchoolSelect
+              value={{
+                secondarySchool: form.secondarySchool,
+                secondarySchoolOldAddress: form.secondarySchoolOldAddress,
+                secondarySchoolAddress: form.secondarySchoolAddress,
+              }}
+              onChange={(school) => {
+                update("secondarySchool", school.secondarySchool);
+                update("secondarySchoolOldAddress", school.secondarySchoolOldAddress);
+                update("secondarySchoolAddress", school.secondarySchoolAddress);
+              }}
+              hasError={Boolean(fieldError("secondarySchool"))}
+            />
+          </Field>
               <Field label="Năm học lớp 9" error={fieldError("schoolYear")}>
                 <Select
                   value={form.schoolYear}
@@ -823,9 +820,9 @@ export function RegisterWizard() {
                   <p className="mt-1 text-sm text-slate-600">Chỉ tính điểm khuyến khích theo giải thưởng đã khai báo.</p>
                 </div>
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-                  <Badge variant="success">Tổng điểm: {bonusScore}</Badge>
-                  <Button onClick={addAward} size="sm">
-                    <Plus size={16} /> Thêm giải thưởng
+                  <Badge variant="success">Tổng điểm C: {bonusScore}</Badge>
+                  <Button onClick={addAward} size="sm" disabled={form.awards.length >= 1}>
+                    <Plus size={16} /> {form.awards.length >= 1 ? "Đã chọn 01 giải" : "Thêm giải thưởng"}
                   </Button>
                 </div>
               </div>
@@ -869,6 +866,11 @@ export function RegisterWizard() {
                     )}
                   </div>
                 ))}
+                <Textarea
+                  placeholder="Ghi chú giải thưởng khác không tính điểm (nếu có)"
+                  value={form.additionalAwardsNote}
+                  onChange={(event) => update("additionalAwardsNote", event.target.value)}
+                />
               </div>
             </div>
           </section>
@@ -911,8 +913,9 @@ export function RegisterWizard() {
         {step === 5 && (
           <section className="space-y-5">
             <Alert>
-              <b>File bắt buộc:</b> ảnh 4x6; học bạ THCS PDF hoặc đủ ảnh học bạ lớp 6-9; giấy khai sinh hoặc CCCD;
-              minh chứng tương ứng nếu có ưu tiên/khuyến khích. Chỉ nhận JPG/JPEG/PNG/PDF.
+              <b>File bắt buộc:</b> ảnh 4x6; giấy khai sinh hoặc CCCD/số định danh. Không bắt buộc upload học bạ.
+              Tuy nhiên, nhà trường khuyến khích upload học bạ/ảnh minh chứng kết quả học tập để quá trình kiểm tra và xử lý hồ sơ nhanh hơn.
+              Minh chứng ưu tiên/khuyến khích có thể bổ sung để nhà trường đối chiếu. Chỉ nhận JPG/JPEG/PNG/PDF.
             </Alert>
             <div className="grid gap-4 md:grid-cols-2">
               {fileTypesInOrder.map((fileType) => {

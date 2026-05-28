@@ -1,0 +1,1314 @@
+[
+  {
+    "id": "thcs-nguyen-trai-phuong-5-tp-ca-mau-ca-mau-cu-phuong-tan-thanh-tinh-ca-mau",
+    "name": "THCS Nguyễn Trãi",
+    "normalizedName": "thcs nguyen trai",
+    "province": "C? Mau",
+    "oldAddress": "Phường 5, TP Cà Mau, Cà Mau cũ",
+    "newAddress": "Phường Tân Thành, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-nguyen-du-phuong-2-phuong-4-tp-ca-mau-ca-mau-cu-phuong-an-xuyen-tinh-ca-mau",
+    "name": "THCS Nguyễn Du",
+    "normalizedName": "thcs nguyen du",
+    "province": "C? Mau",
+    "oldAddress": "Phường 2/Phường 4, TP Cà Mau, Cà Mau cũ",
+    "newAddress": "Phường An Xuyên, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-tran-hung-dao-phuong-6-7-tp-ca-mau-ca-mau-cu-phuong-tan-thanh-tinh-ca-mau",
+    "name": "THCS Trần Hưng Đạo",
+    "normalizedName": "thcs tran hung dao",
+    "province": "C? Mau",
+    "oldAddress": "Phường 6/7, TP Cà Mau, Cà Mau cũ",
+    "newAddress": "Phường Tân Thành, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-vo-thi-sau-phuong-8-9-tp-ca-mau-ca-mau-cu-phuong-ly-van-lam-tinh-ca-mau",
+    "name": "THCS Võ Thị Sáu",
+    "normalizedName": "thcs vo thi sau",
+    "province": "C? Mau",
+    "oldAddress": "Phường 8/9, TP Cà Mau, Cà Mau cũ",
+    "newAddress": "Phường Lý Văn Lâm, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-phan-boi-chau-phuong-1-2-tp-ca-mau-ca-mau-cu-phuong-an-xuyen-tinh-ca-mau",
+    "name": "THCS Phan Bội Châu",
+    "normalizedName": "thcs phan boi chau",
+    "province": "C? Mau",
+    "oldAddress": "Phường 1/2, TP Cà Mau, Cà Mau cũ",
+    "newAddress": "Phường An Xuyên, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-luong-the-vinh-tp-ca-mau-ca-mau-cu-phuong-an-xuyen-tinh-ca-mau",
+    "name": "THCS Lương Thế Vinh",
+    "normalizedName": "thcs luong the vinh",
+    "province": "C? Mau",
+    "oldAddress": "TP Cà Mau, Cà Mau cũ",
+    "newAddress": "Phường An Xuyên, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-huynh-phan-ho-tp-ca-mau-ca-mau-cu-phuong-an-xuyen-tinh-ca-mau",
+    "name": "THCS Huỳnh Phan Hộ",
+    "normalizedName": "thcs huynh phan ho",
+    "province": "C? Mau",
+    "oldAddress": "TP Cà Mau, Cà Mau cũ",
+    "newAddress": "Phường An Xuyên, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-ly-van-lam-xa-ly-van-lam-tp-ca-mau-ca-mau-cu-phuong-ly-van-lam-tinh-ca-mau",
+    "name": "THCS Lý Văn Lâm",
+    "normalizedName": "thcs ly van lam",
+    "province": "C? Mau",
+    "oldAddress": "Xã Lý Văn Lâm, TP Cà Mau, Cà Mau cũ",
+    "newAddress": "Phường Lý Văn Lâm, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-tan-thanh-xa-tan-thanh-tp-ca-mau-ca-mau-cu-phuong-tan-thanh-tinh-ca-mau",
+    "name": "THCS Tân Thành",
+    "normalizedName": "thcs tan thanh",
+    "province": "C? Mau",
+    "oldAddress": "Xã Tân Thành, TP Cà Mau, Cà Mau cũ",
+    "newAddress": "Phường Tân Thành, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-tan-xuyen-xa-tan-xuyen-tp-ca-mau-ca-mau-cu-phuong-an-xuyen-tinh-ca-mau",
+    "name": "THCS Tân Xuyên",
+    "normalizedName": "thcs tan xuyen",
+    "province": "C? Mau",
+    "oldAddress": "Xã Tân Xuyên, TP Cà Mau, Cà Mau cũ",
+    "newAddress": "Phường An Xuyên, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-dinh-binh-xa-dinh-binh-tp-ca-mau-ca-mau-cu-phuong-tan-thanh-tinh-ca-mau",
+    "name": "THCS Định Bình",
+    "normalizedName": "thcs dinh binh",
+    "province": "C? Mau",
+    "oldAddress": "Xã Định Bình, TP Cà Mau, Cà Mau cũ",
+    "newAddress": "Phường Tân Thành, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-tac-van-xa-tac-van-tp-ca-mau-ca-mau-cu-phuong-tan-thanh-tinh-ca-mau",
+    "name": "THCS Tắc Vân",
+    "normalizedName": "thcs tac van",
+    "province": "C? Mau",
+    "oldAddress": "Xã Tắc Vân, TP Cà Mau, Cà Mau cũ",
+    "newAddress": "Phường Tân Thành, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-hoa-thanh-xa-hoa-thanh-tp-ca-mau-ca-mau-cu-phuong-hoa-thanh-tinh-ca-mau",
+    "name": "THCS Hòa Thành",
+    "normalizedName": "thcs hoa thanh",
+    "province": "C? Mau",
+    "oldAddress": "Xã Hòa Thành, TP Cà Mau, Cà Mau cũ",
+    "newAddress": "Phường Hòa Thành, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-hoa-tan-xa-hoa-tan-tp-ca-mau-ca-mau-cu-phuong-hoa-thanh-tinh-ca-mau",
+    "name": "THCS Hòa Tân",
+    "normalizedName": "thcs hoa tan",
+    "province": "C? Mau",
+    "oldAddress": "Xã Hòa Tân, TP Cà Mau, Cà Mau cũ",
+    "newAddress": "Phường Hòa Thành, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-an-xuyen-tp-ca-mau-ca-mau-cu-phuong-an-xuyen-tinh-ca-mau",
+    "name": "THCS An Xuyên",
+    "normalizedName": "thcs an xuyen",
+    "province": "C? Mau",
+    "oldAddress": "TP Cà Mau, Cà Mau cũ",
+    "newAddress": "Phường An Xuyên, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-thoi-binh-thi-tran-thoi-binh-huyen-thoi-binh-ca-mau-cu-xa-thoi-binh-tinh-ca-mau",
+    "name": "THCS Thới Bình",
+    "normalizedName": "thcs thoi binh",
+    "province": "C? Mau",
+    "oldAddress": "Thị trấn Thới Bình, Huyện Thới Bình, Cà Mau cũ",
+    "newAddress": "Xã Thới Bình, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-ho-thi-ky-xa-ho-thi-ky-huyen-thoi-binh-ca-mau-cu-xa-ho-thi-ky-tinh-ca-mau",
+    "name": "THCS Hồ Thị Kỷ",
+    "normalizedName": "thcs ho thi ky",
+    "province": "C? Mau",
+    "oldAddress": "Xã Hồ Thị Kỷ, Huyện Thới Bình, Cà Mau cũ",
+    "newAddress": "Xã Hồ Thị Kỷ, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-tan-loc-xa-tan-loc-huyen-thoi-binh-ca-mau-cu-xa-tan-loc-tinh-ca-mau",
+    "name": "THCS Tân Lộc",
+    "normalizedName": "thcs tan loc",
+    "province": "C? Mau",
+    "oldAddress": "Xã Tân Lộc, Huyện Thới Bình, Cà Mau cũ",
+    "newAddress": "Xã Tân Lộc, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-tan-loc-bac-xa-tan-loc-bac-huyen-thoi-binh-ca-mau-cu-xa-tan-loc-tinh-ca-mau",
+    "name": "THCS Tân Lộc Bắc",
+    "normalizedName": "thcs tan loc bac",
+    "province": "C? Mau",
+    "oldAddress": "Xã Tân Lộc Bắc, Huyện Thới Bình, Cà Mau cũ",
+    "newAddress": "Xã Tân Lộc, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-tan-bang-xa-tan-bang-huyen-thoi-binh-ca-mau-cu-xa-bien-bach-tinh-ca-mau",
+    "name": "THCS Tân Bằng",
+    "normalizedName": "thcs tan bang",
+    "province": "C? Mau",
+    "oldAddress": "Xã Tân Bằng, Huyện Thới Bình, Cà Mau cũ",
+    "newAddress": "Xã Biển Bạch, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-bien-bach-xa-bien-bach-huyen-thoi-binh-ca-mau-cu-xa-bien-bach-tinh-ca-mau",
+    "name": "THCS Biển Bạch",
+    "normalizedName": "thcs bien bach",
+    "province": "C? Mau",
+    "oldAddress": "Xã Biển Bạch, Huyện Thới Bình, Cà Mau cũ",
+    "newAddress": "Xã Biển Bạch, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-bien-bach-dong-xa-bien-bach-dong-huyen-thoi-binh-ca-mau-cu-xa-bien-bach-tinh-ca-mau",
+    "name": "THCS Biển Bạch Đông",
+    "normalizedName": "thcs bien bach dong",
+    "province": "C? Mau",
+    "oldAddress": "Xã Biển Bạch Đông, Huyện Thới Bình, Cà Mau cũ",
+    "newAddress": "Xã Biển Bạch, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-tri-phai-xa-tri-phai-huyen-thoi-binh-ca-mau-cu-xa-tri-phai-tinh-ca-mau",
+    "name": "THCS Trí Phải",
+    "normalizedName": "thcs tri phai",
+    "province": "C? Mau",
+    "oldAddress": "Xã Trí Phải, Huyện Thới Bình, Cà Mau cũ",
+    "newAddress": "Xã Trí Phải, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-tri-luc-xa-tri-luc-huyen-thoi-binh-ca-mau-cu-xa-tri-phai-tinh-ca-mau",
+    "name": "THCS Trí Lực",
+    "normalizedName": "thcs tri luc",
+    "province": "C? Mau",
+    "oldAddress": "Xã Trí Lực, Huyện Thới Bình, Cà Mau cũ",
+    "newAddress": "Xã Trí Phải, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-tan-phu-xa-tan-phu-huyen-thoi-binh-ca-mau-cu-xa-tri-phai-tinh-ca-mau",
+    "name": "THCS Tân Phú",
+    "normalizedName": "thcs tan phu",
+    "province": "C? Mau",
+    "oldAddress": "Xã Tân Phú, Huyện Thới Bình, Cà Mau cũ",
+    "newAddress": "Xã Trí Phải, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-nguyen-van-nguyen-huyen-thoi-binh-ca-mau-cu-xa-thoi-binh-tinh-ca-mau",
+    "name": "THCS Nguyễn Văn Nguyễn",
+    "normalizedName": "thcs nguyen van nguyen",
+    "province": "C? Mau",
+    "oldAddress": "Huyện Thới Bình, Cà Mau cũ",
+    "newAddress": "Xã Thới Bình, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-khanh-thoi-huyen-thoi-binh-ca-mau-cu-xa-thoi-binh-tinh-ca-mau",
+    "name": "THCS Khánh Thới",
+    "normalizedName": "thcs khanh thoi",
+    "province": "C? Mau",
+    "oldAddress": "Huyện Thới Bình, Cà Mau cũ",
+    "newAddress": "Xã Thới Bình, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-va-thpt-tan-loc-xa-tan-loc-huyen-thoi-binh-ca-mau-cu-xa-tan-loc-tinh-ca-mau",
+    "name": "THCS và THPT Tân Lộc",
+    "normalizedName": "thcs va thpt tan loc",
+    "province": "C? Mau",
+    "oldAddress": "Xã Tân Lộc, Huyện Thới Bình, Cà Mau cũ",
+    "newAddress": "Xã Tân Lộc, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-u-minh-thi-tran-u-minh-huyen-u-minh-ca-mau-cu-xa-nguyen-phich-tinh-ca-mau",
+    "name": "THCS U Minh",
+    "normalizedName": "thcs u minh",
+    "province": "C? Mau",
+    "oldAddress": "Thị trấn U Minh, Huyện U Minh, Cà Mau cũ",
+    "newAddress": "Xã Nguyễn Phích, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-nguyen-phich-xa-nguyen-phich-huyen-u-minh-ca-mau-cu-xa-nguyen-phich-tinh-ca-mau",
+    "name": "THCS Nguyễn Phích",
+    "normalizedName": "thcs nguyen phich",
+    "province": "C? Mau",
+    "oldAddress": "Xã Nguyễn Phích, Huyện U Minh, Cà Mau cũ",
+    "newAddress": "Xã Nguyễn Phích, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-khanh-an-xa-khanh-an-huyen-u-minh-ca-mau-cu-xa-khanh-an-tinh-ca-mau",
+    "name": "THCS Khánh An",
+    "normalizedName": "thcs khanh an",
+    "province": "C? Mau",
+    "oldAddress": "Xã Khánh An, Huyện U Minh, Cà Mau cũ",
+    "newAddress": "Xã Khánh An, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-khanh-lam-xa-khanh-lam-huyen-u-minh-ca-mau-cu-xa-khanh-lam-tinh-ca-mau",
+    "name": "THCS Khánh Lâm",
+    "normalizedName": "thcs khanh lam",
+    "province": "C? Mau",
+    "oldAddress": "Xã Khánh Lâm, Huyện U Minh, Cà Mau cũ",
+    "newAddress": "Xã Khánh Lâm, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-khanh-hoa-xa-khanh-hoa-huyen-u-minh-ca-mau-cu-xa-u-minh-tinh-ca-mau",
+    "name": "THCS Khánh Hòa",
+    "normalizedName": "thcs khanh hoa",
+    "province": "C? Mau",
+    "oldAddress": "Xã Khánh Hòa, Huyện U Minh, Cà Mau cũ",
+    "newAddress": "Xã U Minh, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-khanh-hoi-xa-khanh-hoi-huyen-u-minh-ca-mau-cu-xa-khanh-lam-tinh-ca-mau",
+    "name": "THCS Khánh Hội",
+    "normalizedName": "thcs khanh hoi",
+    "province": "C? Mau",
+    "oldAddress": "Xã Khánh Hội, Huyện U Minh, Cà Mau cũ",
+    "newAddress": "Xã Khánh Lâm, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-khanh-tien-xa-khanh-tien-huyen-u-minh-ca-mau-cu-xa-u-minh-tinh-ca-mau",
+    "name": "THCS Khánh Tiến",
+    "normalizedName": "thcs khanh tien",
+    "province": "C? Mau",
+    "oldAddress": "Xã Khánh Tiến, Huyện U Minh, Cà Mau cũ",
+    "newAddress": "Xã U Minh, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-khanh-thuan-xa-khanh-thuan-huyen-u-minh-ca-mau-cu-xa-nguyen-phich-tinh-ca-mau",
+    "name": "THCS Khánh Thuận",
+    "normalizedName": "thcs khanh thuan",
+    "province": "C? Mau",
+    "oldAddress": "Xã Khánh Thuận, Huyện U Minh, Cà Mau cũ",
+    "newAddress": "Xã Nguyễn Phích, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-va-thpt-khanh-an-xa-khanh-an-huyen-u-minh-ca-mau-cu-xa-khanh-an-tinh-ca-mau",
+    "name": "THCS và THPT Khánh An",
+    "normalizedName": "thcs va thpt khanh an",
+    "province": "C? Mau",
+    "oldAddress": "Xã Khánh An, Huyện U Minh, Cà Mau cũ",
+    "newAddress": "Xã Khánh An, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-tran-van-thoi-thi-tran-tran-van-thoi-huyen-tran-van-thoi-ca-mau-cu-xa-tran-van-thoi-tinh-ca-mau",
+    "name": "THCS Trần Văn Thời",
+    "normalizedName": "thcs tran van thoi",
+    "province": "C? Mau",
+    "oldAddress": "Thị trấn Trần Văn Thời, Huyện Trần Văn Thời, Cà Mau cũ",
+    "newAddress": "Xã Trần Văn Thời, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-song-doc-thi-tran-song-doc-huyen-tran-van-thoi-ca-mau-cu-xa-song-doc-tinh-ca-mau",
+    "name": "THCS Sông Đốc",
+    "normalizedName": "thcs song doc",
+    "province": "C? Mau",
+    "oldAddress": "Thị trấn Sông Đốc, Huyện Trần Văn Thời, Cà Mau cũ",
+    "newAddress": "Xã Sông Đốc, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-khanh-binh-xa-khanh-binh-huyen-tran-van-thoi-ca-mau-cu-xa-khanh-binh-tinh-ca-mau",
+    "name": "THCS Khánh Bình",
+    "normalizedName": "thcs khanh binh",
+    "province": "C? Mau",
+    "oldAddress": "Xã Khánh Bình, Huyện Trần Văn Thời, Cà Mau cũ",
+    "newAddress": "Xã Khánh Bình, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-khanh-binh-tay-xa-khanh-binh-tay-huyen-tran-van-thoi-ca-mau-cu-xa-da-bac-tinh-ca-mau",
+    "name": "THCS Khánh Bình Tây",
+    "normalizedName": "thcs khanh binh tay",
+    "province": "C? Mau",
+    "oldAddress": "Xã Khánh Bình Tây, Huyện Trần Văn Thời, Cà Mau cũ",
+    "newAddress": "Xã Đá Bạc, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-khanh-binh-tay-bac-xa-khanh-binh-tay-bac-huyen-tran-van-thoi-ca-mau-cu-xa-da-bac-tinh-ca-mau",
+    "name": "THCS Khánh Bình Tây Bắc",
+    "normalizedName": "thcs khanh binh tay bac",
+    "province": "C? Mau",
+    "oldAddress": "Xã Khánh Bình Tây Bắc, Huyện Trần Văn Thời, Cà Mau cũ",
+    "newAddress": "Xã Đá Bạc, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-loi-an-xa-loi-an-huyen-tran-van-thoi-ca-mau-cu-xa-tran-van-thoi-tinh-ca-mau",
+    "name": "THCS Lợi An",
+    "normalizedName": "thcs loi an",
+    "province": "C? Mau",
+    "oldAddress": "Xã Lợi An, Huyện Trần Văn Thời, Cà Mau cũ",
+    "newAddress": "Xã Trần Văn Thời, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-phong-lac-xa-phong-lac-huyen-tran-van-thoi-ca-mau-cu-xa-tran-van-thoi-tinh-ca-mau",
+    "name": "THCS Phong Lạc",
+    "normalizedName": "thcs phong lac",
+    "province": "C? Mau",
+    "oldAddress": "Xã Phong Lạc, Huyện Trần Văn Thời, Cà Mau cũ",
+    "newAddress": "Xã Trần Văn Thời, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-tran-hoi-xa-tran-hoi-huyen-tran-van-thoi-ca-mau-cu-xa-tran-van-thoi-tinh-ca-mau",
+    "name": "THCS Trần Hợi",
+    "normalizedName": "thcs tran hoi",
+    "province": "C? Mau",
+    "oldAddress": "Xã Trần Hợi, Huyện Trần Văn Thời, Cà Mau cũ",
+    "newAddress": "Xã Trần Văn Thời, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-khanh-hai-xa-khanh-hai-huyen-tran-van-thoi-ca-mau-cu-xa-khanh-hung-tinh-ca-mau",
+    "name": "THCS Khánh Hải",
+    "normalizedName": "thcs khanh hai",
+    "province": "C? Mau",
+    "oldAddress": "Xã Khánh Hải, Huyện Trần Văn Thời, Cà Mau cũ",
+    "newAddress": "Xã Khánh Hưng, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-khanh-hung-xa-khanh-hung-huyen-tran-van-thoi-ca-mau-cu-xa-khanh-hung-tinh-ca-mau",
+    "name": "THCS Khánh Hưng",
+    "normalizedName": "thcs khanh hung",
+    "province": "C? Mau",
+    "oldAddress": "Xã Khánh Hưng, Huyện Trần Văn Thời, Cà Mau cũ",
+    "newAddress": "Xã Khánh Hưng, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-phong-dien-xa-phong-dien-huyen-tran-van-thoi-ca-mau-cu-xa-tran-van-thoi-tinh-ca-mau",
+    "name": "THCS Phong Điền",
+    "normalizedName": "thcs phong dien",
+    "province": "C? Mau",
+    "oldAddress": "Xã Phong Điền, Huyện Trần Văn Thời, Cà Mau cũ",
+    "newAddress": "Xã Trần Văn Thời, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-da-bac-huyen-tran-van-thoi-ca-mau-cu-xa-da-bac-tinh-ca-mau",
+    "name": "THCS Đá Bạc",
+    "normalizedName": "thcs da bac",
+    "province": "C? Mau",
+    "oldAddress": "Huyện Trần Văn Thời, Cà Mau cũ",
+    "newAddress": "Xã Đá Bạc, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-cai-nuoc-thi-tran-cai-nuoc-huyen-cai-nuoc-ca-mau-cu-xa-cai-nuoc-tinh-ca-mau",
+    "name": "THCS Cái Nước",
+    "normalizedName": "thcs cai nuoc",
+    "province": "C? Mau",
+    "oldAddress": "Thị trấn Cái Nước, Huyện Cái Nước, Cà Mau cũ",
+    "newAddress": "Xã Cái Nước, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-tran-thoi-xa-tran-thoi-huyen-cai-nuoc-ca-mau-cu-xa-cai-nuoc-tinh-ca-mau",
+    "name": "THCS Trần Thới",
+    "normalizedName": "thcs tran thoi",
+    "province": "C? Mau",
+    "oldAddress": "Xã Trần Thới, Huyện Cái Nước, Cà Mau cũ",
+    "newAddress": "Xã Cái Nước, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-tan-hung-xa-tan-hung-huyen-cai-nuoc-ca-mau-cu-xa-tan-hung-tinh-ca-mau",
+    "name": "THCS Tân Hưng",
+    "normalizedName": "thcs tan hung",
+    "province": "C? Mau",
+    "oldAddress": "Xã Tân Hưng, Huyện Cái Nước, Cà Mau cũ",
+    "newAddress": "Xã Tân Hưng, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-tan-hung-dong-xa-tan-hung-dong-huyen-cai-nuoc-ca-mau-cu-xa-cai-nuoc-tinh-ca-mau",
+    "name": "THCS Tân Hưng Đông",
+    "normalizedName": "thcs tan hung dong",
+    "province": "C? Mau",
+    "oldAddress": "Xã Tân Hưng Đông, Huyện Cái Nước, Cà Mau cũ",
+    "newAddress": "Xã Cái Nước, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-hung-my-xa-hung-my-huyen-cai-nuoc-ca-mau-cu-xa-hung-my-tinh-ca-mau",
+    "name": "THCS Hưng Mỹ",
+    "normalizedName": "thcs hung my",
+    "province": "C? Mau",
+    "oldAddress": "Xã Hưng Mỹ, Huyện Cái Nước, Cà Mau cũ",
+    "newAddress": "Xã Hưng Mỹ, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-phu-hung-xa-phu-hung-huyen-cai-nuoc-ca-mau-cu-xa-luong-the-tran-tinh-ca-mau",
+    "name": "THCS Phú Hưng",
+    "normalizedName": "thcs phu hung",
+    "province": "C? Mau",
+    "oldAddress": "Xã Phú Hưng, Huyện Cái Nước, Cà Mau cũ",
+    "newAddress": "Xã Lương Thế Trân, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-luong-the-tran-xa-luong-the-tran-huyen-cai-nuoc-ca-mau-cu-xa-luong-the-tran-tinh-ca-mau",
+    "name": "THCS Lương Thế Trân",
+    "normalizedName": "thcs luong the tran",
+    "province": "C? Mau",
+    "oldAddress": "Xã Lương Thế Trân, Huyện Cái Nước, Cà Mau cũ",
+    "newAddress": "Xã Lương Thế Trân, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-hoa-my-xa-hoa-my-huyen-cai-nuoc-ca-mau-cu-xa-hung-my-tinh-ca-mau",
+    "name": "THCS Hòa Mỹ",
+    "normalizedName": "thcs hoa my",
+    "province": "C? Mau",
+    "oldAddress": "Xã Hòa Mỹ, Huyện Cái Nước, Cà Mau cũ",
+    "newAddress": "Xã Hưng Mỹ, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-dong-thoi-xa-dong-thoi-huyen-cai-nuoc-ca-mau-cu-xa-cai-nuoc-tinh-ca-mau",
+    "name": "THCS Đông Thới",
+    "normalizedName": "thcs dong thoi",
+    "province": "C? Mau",
+    "oldAddress": "Xã Đông Thới, Huyện Cái Nước, Cà Mau cũ",
+    "newAddress": "Xã Cái Nước, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-thanh-phu-xa-thanh-phu-huyen-cai-nuoc-ca-mau-cu-xa-luong-the-tran-tinh-ca-mau",
+    "name": "THCS Thạnh Phú",
+    "normalizedName": "thcs thanh phu",
+    "province": "C? Mau",
+    "oldAddress": "Xã Thạnh Phú, Huyện Cái Nước, Cà Mau cũ",
+    "newAddress": "Xã Lương Thế Trân, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-dong-hung-xa-dong-hung-huyen-cai-nuoc-ca-mau-cu-xa-cai-nuoc-tinh-ca-mau",
+    "name": "THCS Đông Hưng",
+    "normalizedName": "thcs dong hung",
+    "province": "C? Mau",
+    "oldAddress": "Xã Đông Hưng, Huyện Cái Nước, Cà Mau cũ",
+    "newAddress": "Xã Cái Nước, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-dam-doi-thi-tran-dam-doi-huyen-dam-doi-ca-mau-cu-xa-dam-doi-tinh-ca-mau",
+    "name": "THCS Đầm Dơi",
+    "normalizedName": "thcs dam doi",
+    "province": "C? Mau",
+    "oldAddress": "Thị trấn Đầm Dơi, Huyện Đầm Dơi, Cà Mau cũ",
+    "newAddress": "Xã Đầm Dơi, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-tan-duyet-xa-tan-duyet-huyen-dam-doi-ca-mau-cu-xa-dam-doi-tinh-ca-mau",
+    "name": "THCS Tân Duyệt",
+    "normalizedName": "thcs tan duyet",
+    "province": "C? Mau",
+    "oldAddress": "Xã Tân Duyệt, Huyện Đầm Dơi, Cà Mau cũ",
+    "newAddress": "Xã Đầm Dơi, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-ta-an-khuong-xa-ta-an-khuong-huyen-dam-doi-ca-mau-cu-xa-ta-an-khuong-tinh-ca-mau",
+    "name": "THCS Tạ An Khương",
+    "normalizedName": "thcs ta an khuong",
+    "province": "C? Mau",
+    "oldAddress": "Xã Tạ An Khương, Huyện Đầm Dơi, Cà Mau cũ",
+    "newAddress": "Xã Tạ An Khương, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-ta-an-khuong-dong-xa-ta-an-khuong-dong-huyen-dam-doi-ca-mau-cu-xa-ta-an-khuong-tinh-ca-mau",
+    "name": "THCS Tạ An Khương Đông",
+    "normalizedName": "thcs ta an khuong dong",
+    "province": "C? Mau",
+    "oldAddress": "Xã Tạ An Khương Đông, Huyện Đầm Dơi, Cà Mau cũ",
+    "newAddress": "Xã Tạ An Khương, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-tan-tien-xa-tan-tien-huyen-dam-doi-ca-mau-cu-xa-tan-tien-tinh-ca-mau",
+    "name": "THCS Tân Tiến",
+    "normalizedName": "thcs tan tien",
+    "province": "C? Mau",
+    "oldAddress": "Xã Tân Tiến, Huyện Đầm Dơi, Cà Mau cũ",
+    "newAddress": "Xã Tân Tiến, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-tan-thuan-xa-tan-thuan-huyen-dam-doi-ca-mau-cu-xa-tan-thuan-tinh-ca-mau",
+    "name": "THCS Tân Thuận",
+    "normalizedName": "thcs tan thuan",
+    "province": "C? Mau",
+    "oldAddress": "Xã Tân Thuận, Huyện Đầm Dơi, Cà Mau cũ",
+    "newAddress": "Xã Tân Thuận, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-tran-phan-xa-tran-phan-huyen-dam-doi-ca-mau-cu-xa-tran-phan-tinh-ca-mau",
+    "name": "THCS Trần Phán",
+    "normalizedName": "thcs tran phan",
+    "province": "C? Mau",
+    "oldAddress": "Xã Trần Phán, Huyện Đầm Dơi, Cà Mau cũ",
+    "newAddress": "Xã Trần Phán, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-quach-pham-xa-quach-pham-huyen-dam-doi-ca-mau-cu-xa-quach-pham-tinh-ca-mau",
+    "name": "THCS Quách Phẩm",
+    "normalizedName": "thcs quach pham",
+    "province": "C? Mau",
+    "oldAddress": "Xã Quách Phẩm, Huyện Đầm Dơi, Cà Mau cũ",
+    "newAddress": "Xã Quách Phẩm, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-quach-pham-bac-xa-quach-pham-bac-huyen-dam-doi-ca-mau-cu-xa-quach-pham-tinh-ca-mau",
+    "name": "THCS Quách Phẩm Bắc",
+    "normalizedName": "thcs quach pham bac",
+    "province": "C? Mau",
+    "oldAddress": "Xã Quách Phẩm Bắc, Huyện Đầm Dơi, Cà Mau cũ",
+    "newAddress": "Xã Quách Phẩm, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-thanh-tung-xa-thanh-tung-huyen-dam-doi-ca-mau-cu-xa-thanh-tung-tinh-ca-mau",
+    "name": "THCS Thanh Tùng",
+    "normalizedName": "thcs thanh tung",
+    "province": "C? Mau",
+    "oldAddress": "Xã Thanh Tùng, Huyện Đầm Dơi, Cà Mau cũ",
+    "newAddress": "Xã Thanh Tùng, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-ngoc-chanh-xa-ngoc-chanh-huyen-dam-doi-ca-mau-cu-xa-thanh-tung-tinh-ca-mau",
+    "name": "THCS Ngọc Chánh",
+    "normalizedName": "thcs ngoc chanh",
+    "province": "C? Mau",
+    "oldAddress": "Xã Ngọc Chánh, Huyện Đầm Dơi, Cà Mau cũ",
+    "newAddress": "Xã Thanh Tùng, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-nguyen-huan-xa-nguyen-huan-huyen-dam-doi-ca-mau-cu-xa-tan-tien-tinh-ca-mau",
+    "name": "THCS Nguyễn Huân",
+    "normalizedName": "thcs nguyen huan",
+    "province": "C? Mau",
+    "oldAddress": "Xã Nguyễn Huân, Huyện Đầm Dơi, Cà Mau cũ",
+    "newAddress": "Xã Tân Tiến, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-tan-dan-xa-tan-dan-huyen-dam-doi-ca-mau-cu-xa-dam-doi-tinh-ca-mau",
+    "name": "THCS Tân Dân",
+    "normalizedName": "thcs tan dan",
+    "province": "C? Mau",
+    "oldAddress": "Xã Tân Dân, Huyện Đầm Dơi, Cà Mau cũ",
+    "newAddress": "Xã Đầm Dơi, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-tan-duc-xa-tan-duc-huyen-dam-doi-ca-mau-cu-xa-tan-thuan-tinh-ca-mau",
+    "name": "THCS Tân Đức",
+    "normalizedName": "thcs tan duc",
+    "province": "C? Mau",
+    "oldAddress": "Xã Tân Đức, Huyện Đầm Dơi, Cà Mau cũ",
+    "newAddress": "Xã Tân Thuận, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-nam-can-thi-tran-nam-can-huyen-nam-can-ca-mau-cu-xa-nam-can-tinh-ca-mau",
+    "name": "THCS Năm Căn",
+    "normalizedName": "thcs nam can",
+    "province": "C? Mau",
+    "oldAddress": "Thị trấn Năm Căn, Huyện Năm Căn, Cà Mau cũ",
+    "newAddress": "Xã Năm Căn, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-ham-rong-xa-ham-rong-huyen-nam-can-ca-mau-cu-xa-nam-can-tinh-ca-mau",
+    "name": "THCS Hàm Rồng",
+    "normalizedName": "thcs ham rong",
+    "province": "C? Mau",
+    "oldAddress": "Xã Hàm Rồng, Huyện Năm Căn, Cà Mau cũ",
+    "newAddress": "Xã Năm Căn, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-hang-vinh-xa-hang-vinh-huyen-nam-can-ca-mau-cu-xa-nam-can-tinh-ca-mau",
+    "name": "THCS Hàng Vịnh",
+    "normalizedName": "thcs hang vinh",
+    "province": "C? Mau",
+    "oldAddress": "Xã Hàng Vịnh, Huyện Năm Căn, Cà Mau cũ",
+    "newAddress": "Xã Năm Căn, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-dat-moi-xa-dat-moi-huyen-nam-can-ca-mau-cu-xa-dat-moi-tinh-ca-mau",
+    "name": "THCS Đất Mới",
+    "normalizedName": "thcs dat moi",
+    "province": "C? Mau",
+    "oldAddress": "Xã Đất Mới, Huyện Năm Căn, Cà Mau cũ",
+    "newAddress": "Xã Đất Mới, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-hiep-tung-xa-hiep-tung-huyen-nam-can-ca-mau-cu-xa-tam-giang-tinh-ca-mau",
+    "name": "THCS Hiệp Tùng",
+    "normalizedName": "thcs hiep tung",
+    "province": "C? Mau",
+    "oldAddress": "Xã Hiệp Tùng, Huyện Năm Căn, Cà Mau cũ",
+    "newAddress": "Xã Tam Giang, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-tam-giang-xa-tam-giang-huyen-nam-can-ca-mau-cu-xa-tam-giang-tinh-ca-mau",
+    "name": "THCS Tam Giang",
+    "normalizedName": "thcs tam giang",
+    "province": "C? Mau",
+    "oldAddress": "Xã Tam Giang, Huyện Năm Căn, Cà Mau cũ",
+    "newAddress": "Xã Tam Giang, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-lam-hai-xa-lam-hai-huyen-nam-can-ca-mau-cu-xa-dat-moi-tinh-ca-mau",
+    "name": "THCS Lâm Hải",
+    "normalizedName": "thcs lam hai",
+    "province": "C? Mau",
+    "oldAddress": "Xã Lâm Hải, Huyện Năm Căn, Cà Mau cũ",
+    "newAddress": "Xã Đất Mới, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-rach-goc-thi-tran-rach-goc-huyen-ngoc-hien-ca-mau-cu-xa-phan-ngoc-hien-tinh-ca-mau",
+    "name": "THCS Rạch Gốc",
+    "normalizedName": "thcs rach goc",
+    "province": "C? Mau",
+    "oldAddress": "Thị trấn Rạch Gốc, Huyện Ngọc Hiển, Cà Mau cũ",
+    "newAddress": "Xã Phan Ngọc Hiển, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-tan-an-xa-tan-an-huyen-ngoc-hien-ca-mau-cu-xa-phan-ngoc-hien-tinh-ca-mau",
+    "name": "THCS Tân Ân",
+    "normalizedName": "thcs tan an",
+    "province": "C? Mau",
+    "oldAddress": "Xã Tân Ân, Huyện Ngọc Hiển, Cà Mau cũ",
+    "newAddress": "Xã Phan Ngọc Hiển, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-vien-an-xa-vien-an-huyen-ngoc-hien-ca-mau-cu-xa-dat-mui-tinh-ca-mau",
+    "name": "THCS Viên An",
+    "normalizedName": "thcs vien an",
+    "province": "C? Mau",
+    "oldAddress": "Xã Viên An, Huyện Ngọc Hiển, Cà Mau cũ",
+    "newAddress": "Xã Đất Mũi, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-vien-an-dong-xa-vien-an-dong-huyen-ngoc-hien-ca-mau-cu-xa-phan-ngoc-hien-tinh-ca-mau",
+    "name": "THCS Viên An Đông",
+    "normalizedName": "thcs vien an dong",
+    "province": "C? Mau",
+    "oldAddress": "Xã Viên An Đông, Huyện Ngọc Hiển, Cà Mau cũ",
+    "newAddress": "Xã Phan Ngọc Hiển, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-dat-mui-xa-dat-mui-huyen-ngoc-hien-ca-mau-cu-xa-dat-mui-tinh-ca-mau",
+    "name": "THCS Đất Mũi",
+    "normalizedName": "thcs dat mui",
+    "province": "C? Mau",
+    "oldAddress": "Xã Đất Mũi, Huyện Ngọc Hiển, Cà Mau cũ",
+    "newAddress": "Xã Đất Mũi, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-tam-giang-tay-xa-tam-giang-tay-huyen-ngoc-hien-ca-mau-cu-xa-tan-an-tinh-ca-mau",
+    "name": "THCS Tam Giang Tây",
+    "normalizedName": "thcs tam giang tay",
+    "province": "C? Mau",
+    "oldAddress": "Xã Tam Giang Tây, Huyện Ngọc Hiển, Cà Mau cũ",
+    "newAddress": "Xã Tân Ân, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-tan-an-tay-xa-tan-an-tay-huyen-ngoc-hien-ca-mau-cu-xa-tan-an-tinh-ca-mau",
+    "name": "THCS Tân Ân Tây",
+    "normalizedName": "thcs tan an tay",
+    "province": "C? Mau",
+    "oldAddress": "Xã Tân Ân Tây, Huyện Ngọc Hiển, Cà Mau cũ",
+    "newAddress": "Xã Tân Ân, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-va-thpt-vien-an-xa-vien-an-huyen-ngoc-hien-ca-mau-cu-xa-dat-mui-tinh-ca-mau",
+    "name": "THCS và THPT Viên An",
+    "normalizedName": "thcs va thpt vien an",
+    "province": "C? Mau",
+    "oldAddress": "Xã Viên An, Huyện Ngọc Hiển, Cà Mau cũ",
+    "newAddress": "Xã Đất Mũi, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-phu-tan-thi-tran-xa-phu-tan-huyen-phu-tan-ca-mau-cu-xa-phu-tan-tinh-ca-mau",
+    "name": "THCS Phú Tân",
+    "normalizedName": "thcs phu tan",
+    "province": "C? Mau",
+    "oldAddress": "Thị trấn/Xã Phú Tân, Huyện Phú Tân, Cà Mau cũ",
+    "newAddress": "Xã Phú Tân, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-cai-doi-vam-thi-tran-cai-doi-vam-huyen-phu-tan-ca-mau-cu-xa-cai-doi-vam-tinh-ca-mau",
+    "name": "THCS Cái Đôi Vàm",
+    "normalizedName": "thcs cai doi vam",
+    "province": "C? Mau",
+    "oldAddress": "Thị trấn Cái Đôi Vàm, Huyện Phú Tân, Cà Mau cũ",
+    "newAddress": "Xã Cái Đôi Vàm, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-phu-my-xa-phu-my-huyen-phu-tan-ca-mau-cu-xa-phu-my-tinh-ca-mau",
+    "name": "THCS Phú Mỹ",
+    "normalizedName": "thcs phu my",
+    "province": "C? Mau",
+    "oldAddress": "Xã Phú Mỹ, Huyện Phú Tân, Cà Mau cũ",
+    "newAddress": "Xã Phú Mỹ, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-phu-thuan-xa-phu-thuan-huyen-phu-tan-ca-mau-cu-xa-phu-my-tinh-ca-mau",
+    "name": "THCS Phú Thuận",
+    "normalizedName": "thcs phu thuan",
+    "province": "C? Mau",
+    "oldAddress": "Xã Phú Thuận, Huyện Phú Tân, Cà Mau cũ",
+    "newAddress": "Xã Phú Mỹ, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-rach-cheo-xa-rach-cheo-huyen-phu-tan-ca-mau-cu-xa-nguyen-viet-khai-tinh-ca-mau",
+    "name": "THCS Rạch Chèo",
+    "normalizedName": "thcs rach cheo",
+    "province": "C? Mau",
+    "oldAddress": "Xã Rạch Chèo, Huyện Phú Tân, Cà Mau cũ",
+    "newAddress": "Xã Nguyễn Việt Khái, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-tan-hai-xa-tan-hai-huyen-phu-tan-ca-mau-cu-xa-phu-tan-tinh-ca-mau",
+    "name": "THCS Tân Hải",
+    "normalizedName": "thcs tan hai",
+    "province": "C? Mau",
+    "oldAddress": "Xã Tân Hải, Huyện Phú Tân, Cà Mau cũ",
+    "newAddress": "Xã Phú Tân, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-nguyen-viet-khai-xa-nguyen-viet-khai-huyen-phu-tan-ca-mau-cu-xa-cai-doi-vam-tinh-ca-mau",
+    "name": "THCS Nguyễn Việt Khái",
+    "normalizedName": "thcs nguyen viet khai",
+    "province": "C? Mau",
+    "oldAddress": "Xã Nguyễn Việt Khái, Huyện Phú Tân, Cà Mau cũ",
+    "newAddress": "Xã Cái Đôi Vàm, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-viet-thang-xa-viet-thang-huyen-phu-tan-ca-mau-cu-xa-nguyen-viet-khai-tinh-ca-mau",
+    "name": "THCS Việt Thắng",
+    "normalizedName": "thcs viet thang",
+    "province": "C? Mau",
+    "oldAddress": "Xã Việt Thắng, Huyện Phú Tân, Cà Mau cũ",
+    "newAddress": "Xã Nguyễn Việt Khái, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-tran-huynh-tp-bac-lieu-bac-lieu-cu-phuong-bac-lieu-tinh-ca-mau",
+    "name": "THCS Trần Huỳnh",
+    "normalizedName": "thcs tran huynh",
+    "province": "C? Mau",
+    "oldAddress": "TP Bạc Liêu, Bạc Liêu cũ",
+    "newAddress": "Phường Bạc Liêu, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-vo-thi-sau-tp-bac-lieu-bac-lieu-cu-phuong-bac-lieu-tinh-ca-mau",
+    "name": "THCS Võ Thị Sáu",
+    "normalizedName": "thcs vo thi sau",
+    "province": "C? Mau",
+    "oldAddress": "TP Bạc Liêu, Bạc Liêu cũ",
+    "newAddress": "Phường Bạc Liêu, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-le-hong-phong-tp-bac-lieu-bac-lieu-cu-phuong-bac-lieu-tinh-ca-mau",
+    "name": "THCS Lê Hồng Phong",
+    "normalizedName": "thcs le hong phong",
+    "province": "C? Mau",
+    "oldAddress": "TP Bạc Liêu, Bạc Liêu cũ",
+    "newAddress": "Phường Bạc Liêu, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-tran-phu-tp-bac-lieu-bac-lieu-cu-phuong-bac-lieu-tinh-ca-mau",
+    "name": "THCS Trần Phú",
+    "normalizedName": "thcs tran phu",
+    "province": "C? Mau",
+    "oldAddress": "TP Bạc Liêu, Bạc Liêu cũ",
+    "newAddress": "Phường Bạc Liêu, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-nguyen-thi-minh-khai-tp-bac-lieu-bac-lieu-cu-phuong-bac-lieu-tinh-ca-mau",
+    "name": "THCS Nguyễn Thị Minh Khai",
+    "normalizedName": "thcs nguyen thi minh khai",
+    "province": "C? Mau",
+    "oldAddress": "TP Bạc Liêu, Bạc Liêu cũ",
+    "newAddress": "Phường Bạc Liêu, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-nguyen-van-troi-tp-bac-lieu-bac-lieu-cu-phuong-bac-lieu-tinh-ca-mau",
+    "name": "THCS Nguyễn Văn Trỗi",
+    "normalizedName": "thcs nguyen van troi",
+    "province": "C? Mau",
+    "oldAddress": "TP Bạc Liêu, Bạc Liêu cũ",
+    "newAddress": "Phường Bạc Liêu, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-hiep-thanh-tp-bac-lieu-bac-lieu-cu-phuong-hiep-thanh-tinh-ca-mau",
+    "name": "THCS Hiệp Thành",
+    "normalizedName": "thcs hiep thanh",
+    "province": "C? Mau",
+    "oldAddress": "TP Bạc Liêu, Bạc Liêu cũ",
+    "newAddress": "Phường Hiệp Thành, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-vinh-trach-xa-vinh-trach-tp-bac-lieu-bac-lieu-cu-phuong-vinh-trach-tinh-ca-mau",
+    "name": "THCS Vĩnh Trạch",
+    "normalizedName": "thcs vinh trach",
+    "province": "C? Mau",
+    "oldAddress": "Xã Vĩnh Trạch, TP Bạc Liêu, Bạc Liêu cũ",
+    "newAddress": "Phường Vĩnh Trạch, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-vinh-trach-dong-xa-vinh-trach-dong-tp-bac-lieu-bac-lieu-cu-phuong-hiep-thanh-tinh-ca-mau",
+    "name": "THCS Vĩnh Trạch Đông",
+    "normalizedName": "thcs vinh trach dong",
+    "province": "C? Mau",
+    "oldAddress": "Xã Vĩnh Trạch Đông, TP Bạc Liêu, Bạc Liêu cũ",
+    "newAddress": "Phường Hiệp Thành, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-nha-mat-phuong-nha-mat-tp-bac-lieu-bac-lieu-cu-phuong-hiep-thanh-tinh-ca-mau",
+    "name": "THCS Nhà Mát",
+    "normalizedName": "thcs nha mat",
+    "province": "C? Mau",
+    "oldAddress": "Phường Nhà Mát, TP Bạc Liêu, Bạc Liêu cũ",
+    "newAddress": "Phường Hiệp Thành, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-le-quy-don-tp-bac-lieu-bac-lieu-cu-phuong-bac-lieu-tinh-ca-mau",
+    "name": "THCS Lê Quý Đôn",
+    "normalizedName": "thcs le quy don",
+    "province": "C? Mau",
+    "oldAddress": "TP Bạc Liêu, Bạc Liêu cũ",
+    "newAddress": "Phường Bạc Liêu, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-hong-dan-thi-tran-ngan-dua-hong-dan-huyen-hong-dan-bac-lieu-cu-xa-hong-dan-tinh-ca-mau",
+    "name": "THCS Hồng Dân",
+    "normalizedName": "thcs hong dan",
+    "province": "C? Mau",
+    "oldAddress": "Thị trấn Ngan Dừa/Hồng Dân, Huyện Hồng Dân, Bạc Liêu cũ",
+    "newAddress": "Xã Hồng Dân, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-ngan-dua-thi-tran-ngan-dua-huyen-hong-dan-bac-lieu-cu-xa-hong-dan-tinh-ca-mau",
+    "name": "THCS Ngan Dừa",
+    "normalizedName": "thcs ngan dua",
+    "province": "C? Mau",
+    "oldAddress": "Thị trấn Ngan Dừa, Huyện Hồng Dân, Bạc Liêu cũ",
+    "newAddress": "Xã Hồng Dân, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-ninh-quoi-xa-ninh-quoi-huyen-hong-dan-bac-lieu-cu-xa-ninh-quoi-tinh-ca-mau",
+    "name": "THCS Ninh Quới",
+    "normalizedName": "thcs ninh quoi",
+    "province": "C? Mau",
+    "oldAddress": "Xã Ninh Quới, Huyện Hồng Dân, Bạc Liêu cũ",
+    "newAddress": "Xã Ninh Quới, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-ninh-quoi-a-xa-ninh-quoi-a-huyen-hong-dan-bac-lieu-cu-xa-ninh-quoi-tinh-ca-mau",
+    "name": "THCS Ninh Quới A",
+    "normalizedName": "thcs ninh quoi a",
+    "province": "C? Mau",
+    "oldAddress": "Xã Ninh Quới A, Huyện Hồng Dân, Bạc Liêu cũ",
+    "newAddress": "Xã Ninh Quới, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-ninh-thanh-loi-xa-ninh-thanh-loi-huyen-hong-dan-bac-lieu-cu-xa-ninh-thanh-loi-tinh-ca-mau",
+    "name": "THCS Ninh Thạnh Lợi",
+    "normalizedName": "thcs ninh thanh loi",
+    "province": "C? Mau",
+    "oldAddress": "Xã Ninh Thạnh Lợi, Huyện Hồng Dân, Bạc Liêu cũ",
+    "newAddress": "Xã Ninh Thạnh Lợi, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-ninh-thanh-loi-a-xa-ninh-thanh-loi-a-huyen-hong-dan-bac-lieu-cu-xa-ninh-thanh-loi-tinh-ca-mau",
+    "name": "THCS Ninh Thạnh Lợi A",
+    "normalizedName": "thcs ninh thanh loi a",
+    "province": "C? Mau",
+    "oldAddress": "Xã Ninh Thạnh Lợi A, Huyện Hồng Dân, Bạc Liêu cũ",
+    "newAddress": "Xã Ninh Thạnh Lợi, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-vinh-loc-xa-vinh-loc-huyen-hong-dan-bac-lieu-cu-xa-vinh-loc-tinh-ca-mau",
+    "name": "THCS Vĩnh Lộc",
+    "normalizedName": "thcs vinh loc",
+    "province": "C? Mau",
+    "oldAddress": "Xã Vĩnh Lộc, Huyện Hồng Dân, Bạc Liêu cũ",
+    "newAddress": "Xã Vĩnh Lộc, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-vinh-loc-a-xa-vinh-loc-a-huyen-hong-dan-bac-lieu-cu-xa-vinh-loc-tinh-ca-mau",
+    "name": "THCS Vĩnh Lộc A",
+    "normalizedName": "thcs vinh loc a",
+    "province": "C? Mau",
+    "oldAddress": "Xã Vĩnh Lộc A, Huyện Hồng Dân, Bạc Liêu cũ",
+    "newAddress": "Xã Vĩnh Lộc, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-loc-ninh-xa-loc-ninh-huyen-hong-dan-bac-lieu-cu-xa-hong-dan-tinh-ca-mau",
+    "name": "THCS Lộc Ninh",
+    "normalizedName": "thcs loc ninh",
+    "province": "C? Mau",
+    "oldAddress": "Xã Lộc Ninh, Huyện Hồng Dân, Bạc Liêu cũ",
+    "newAddress": "Xã Hồng Dân, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-vinh-loc-b-xa-vinh-loc-b-huyen-hong-dan-bac-lieu-cu-xa-vinh-loc-tinh-ca-mau",
+    "name": "THCS Vĩnh Lộc B",
+    "normalizedName": "thcs vinh loc b",
+    "province": "C? Mau",
+    "oldAddress": "Xã Vĩnh Lộc B, Huyện Hồng Dân, Bạc Liêu cũ",
+    "newAddress": "Xã Vĩnh Lộc, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-phuoc-long-thi-tran-phuoc-long-huyen-phuoc-long-bac-lieu-cu-xa-phuoc-long-tinh-ca-mau",
+    "name": "THCS Phước Long",
+    "normalizedName": "thcs phuoc long",
+    "province": "C? Mau",
+    "oldAddress": "Thị trấn Phước Long, Huyện Phước Long, Bạc Liêu cũ",
+    "newAddress": "Xã Phước Long, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-vinh-phu-dong-xa-vinh-phu-dong-huyen-phuoc-long-bac-lieu-cu-xa-phuoc-long-tinh-ca-mau",
+    "name": "THCS Vĩnh Phú Đông",
+    "normalizedName": "thcs vinh phu dong",
+    "province": "C? Mau",
+    "oldAddress": "Xã Vĩnh Phú Đông, Huyện Phước Long, Bạc Liêu cũ",
+    "newAddress": "Xã Phước Long, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-vinh-phu-tay-xa-vinh-phu-tay-huyen-phuoc-long-bac-lieu-cu-xa-vinh-phuoc-tinh-ca-mau",
+    "name": "THCS Vĩnh Phú Tây",
+    "normalizedName": "thcs vinh phu tay",
+    "province": "C? Mau",
+    "oldAddress": "Xã Vĩnh Phú Tây, Huyện Phước Long, Bạc Liêu cũ",
+    "newAddress": "Xã Vĩnh Phước, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-vinh-thanh-xa-vinh-thanh-huyen-phuoc-long-bac-lieu-cu-xa-vinh-thanh-tinh-ca-mau",
+    "name": "THCS Vĩnh Thanh",
+    "normalizedName": "thcs vinh thanh",
+    "province": "C? Mau",
+    "oldAddress": "Xã Vĩnh Thanh, Huyện Phước Long, Bạc Liêu cũ",
+    "newAddress": "Xã Vĩnh Thanh, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-xa-phuoc-long-xa-phuoc-long-huyen-phuoc-long-bac-lieu-cu-xa-vinh-phuoc-tinh-ca-mau",
+    "name": "THCS xã Phước Long",
+    "normalizedName": "thcs xa phuoc long",
+    "province": "C? Mau",
+    "oldAddress": "Xã Phước Long, Huyện Phước Long, Bạc Liêu cũ",
+    "newAddress": "Xã Vĩnh Phước, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-phong-thanh-tay-a-xa-phong-thanh-tay-a-huyen-phuoc-long-bac-lieu-cu-xa-phong-hiep-tinh-ca-mau",
+    "name": "THCS Phong Thạnh Tây A",
+    "normalizedName": "thcs phong thanh tay a",
+    "province": "C? Mau",
+    "oldAddress": "Xã Phong Thạnh Tây A, Huyện Phước Long, Bạc Liêu cũ",
+    "newAddress": "Xã Phong Hiệp, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-phong-thanh-tay-b-xa-phong-thanh-tay-b-huyen-phuoc-long-bac-lieu-cu-xa-phong-hiep-tinh-ca-mau",
+    "name": "THCS Phong Thạnh Tây B",
+    "normalizedName": "thcs phong thanh tay b",
+    "province": "C? Mau",
+    "oldAddress": "Xã Phong Thạnh Tây B, Huyện Phước Long, Bạc Liêu cũ",
+    "newAddress": "Xã Phong Hiệp, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-hung-phu-xa-hung-phu-huyen-phuoc-long-bac-lieu-cu-xa-vinh-thanh-tinh-ca-mau",
+    "name": "THCS Hưng Phú",
+    "normalizedName": "thcs hung phu",
+    "province": "C? Mau",
+    "oldAddress": "Xã Hưng Phú, Huyện Phước Long, Bạc Liêu cũ",
+    "newAddress": "Xã Vĩnh Thanh, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-vinh-loi-thi-tran-chau-hung-vinh-loi-huyen-vinh-loi-bac-lieu-cu-xa-vinh-loi-tinh-ca-mau",
+    "name": "THCS Vĩnh Lợi",
+    "normalizedName": "thcs vinh loi",
+    "province": "C? Mau",
+    "oldAddress": "Thị trấn Châu Hưng/Vĩnh Lợi, Huyện Vĩnh Lợi, Bạc Liêu cũ",
+    "newAddress": "Xã Vĩnh Lợi, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-chau-hung-thi-tran-chau-hung-huyen-vinh-loi-bac-lieu-cu-xa-vinh-loi-tinh-ca-mau",
+    "name": "THCS Châu Hưng",
+    "normalizedName": "thcs chau hung",
+    "province": "C? Mau",
+    "oldAddress": "Thị trấn Châu Hưng, Huyện Vĩnh Lợi, Bạc Liêu cũ",
+    "newAddress": "Xã Vĩnh Lợi, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-chau-hung-a-xa-chau-hung-a-huyen-vinh-loi-bac-lieu-cu-xa-vinh-loi-tinh-ca-mau",
+    "name": "THCS Châu Hưng A",
+    "normalizedName": "thcs chau hung a",
+    "province": "C? Mau",
+    "oldAddress": "Xã Châu Hưng A, Huyện Vĩnh Lợi, Bạc Liêu cũ",
+    "newAddress": "Xã Vĩnh Lợi, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-hung-hoi-xa-hung-hoi-huyen-vinh-loi-bac-lieu-cu-xa-hung-hoi-tinh-ca-mau",
+    "name": "THCS Hưng Hội",
+    "normalizedName": "thcs hung hoi",
+    "province": "C? Mau",
+    "oldAddress": "Xã Hưng Hội, Huyện Vĩnh Lợi, Bạc Liêu cũ",
+    "newAddress": "Xã Hưng Hội, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-hung-thanh-xa-hung-thanh-huyen-vinh-loi-bac-lieu-cu-xa-hung-hoi-tinh-ca-mau",
+    "name": "THCS Hưng Thành",
+    "normalizedName": "thcs hung thanh",
+    "province": "C? Mau",
+    "oldAddress": "Xã Hưng Thành, Huyện Vĩnh Lợi, Bạc Liêu cũ",
+    "newAddress": "Xã Hưng Hội, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-long-thanh-xa-long-thanh-huyen-vinh-loi-bac-lieu-cu-xa-hoa-binh-tinh-ca-mau",
+    "name": "THCS Long Thạnh",
+    "normalizedName": "thcs long thanh",
+    "province": "C? Mau",
+    "oldAddress": "Xã Long Thạnh, Huyện Vĩnh Lợi, Bạc Liêu cũ",
+    "newAddress": "Xã Hòa Bình, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-vinh-hung-xa-vinh-hung-huyen-vinh-loi-bac-lieu-cu-xa-chau-thoi-tinh-ca-mau",
+    "name": "THCS Vĩnh Hưng",
+    "normalizedName": "thcs vinh hung",
+    "province": "C? Mau",
+    "oldAddress": "Xã Vĩnh Hưng, Huyện Vĩnh Lợi, Bạc Liêu cũ",
+    "newAddress": "Xã Châu Thới, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-vinh-hung-a-xa-vinh-hung-a-huyen-vinh-loi-bac-lieu-cu-xa-chau-thoi-tinh-ca-mau",
+    "name": "THCS Vĩnh Hưng A",
+    "normalizedName": "thcs vinh hung a",
+    "province": "C? Mau",
+    "oldAddress": "Xã Vĩnh Hưng A, Huyện Vĩnh Lợi, Bạc Liêu cũ",
+    "newAddress": "Xã Châu Thới, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-chau-thoi-xa-chau-thoi-huyen-vinh-loi-bac-lieu-cu-xa-chau-thoi-tinh-ca-mau",
+    "name": "THCS Châu Thới",
+    "normalizedName": "thcs chau thoi",
+    "province": "C? Mau",
+    "oldAddress": "Xã Châu Thới, Huyện Vĩnh Lợi, Bạc Liêu cũ",
+    "newAddress": "Xã Châu Thới, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-hoa-binh-thi-tran-hoa-binh-huyen-hoa-binh-bac-lieu-cu-xa-hoa-binh-tinh-ca-mau",
+    "name": "THCS Hòa Bình",
+    "normalizedName": "thcs hoa binh",
+    "province": "C? Mau",
+    "oldAddress": "Thị trấn Hòa Bình, Huyện Hòa Bình, Bạc Liêu cũ",
+    "newAddress": "Xã Hòa Bình, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-minh-dieu-xa-minh-dieu-huyen-hoa-binh-bac-lieu-cu-xa-vinh-my-tinh-ca-mau",
+    "name": "THCS Minh Diệu",
+    "normalizedName": "thcs minh dieu",
+    "province": "C? Mau",
+    "oldAddress": "Xã Minh Diệu, Huyện Hòa Bình, Bạc Liêu cũ",
+    "newAddress": "Xã Vĩnh Mỹ, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-vinh-my-a-xa-vinh-my-a-huyen-hoa-binh-bac-lieu-cu-xa-hoa-binh-tinh-ca-mau",
+    "name": "THCS Vĩnh Mỹ A",
+    "normalizedName": "thcs vinh my a",
+    "province": "C? Mau",
+    "oldAddress": "Xã Vĩnh Mỹ A, Huyện Hòa Bình, Bạc Liêu cũ",
+    "newAddress": "Xã Hòa Bình, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-vinh-my-b-xa-vinh-my-b-huyen-hoa-binh-bac-lieu-cu-xa-vinh-my-tinh-ca-mau",
+    "name": "THCS Vĩnh Mỹ B",
+    "normalizedName": "thcs vinh my b",
+    "province": "C? Mau",
+    "oldAddress": "Xã Vĩnh Mỹ B, Huyện Hòa Bình, Bạc Liêu cũ",
+    "newAddress": "Xã Vĩnh Mỹ, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-vinh-hau-xa-vinh-hau-huyen-hoa-binh-bac-lieu-cu-xa-vinh-hau-tinh-ca-mau",
+    "name": "THCS Vĩnh Hậu",
+    "normalizedName": "thcs vinh hau",
+    "province": "C? Mau",
+    "oldAddress": "Xã Vĩnh Hậu, Huyện Hòa Bình, Bạc Liêu cũ",
+    "newAddress": "Xã Vĩnh Hậu, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-vinh-hau-a-xa-vinh-hau-a-huyen-hoa-binh-bac-lieu-cu-xa-vinh-hau-tinh-ca-mau",
+    "name": "THCS Vĩnh Hậu A",
+    "normalizedName": "thcs vinh hau a",
+    "province": "C? Mau",
+    "oldAddress": "Xã Vĩnh Hậu A, Huyện Hòa Bình, Bạc Liêu cũ",
+    "newAddress": "Xã Vĩnh Hậu, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-vinh-thinh-xa-vinh-thinh-huyen-hoa-binh-bac-lieu-cu-xa-vinh-hau-tinh-ca-mau",
+    "name": "THCS Vĩnh Thịnh",
+    "normalizedName": "thcs vinh thinh",
+    "province": "C? Mau",
+    "oldAddress": "Xã Vĩnh Thịnh, Huyện Hòa Bình, Bạc Liêu cũ",
+    "newAddress": "Xã Vĩnh Hậu, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-gia-rai-thi-xa-gia-rai-bac-lieu-cu-phuong-gia-rai-tinh-ca-mau",
+    "name": "THCS Giá Rai",
+    "normalizedName": "thcs gia rai",
+    "province": "C? Mau",
+    "oldAddress": "Thị xã Giá Rai, Bạc Liêu cũ",
+    "newAddress": "Phường Giá Rai, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-ho-phong-phuong-ho-phong-thi-xa-gia-rai-bac-lieu-cu-phuong-gia-rai-tinh-ca-mau",
+    "name": "THCS Hộ Phòng",
+    "normalizedName": "thcs ho phong",
+    "province": "C? Mau",
+    "oldAddress": "Phường Hộ Phòng, Thị xã Giá Rai, Bạc Liêu cũ",
+    "newAddress": "Phường Giá Rai, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-lang-tron-phuong-lang-tron-thi-xa-gia-rai-bac-lieu-cu-phuong-lang-tron-tinh-ca-mau",
+    "name": "THCS Láng Tròn",
+    "normalizedName": "thcs lang tron",
+    "province": "C? Mau",
+    "oldAddress": "Phường Láng Tròn, Thị xã Giá Rai, Bạc Liêu cũ",
+    "newAddress": "Phường Láng Tròn, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-phong-thanh-a-xa-phong-thanh-a-thi-xa-gia-rai-bac-lieu-cu-phuong-gia-rai-tinh-ca-mau",
+    "name": "THCS Phong Thạnh A",
+    "normalizedName": "thcs phong thanh a",
+    "province": "C? Mau",
+    "oldAddress": "Xã Phong Thạnh A, Thị xã Giá Rai, Bạc Liêu cũ",
+    "newAddress": "Phường Giá Rai, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-phong-thanh-xa-phong-thanh-thi-xa-gia-rai-bac-lieu-cu-phuong-gia-rai-tinh-ca-mau",
+    "name": "THCS Phong Thạnh",
+    "normalizedName": "thcs phong thanh",
+    "province": "C? Mau",
+    "oldAddress": "Xã Phong Thạnh, Thị xã Giá Rai, Bạc Liêu cũ",
+    "newAddress": "Phường Giá Rai, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-phong-thanh-dong-xa-phong-thanh-dong-thi-xa-gia-rai-bac-lieu-cu-phuong-lang-tron-tinh-ca-mau",
+    "name": "THCS Phong Thạnh Đông",
+    "normalizedName": "thcs phong thanh dong",
+    "province": "C? Mau",
+    "oldAddress": "Xã Phong Thạnh Đông, Thị xã Giá Rai, Bạc Liêu cũ",
+    "newAddress": "Phường Láng Tròn, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-phong-tan-xa-phong-tan-thi-xa-gia-rai-bac-lieu-cu-phuong-lang-tron-tinh-ca-mau",
+    "name": "THCS Phong Tân",
+    "normalizedName": "thcs phong tan",
+    "province": "C? Mau",
+    "oldAddress": "Xã Phong Tân, Thị xã Giá Rai, Bạc Liêu cũ",
+    "newAddress": "Phường Láng Tròn, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-tan-phong-xa-tan-phong-thi-xa-gia-rai-bac-lieu-cu-xa-phong-thanh-tinh-ca-mau",
+    "name": "THCS Tân Phong",
+    "normalizedName": "thcs tan phong",
+    "province": "C? Mau",
+    "oldAddress": "Xã Tân Phong, Thị xã Giá Rai, Bạc Liêu cũ",
+    "newAddress": "Xã Phong Thạnh, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-tan-thanh-xa-tan-thanh-thi-xa-gia-rai-bac-lieu-cu-xa-phong-thanh-tinh-ca-mau",
+    "name": "THCS Tân Thạnh",
+    "normalizedName": "thcs tan thanh",
+    "province": "C? Mau",
+    "oldAddress": "Xã Tân Thạnh, Thị xã Giá Rai, Bạc Liêu cũ",
+    "newAddress": "Xã Phong Thạnh, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-tan-phu-xa-tan-phu-thi-xa-gia-rai-bac-lieu-cu-xa-phong-thanh-tinh-ca-mau",
+    "name": "THCS Tân Phú",
+    "normalizedName": "thcs tan phu",
+    "province": "C? Mau",
+    "oldAddress": "Xã Tân Phú, Thị xã Giá Rai, Bạc Liêu cũ",
+    "newAddress": "Xã Phong Thạnh, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-ganh-hao-thi-tran-ganh-hao-huyen-dong-hai-bac-lieu-cu-xa-ganh-hao-tinh-ca-mau",
+    "name": "THCS Gành Hào",
+    "normalizedName": "thcs ganh hao",
+    "province": "C? Mau",
+    "oldAddress": "Thị trấn Gành Hào, Huyện Đông Hải, Bạc Liêu cũ",
+    "newAddress": "Xã Gành Hào, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-long-dien-xa-long-dien-huyen-dong-hai-bac-lieu-cu-xa-long-dien-tinh-ca-mau",
+    "name": "THCS Long Điền",
+    "normalizedName": "thcs long dien",
+    "province": "C? Mau",
+    "oldAddress": "Xã Long Điền, Huyện Đông Hải, Bạc Liêu cũ",
+    "newAddress": "Xã Long Điền, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-long-dien-dong-xa-long-dien-dong-huyen-dong-hai-bac-lieu-cu-xa-dong-hai-tinh-ca-mau",
+    "name": "THCS Long Điền Đông",
+    "normalizedName": "thcs long dien dong",
+    "province": "C? Mau",
+    "oldAddress": "Xã Long Điền Đông, Huyện Đông Hải, Bạc Liêu cũ",
+    "newAddress": "Xã Đông Hải, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-long-dien-tay-xa-long-dien-tay-huyen-dong-hai-bac-lieu-cu-xa-ganh-hao-tinh-ca-mau",
+    "name": "THCS Long Điền Tây",
+    "normalizedName": "thcs long dien tay",
+    "province": "C? Mau",
+    "oldAddress": "Xã Long Điền Tây, Huyện Đông Hải, Bạc Liêu cũ",
+    "newAddress": "Xã Gành Hào, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-dien-hai-xa-dien-hai-huyen-dong-hai-bac-lieu-cu-xa-long-dien-tinh-ca-mau",
+    "name": "THCS Điền Hải",
+    "normalizedName": "thcs dien hai",
+    "province": "C? Mau",
+    "oldAddress": "Xã Điền Hải, Huyện Đông Hải, Bạc Liêu cũ",
+    "newAddress": "Xã Long Điền, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-an-trach-xa-an-trach-huyen-dong-hai-bac-lieu-cu-xa-an-trach-tinh-ca-mau",
+    "name": "THCS An Trạch",
+    "normalizedName": "thcs an trach",
+    "province": "C? Mau",
+    "oldAddress": "Xã An Trạch, Huyện Đông Hải, Bạc Liêu cũ",
+    "newAddress": "Xã An Trạch, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-an-trach-a-xa-an-trach-a-huyen-dong-hai-bac-lieu-cu-xa-an-trach-tinh-ca-mau",
+    "name": "THCS An Trạch A",
+    "normalizedName": "thcs an trach a",
+    "province": "C? Mau",
+    "oldAddress": "Xã An Trạch A, Huyện Đông Hải, Bạc Liêu cũ",
+    "newAddress": "Xã An Trạch, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-dinh-thanh-xa-dinh-thanh-huyen-dong-hai-bac-lieu-cu-xa-dinh-thanh-tinh-ca-mau",
+    "name": "THCS Định Thành",
+    "normalizedName": "thcs dinh thanh",
+    "province": "C? Mau",
+    "oldAddress": "Xã Định Thành, Huyện Đông Hải, Bạc Liêu cũ",
+    "newAddress": "Xã Định Thành, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-dinh-thanh-a-xa-dinh-thanh-a-huyen-dong-hai-bac-lieu-cu-xa-dinh-thanh-tinh-ca-mau",
+    "name": "THCS Định Thành A",
+    "normalizedName": "thcs dinh thanh a",
+    "province": "C? Mau",
+    "oldAddress": "Xã Định Thành A, Huyện Đông Hải, Bạc Liêu cũ",
+    "newAddress": "Xã Định Thành, tỉnh Cà Mau"
+  },
+  {
+    "id": "thcs-dong-hai-huyen-dong-hai-bac-lieu-cu-xa-dong-hai-tinh-ca-mau",
+    "name": "THCS Đông Hải",
+    "normalizedName": "thcs dong hai",
+    "province": "C? Mau",
+    "oldAddress": "Huyện Đông Hải, Bạc Liêu cũ",
+    "newAddress": "Xã Đông Hải, tỉnh Cà Mau"
+  },
+  {
+    "id": "truong-ptdt-noi-tru-tinh-ca-mau-tp-ca-mau-ca-mau-cu-phuong-an-xuyen-tinh-ca-mau",
+    "name": "Trường PTDT Nội trú tỉnh Cà Mau",
+    "normalizedName": "truong ptdt noi tru tinh ca mau",
+    "province": "C? Mau",
+    "oldAddress": "TP Cà Mau, Cà Mau cũ",
+    "newAddress": "Phường An Xuyên, tỉnh Cà Mau"
+  },
+  {
+    "id": "truong-ptdt-noi-tru-tinh-bac-lieu-tp-bac-lieu-bac-lieu-cu-phuong-bac-lieu-tinh-ca-mau",
+    "name": "Trường PTDT Nội trú tỉnh Bạc Liêu",
+    "normalizedName": "truong ptdt noi tru tinh bac lieu",
+    "province": "C? Mau",
+    "oldAddress": "TP Bạc Liêu, Bạc Liêu cũ",
+    "newAddress": "Phường Bạc Liêu, tỉnh Cà Mau"
+  }
+]

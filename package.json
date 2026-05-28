@@ -5,10 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && next build",
+    "build": "npm run validate:secondary-schools && prisma generate && next build",
     "start": "next start",
     "lint": "eslint .",
     "vercel-build": "node scripts/vercel-build.mjs",
+    "validate:secondary-schools": "tsx scripts/validate-secondary-schools-csv.ts",
+    "test:pdf": "tsx scripts/test-registration-form-pdf.ts",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:deploy": "prisma migrate deploy",
@@ -17,6 +19,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "latest",
+    "@pdf-lib/fontkit": "^1.1.1",
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "latest",
     "@sparticuz/chromium": "latest",

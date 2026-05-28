@@ -12,14 +12,19 @@ import { prisma } from "@/lib/prisma";
 import { calculateAdmissionScoreDetails } from "@/lib/admission-score";
 import {
   ACADEMIC_LEVEL_LABELS,
+  ADMISSION_PUBLICATION_LABELS,
+  ADMISSION_RESULT_LABELS,
   FILE_STATUS_LABELS,
   FILE_TYPE_LABELS,
   GENDER_LABELS,
+  PHYSICAL_DOSSIER_LABELS,
+  PHYSICAL_DOSSIER_VALIDITY_LABELS,
   PRIORITY_LABELS,
   PRIZE_LABELS,
   STATUS_LABELS,
 } from "@/lib/constants";
 import { formatDate, formatBytes } from "@/lib/utils";
+import { AdmissionResultForm, PhysicalDossierForm } from "./AdminAdmissionPanels";
 import { DeleteApplicationButton } from "./DeleteApplicationButton";
 
 export const dynamic = "force-dynamic";
@@ -45,6 +50,7 @@ export default async function AdminApplicationDetailPage({ params }: { params: P
   });
   if (!app) notFound();
   const scoreDetails = calculateAdmissionScoreDetails(app.academicRecords, app.bonusScore);
+  const hasTranscript = app.files.some((file) => file.fileType === "HOC_BA_THCS" || file.fileType.startsWith("HOC_BA_LOP_"));
 
   return (
     <AdminShell>
@@ -66,9 +72,9 @@ export default async function AdminApplicationDetailPage({ params }: { params: P
           </Link>
           <Link
             className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800"
-            href={`/api/admin/applications/${app.id}/pdf`}
+            href={`/api/admin/applications/${app.id}/registration-form-pdf`}
           >
-            <Download size={16} /> Xuất PDF
+            <Download size={16} /> Tải đơn PDF
           </Link>
           <DeleteApplicationButton applicationId={app.id} />
         </div>
@@ -87,6 +93,8 @@ export default async function AdminApplicationDetailPage({ params }: { params: P
             <Info label="Ngày cấp" value={formatDate(app.issueDate)} />
             <Info label="Nơi cấp" value={app.issuePlace ?? ""} />
             <Info label="Trường THCS" value={app.secondarySchool} />
+            <Info label="Địa chỉ cũ trường THCS" value={app.secondarySchoolOldAddress ?? ""} />
+            <Info label="Địa chỉ mới trường THCS" value={app.secondarySchoolAddress ?? ""} />
             <Info label="Phương án" value={`${app.selectedOptionNumber} - ${app.selectedSubjects}`} />
           </div>
         </Card>
@@ -111,6 +119,65 @@ export default async function AdminApplicationDetailPage({ params }: { params: P
 
       <div className="mt-6 grid gap-4 lg:grid-cols-2">
         <Card>
+          <CardTitle>Tình trạng hồ sơ trực tiếp/bản giấy</CardTitle>
+          <div className="mt-4 grid gap-3 text-sm">
+            <Info label="Trạng thái" value={PHYSICAL_DOSSIER_LABELS[app.physicalDossierStatus] ?? app.physicalDossierStatus} />
+            <Info label="Kiểm tra hồ sơ" value={PHYSICAL_DOSSIER_VALIDITY_LABELS[app.physicalDossierValidity] ?? app.physicalDossierValidity} />
+            <Info label="Ngày tiếp nhận" value={formatDate(app.physicalDossierReceivedAt)} />
+            <Info label="Ghi chú công khai" value={app.physicalDossierPublicNote ?? ""} />
+            <Info label="Ghi chú nội bộ" value={app.physicalDossierInternalNote ?? ""} />
+          </div>
+          <div className="mt-4">
+            <PhysicalDossierForm
+              applicationId={app.id}
+              initial={{
+                physicalDossierStatus: app.physicalDossierStatus,
+                physicalDossierValidity: app.physicalDossierValidity,
+                physicalDossierPublicNote: app.physicalDossierPublicNote ?? "",
+                physicalDossierInternalNote: app.physicalDossierInternalNote ?? "",
+              }}
+            />
+          </div>
+        </Card>
+
+        <Card>
+          <CardTitle>Kết quả tuyển sinh</CardTitle>
+          <div className="mt-4 grid gap-3 text-sm">
+            <Info label="Kết quả hiện tại" value={ADMISSION_RESULT_LABELS[app.admissionResult] ?? app.admissionResult} />
+            <Info
+              label="Trạng thái công bố"
+              value={
+                app.admissionPublished
+                  ? ADMISSION_PUBLICATION_LABELS.DA_CONG_BO
+                  : app.admissionPublishedAt
+                    ? ADMISSION_PUBLICATION_LABELS.DA_GO_CONG_BO
+                    : ADMISSION_PUBLICATION_LABELS.CHUA_CONG_BO
+              }
+            />
+            <Info label="Đợt xét tuyển" value={app.admissionBatch ?? ""} />
+            <Info label="Thứ hạng" value={app.admissionRank ? String(app.admissionRank) : ""} />
+            <Info label="Điểm snapshot" value={app.admissionScoreSnapshot != null ? String(app.admissionScoreSnapshot) : ""} />
+            <Info label="Ghi chú công khai" value={app.admissionPublicNote ?? ""} />
+            <Info label="Ghi chú nội bộ" value={app.admissionNote ?? ""} />
+          </div>
+          <div className="mt-4">
+            <AdmissionResultForm
+              applicationId={app.id}
+              initial={{
+                admissionResult: app.admissionResult,
+                admissionRank: app.admissionRank,
+                admissionBatch: app.admissionBatch ?? "",
+                admissionPublicNote: app.admissionPublicNote ?? "",
+                admissionNote: app.admissionNote ?? "",
+                admissionPublished: app.admissionPublished,
+              }}
+            />
+          </div>
+        </Card>
+      </div>
+
+      <div className="mt-6 grid gap-4 lg:grid-cols-2">
+        <Card>
           <CardTitle>Thông tin liên hệ</CardTitle>
           <div className="mt-4 grid gap-3 text-sm">
             <Info label="Số nhà" value={app.houseNumber ?? ""} />
@@ -128,6 +195,10 @@ export default async function AdminApplicationDetailPage({ params }: { params: P
         <Card>
           <CardTitle>Ưu tiên và khuyến khích</CardTitle>
           <div className="mt-4 space-y-4 text-sm">
+            <Info
+              label="Tình trạng học bạ"
+              value={hasTranscript ? "Đã có học bạ" : "Chưa có học bạ - không bắt buộc, khuyến khích bổ sung"}
+            />
             <Info
               label="Đối tượng"
               value={

@@ -18,6 +18,10 @@ export const SUBJECT_OPTIONS = [
 ] as const;
 
 export const PRIORITY_LABELS: Record<string, string> = {
+  CON_LIET_SI: "Con liệt sĩ",
+  CON_THUONG_BINH_BENH_BINH: "Con thương binh/bệnh binh/người hưởng chính sách như thương binh",
+  CON_ANH_HUNG_LLD_BA_ME_VNAH:
+    "Con của Anh hùng lực lượng vũ trang, Anh hùng lao động, Bà mẹ Việt Nam anh hùng",
   CON_THUONG_BINH_LIET_SI: "Con thương binh/liệt sĩ",
   DAN_TOC_THIEU_SO: "Dân tộc thiểu số Khmer, Hoa, ...",
   CHA_ME_DAN_TOC_THIEU_SO: "Có cha hoặc mẹ là người dân tộc thiểu số",
@@ -39,6 +43,20 @@ export const PRIZE_SCORES: Record<string, number> = {
   GIAI_NHAT: 1.5,
   GIAI_NHI: 1.0,
   GIAI_BA: 0.5,
+};
+
+export const PRIORITY_SCORES: Record<string, number> = {
+  CON_LIET_SI: 2,
+  CON_THUONG_BINH_BENH_BINH: 1.5,
+  CON_ANH_HUNG_LLD_BA_ME_VNAH: 1.5,
+  CON_THUONG_BINH_LIET_SI: 1.5,
+  DAN_TOC_THIEU_SO: 1,
+  CHA_ME_DAN_TOC_THIEU_SO: 1,
+  VUNG_DAC_BIET_KHO_KHAN: 1,
+  HO_NGHEO: 0,
+  HO_CAN_NGHEO: 0,
+  MO_COI_CHA_HOAC_ME: 0,
+  MO_COI_CHA_LAN_ME: 0,
 };
 
 export const FILE_TYPE_LABELS: Record<string, string> = {
@@ -105,3 +123,49 @@ export const FILE_SIZE_LIMITS_MB: Record<string, number> = {
 
 export const ALL_FILE_TYPES = Object.keys(FILE_TYPE_LABELS);
 export const ALL_PRIORITY_TYPES = Object.keys(PRIORITY_LABELS);
+
+export const ADMISSION_RESULT_STATUSES = [
+  "CHUA_XET",
+  "TRUNG_TUYEN",
+  "KHONG_TRUNG_TUYEN",
+  "DU_BI",
+  "HUY_KET_QUA",
+] as const;
+
+export const ADMISSION_RESULT_LABELS: Record<string, string> = {
+  CHUA_XET: "Chưa xét",
+  TRUNG_TUYEN: "Trúng tuyển",
+  KHONG_TRUNG_TUYEN: "Không trúng tuyển",
+  DU_BI: "Dự bị",
+  HUY_KET_QUA: "Hủy kết quả",
+};
+
+export const ADMISSION_PUBLICATION_STATUSES = ["CHUA_CONG_BO", "DA_CONG_BO", "DA_GO_CONG_BO"] as const;
+
+export const ADMISSION_PUBLICATION_LABELS: Record<string, string> = {
+  CHUA_CONG_BO: "Chưa công bố",
+  DA_CONG_BO: "Đã công bố",
+  DA_GO_CONG_BO: "Đã gỡ công bố",
+};
+
+export const PHYSICAL_DOSSIER_STATUSES = ["CHUA_NOP_TRUC_TIEP", "DA_NOP_TRUC_TIEP"] as const;
+
+export const PHYSICAL_DOSSIER_LABELS: Record<string, string> = {
+  CHUA_NOP_TRUC_TIEP: "Chưa nộp hồ sơ trực tiếp",
+  DA_NOP_TRUC_TIEP: "Đã nộp hồ sơ trực tiếp",
+};
+
+export const PHYSICAL_DOSSIER_VALIDITY_STATUSES = ["CHUA_KIEM_TRA", "HOP_LE", "CHUA_HOP_LE", "CAN_BO_SUNG"] as const;
+
+export const PHYSICAL_DOSSIER_VALIDITY_LABELS: Record<string, string> = {
+  CHUA_KIEM_TRA: "Chưa kiểm tra",
+  HOP_LE: "Hợp lệ",
+  CHUA_HOP_LE: "Chưa hợp lệ",
+  CAN_BO_SUNG: "Cần bổ sung",
+};
+
+export const ADMISSION_BATCH_OPTIONS = ["Đợt 1", "Đợt 2"] as const;
+
+export const REGISTRATION_CLOSE_AT = "2026-07-16T23:59:59+07:00";
+export const ADMISSION_ROUND_1_PUBLISH_AT = "2026-07-18T08:00:00+07:00";
+export const ADMISSION_ROUND_2_PUBLISH_AT = "2026-07-27T08:00:00+07:00";

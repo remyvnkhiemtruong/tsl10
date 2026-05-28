@@ -11,14 +11,14 @@ export async function GET() {
   const applications = await prisma.application.findMany({
     where: { deletedAt: null },
     orderBy: { submittedAt: "desc" },
-    include: { academicRecords: true }
+    include: { academicRecords: true, priorities: true, awards: true, files: true }
   });
   const workbook = await buildApplicationsWorkbook(applications);
   const buffer = await workbook.xlsx.writeBuffer();
   return new NextResponse(buffer, {
     headers: {
       "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "Content-Disposition": "attachment; filename=ds-ho-so-tuyen-sinh-vvk-2026.xlsx"
+      "Content-Disposition": "attachment; filename=noi-bo-ket-qua-tuyen-sinh-vvk-2026.xlsx"
     }
   });
 }

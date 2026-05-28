@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getSchoolSettings } from "@/lib/school-settings";
 import { lookupSchema } from "@/lib/validation";
 
 export const runtime = "nodejs";
@@ -19,26 +20,47 @@ export async function GET(request: Request) {
     );
   }
 
-  const app = await prisma.application.findFirst({
-    where: {
-      deletedAt: null,
-      applicationCode: parsed.data.applicationCode.trim(),
-      citizenId: parsed.data.citizenId.trim(),
-      dateOfBirth: new Date(parsed.data.dateOfBirth)
-    },
-    select: {
-      applicationCode: true,
-      fullName: true,
-      dateOfBirth: true,
-      secondarySchool: true,
-      selectedOptionNumber: true,
-      selectedSubjects: true,
-      status: true,
-      publicNote: true,
-      submittedAt: true
-    }
-  });
+  const [settings, app] = await Promise.all([
+    getSchoolSettings(),
+    prisma.application.findFirst({
+      where: {
+        deletedAt: null,
+        applicationCode: parsed.data.applicationCode.trim(),
+        citizenId: parsed.data.citizenId.trim(),
+        dateOfBirth: new Date(parsed.data.dateOfBirth)
+      },
+      select: {
+        applicationCode: true,
+        fullName: true,
+        dateOfBirth: true,
+        secondarySchool: true,
+        selectedOptionNumber: true,
+        selectedSubjects: true,
+        status: true,
+        publicNote: true,
+        submittedAt: true,
+        physicalDossierStatus: true,
+        physicalDossierValidity: true,
+        physicalDossierPublicNote: true,
+        admissionResult: true,
+        admissionPublished: true,
+        admissionPublicNote: true,
+        admissionBatch: true,
+        admissionScoreSnapshot: true
+      }
+    }),
+  ]);
 
   if (!app) return NextResponse.json({ error: "Không tìm thấy hồ sơ phù hợp" }, { status: 404 });
-  return NextResponse.json({ application: app });
+  const showPersonalAdmissionResult =
+    settings.personalResultLookupEnabled && (app.admissionPublished || app.admissionResult !== "CHUA_XET");
+  return NextResponse.json({
+    application: {
+      ...app,
+      admissionResult: showPersonalAdmissionResult ? app.admissionResult : "CHUA_XET",
+      admissionPublicNote: showPersonalAdmissionResult ? app.admissionPublicNote : null,
+      admissionScoreSnapshot: showPersonalAdmissionResult ? app.admissionScoreSnapshot : null,
+      admissionPublished: showPersonalAdmissionResult ? app.admissionPublished : false,
+    },
+  });
 }

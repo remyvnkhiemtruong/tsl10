@@ -18,6 +18,7 @@ export default async function SuccessPage({ params }: { params: Promise<{ applic
           <p className="mt-4 rounded-2xl bg-school-50 p-4 text-2xl font-black text-school-900">{applicationCode}</p>
           <p className="mt-4 text-sm leading-6 text-slate-600">
             Vui lòng lưu mã hồ sơ để tra cứu trạng thái cùng số định danh và ngày sinh.
+            Em có thể tải đơn đăng ký PDF đã điền sẵn thông tin ở trang tra cứu, in ra, ký xác nhận của cha/mẹ hoặc người giám hộ và nộp kèm bộ hồ sơ trực tiếp theo thông báo của nhà trường.
           </p>
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
             <Link

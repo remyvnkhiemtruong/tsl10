@@ -3,13 +3,20 @@
 import { useState } from "react";
 import { Search } from "lucide-react";
 import { PublicHeader } from "@/components/PublicHeader";
+import { SchoolContactCard } from "@/components/SchoolContactCard";
 import { Alert } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { STATUS_LABELS } from "@/lib/constants";
+import {
+  ADMISSION_RESULT_LABELS,
+  PHYSICAL_DOSSIER_LABELS,
+  PHYSICAL_DOSSIER_VALIDITY_LABELS,
+  STATUS_LABELS,
+} from "@/lib/constants";
+import { DEFAULT_SCHOOL_SETTINGS } from "@/lib/school-contact";
 import { formatDate } from "@/lib/utils";
 
 type LookupResult = {
@@ -22,6 +29,14 @@ type LookupResult = {
   status: string;
   publicNote: string | null;
   submittedAt: string;
+  physicalDossierStatus: string;
+  physicalDossierValidity: string;
+  physicalDossierPublicNote: string | null;
+  admissionResult: string;
+  admissionPublished: boolean;
+  admissionPublicNote: string | null;
+  admissionBatch: string | null;
+  admissionScoreSnapshot: number | null;
 };
 
 function statusVariant(status: string): "secondary" | "success" | "warning" | "destructive" {
@@ -54,6 +69,26 @@ export default function LookupPage() {
     } finally {
       setLoading(false);
     }
+  }
+
+  async function downloadPdf() {
+    const res = await fetch("/api/applications/registration-form-pdf", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(query),
+    });
+    if (!res.ok) {
+      const json = (await res.json()) as { error?: string };
+      setError(json.error ?? "Không thể tải PDF");
+      return;
+    }
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = `don-dang-ky-du-tuyen-lop-10-vvk-2026-${result?.applicationCode ?? "ho-so"}.pdf`;
+    anchor.click();
+    URL.revokeObjectURL(url);
   }
 
   return (
@@ -129,10 +164,70 @@ export default function LookupPage() {
                 <Info label="Ngày nộp" value={formatDate(result.submittedAt)} />
                 {result.publicNote && <Info label="Ghi chú" value={result.publicNote} className="sm:col-span-2" />}
               </div>
+              <Alert variant="success" className="mt-5">
+                Hồ sơ trực tuyến đã được ghi nhận.
+              </Alert>
+              <div className="mt-5 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm">
+                <h2 className="font-bold text-slate-950">Tình trạng hồ sơ trực tiếp/bản giấy</h2>
+                <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                  <Info label="Trạng thái" value={PHYSICAL_DOSSIER_LABELS[result.physicalDossierStatus] ?? result.physicalDossierStatus} />
+                  <Info label="Kiểm tra hồ sơ" value={PHYSICAL_DOSSIER_VALIDITY_LABELS[result.physicalDossierValidity] ?? result.physicalDossierValidity} />
+                  {result.physicalDossierPublicNote && <Info label="Ghi chú của nhà trường" value={result.physicalDossierPublicNote} className="sm:col-span-2" />}
+                </div>
+                {result.physicalDossierStatus === "CHUA_NOP_TRUC_TIEP" && (
+                  <Alert variant="warning" className="mt-4">
+                    Nhà trường chưa ghi nhận hồ sơ trực tiếp/bản giấy của em. Vui lòng tải đơn đăng ký PDF, in ra, ký xác nhận của cha/mẹ hoặc người giám hộ và nộp kèm bộ hồ sơ theo thông báo của nhà trường.
+                  </Alert>
+                )}
+                {result.physicalDossierStatus === "DA_NOP_TRUC_TIEP" && result.physicalDossierValidity === "HOP_LE" && (
+                  <Alert variant="success" className="mt-4">
+                    Hồ sơ trực tiếp/bản giấy đã được nhà trường tiếp nhận và ghi nhận hợp lệ.
+                  </Alert>
+                )}
+                <p className="mt-3 text-xs font-semibold text-slate-600">
+                  Trạng thái hồ sơ hợp lệ không phải là kết quả trúng tuyển. Kết quả tuyển sinh chỉ hiển thị khi nhà trường công bố.
+                </p>
+              </div>
+              <div className="mt-5 rounded-2xl border border-slate-200 p-4 text-sm">
+                <h2 className="font-bold text-slate-950">Kết quả tuyển sinh</h2>
+                {result.admissionResult === "CHUA_XET" ? (
+                  <p className="mt-2 text-slate-600">Hồ sơ của em đã được ghi nhận. Kết quả tuyển sinh chưa được công bố trên hệ thống.</p>
+                ) : result.admissionResult === "TRUNG_TUYEN" ? (
+                  <Alert variant="success" className="mt-3">
+                    Chúc mừng em đã trúng tuyển. Vui lòng theo dõi thông báo của Trường THPT Võ Văn Kiệt để thực hiện các bước xác nhận nhập học theo thời gian quy định.
+                  </Alert>
+                ) : (
+                  <Alert variant="warning" className="mt-3">
+                    Hồ sơ của em chưa có tên trong danh sách trúng tuyển đã công bố. Vui lòng theo dõi thông báo chính thức của nhà trường.
+                  </Alert>
+                )}
+                <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                  <Info label="Kết quả" value={ADMISSION_RESULT_LABELS[result.admissionResult] ?? result.admissionResult} />
+                  <Info label="Đợt xét tuyển" value={result.admissionBatch ?? ""} />
+                  {result.admissionScoreSnapshot != null && <Info label="Điểm xét tuyển" value={String(result.admissionScoreSnapshot)} />}
+                  {result.admissionPublicNote && <Info label="Ghi chú công khai" value={result.admissionPublicNote} className="sm:col-span-2" />}
+                </div>
+              </div>
+              <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <p className="text-sm text-slate-600">
+                  Em có thể tải đơn đăng ký PDF đã điền sẵn thông tin, in ra, ký xác nhận của cha/mẹ hoặc người giám hộ và nộp kèm bộ hồ sơ theo thông báo của Trường THPT Võ Văn Kiệt.
+                </p>
+                <Button onClick={downloadPdf}>Tải đơn đăng ký PDF</Button>
+              </div>
             </Card>
           )}
         </div>
       </section>
+      <footer className="border-t border-slate-200 bg-white py-8">
+        <div className="page-container">
+          <SchoolContactCard
+            contact={DEFAULT_SCHOOL_SETTINGS.contact}
+            leadershipContacts={DEFAULT_SCHOOL_SETTINGS.leadershipContacts}
+            publicLeadershipPhones={DEFAULT_SCHOOL_SETTINGS.publicLeadershipPhones}
+            compact
+          />
+        </div>
+      </footer>
     </main>
   );
 }

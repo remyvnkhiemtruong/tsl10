@@ -7,6 +7,7 @@ const navItems = [
   { href: "/huong-dan", label: "Hướng dẫn" },
   { href: "/dang-ky", label: "Đăng ký" },
   { href: "/tra-cuu", label: "Tra cứu" },
+  { href: "/cong-bo-trung-tuyen", label: "Trúng tuyển" },
   { href: "/admin/login", label: "Quản trị" },
 ];
 

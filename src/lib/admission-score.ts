@@ -16,6 +16,8 @@ export type AdmissionScoreRecord = {
 export type AdmissionScoreDetails = {
   academicAverageSum: number;
   convertedScoreSum: number;
+  priorityScore: number;
+  awardBonusScore: number;
   bonusScore: number;
   totalScore: number;
 };
@@ -93,8 +95,35 @@ export function calculateAdmissionScoreDetails(records: AdmissionScoreRecord[], 
   return {
     academicAverageSum,
     convertedScoreSum,
+    priorityScore: 0,
+    awardBonusScore: normalizedBonusScore,
     bonusScore: normalizedBonusScore,
     totalScore: roundScore(academicAverageSum + convertedScoreSum + normalizedBonusScore),
   };
 }
 
+export function calculatePriorityScore(priorityTypes: string[]) {
+  return roundScore(priorityTypes.reduce((max, type) => Math.max(max, PRIORITY_SCORES[type] ?? 0), 0));
+}
+
+export function calculateAwardBonusScore(awards: Array<{ prize: string }>) {
+  const countedAward = [...awards].sort((a, b) => (PRIZE_SCORES[b.prize] ?? 0) - (PRIZE_SCORES[a.prize] ?? 0))[0];
+  return roundScore(countedAward ? PRIZE_SCORES[countedAward.prize] ?? 0 : 0);
+}
+
+export function calculateCombinedBonusScore(priorityTypes: string[], awards: Array<{ prize: string }>) {
+  return roundScore(calculatePriorityScore(priorityTypes) + calculateAwardBonusScore(awards));
+}
+
+export function calculateAdmissionScoreWithBonuses(
+  records: AdmissionScoreRecord[],
+  priorityTypes: string[],
+  awards: Array<{ prize: string }>
+) {
+  const priorityScore = calculatePriorityScore(priorityTypes);
+  const awardBonusScore = calculateAwardBonusScore(awards);
+  const bonusScore = roundScore(priorityScore + awardBonusScore);
+  const details = calculateAdmissionScoreDetails(records, bonusScore);
+  return { ...details, priorityScore, awardBonusScore, bonusScore, totalScore: details.totalScore };
+}
+import { PRIORITY_SCORES, PRIZE_SCORES } from "@/lib/constants";

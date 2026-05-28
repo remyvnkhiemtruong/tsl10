@@ -10,6 +10,10 @@ Hệ thống đăng ký dự tuyển vào lớp 10 cho **Trường THPT Võ Văn
 - Tính điểm xét tuyển dự kiến A + B + C phục vụ hội đồng tuyển sinh, không tự kết luận trúng tuyển.
 - Tra cứu hồ sơ bằng mã hồ sơ, số định danh và ngày sinh.
 - Admin đăng nhập, xem danh sách/chi tiết hồ sơ, duyệt file, cập nhật trạng thái, chỉnh sửa/xóa mềm hồ sơ và xuất Excel/PDF.
+- Dropdown trường THCS Cà Mau mới với 164 dòng dữ liệu seed/chính thức, tìm theo tên trường, địa chỉ cũ và địa chỉ mới.
+- Admin cập nhật trạng thái hồ sơ trực tiếp/bản giấy và trạng thái hợp lệ để thí sinh theo dõi.
+- Admin quản lý kết quả tuyển sinh, công bố/gỡ công bố; trang công khai chỉ hiển thị thí sinh trúng tuyển đã công bố.
+- Xuất đơn đăng ký dự tuyển PDF điền sẵn thông tin bằng `pdf-lib` + font Noto Sans, không dùng Chrome print.
 
 ## Chạy local
 
@@ -110,6 +114,8 @@ SEED_ADMIN_PASSWORD=Admin123@
 
 ```bash
 npm run lint
+npm run validate:secondary-schools
+npm run test:pdf
 npm run build
 npx prisma generate
 ```
@@ -126,4 +132,7 @@ Sau deploy, kiểm tra:
 
 - `docs/quy-che-tuyen-sinh-2026-2027.md`
 - `docs/danh-muc-hanh-chinh-34-tinh-thanh-2025.md`
+- `docs/danh-muc-truong-thcs-ca-mau-moi.md`
+- `docs/cong-bo-trung-tuyen.md`
+- `docs/quy-trinh-xet-tuyen-vvk-2026.md`
 - `docs/vercel-database-bootstrap.md`

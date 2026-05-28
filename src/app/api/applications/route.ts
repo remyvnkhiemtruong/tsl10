@@ -1,12 +1,13 @@
 import { NextResponse } from "next/server";
 import { Prisma, FileType, PriorityType, Prize } from "@prisma/client";
 import { ZodError } from "zod";
-import { calculateAdmissionScoreDetails } from "@/lib/admission-score";
+import { calculateAdmissionScoreWithBonuses } from "@/lib/admission-score";
 import { WARD_OTHER_VALUE } from "@/lib/administrative-units";
 import { composePermanentAddress } from "@/lib/address";
 import { generateApplicationCode } from "@/lib/application-code";
 import { SUBJECT_OPTIONS } from "@/lib/constants";
 import { prisma } from "@/lib/prisma";
+import { getSchoolSettings } from "@/lib/school-settings";
 import { applicationCreateSchema, prizeScore, zodFieldErrors } from "@/lib/validation";
 
 export const runtime = "nodejs";
@@ -23,13 +24,17 @@ export async function POST(request: Request) {
   try {
     const json: unknown = await request.json();
     const parsed = applicationCreateSchema.parse(json);
+    const settings = await getSchoolSettings();
+    if (new Date() > new Date(settings.registrationDeadline)) {
+      return NextResponse.json({ error: settings.registrationLockedNote }, { status: 403 });
+    }
+
     const duplicate = await prisma.application.findUnique({ where: { citizenId: parsed.citizenId } });
     if (duplicate) {
       return NextResponse.json({ error: "Số định danh này đã có hồ sơ đăng ký" }, { status: 409 });
     }
 
     const selected = SUBJECT_OPTIONS.find((item) => item.optionNumber === parsed.selectedOptionNumber);
-    const bonusScore = parsed.awards.reduce((sum, award) => sum + prizeScore(award.prize), 0);
     const finalWard = parsed.ward === WARD_OTHER_VALUE ? parsed.wardOther : parsed.ward;
     const permanentAddress = composePermanentAddress({
       houseNumber: parsed.houseNumber,
@@ -37,7 +42,7 @@ export async function POST(request: Request) {
       ward: finalWard,
       province: parsed.province,
     });
-    const scoreDetails = calculateAdmissionScoreDetails(parsed.academicRecords, bonusScore);
+    const scoreDetails = calculateAdmissionScoreWithBonuses(parsed.academicRecords, parsed.priorities, parsed.awards);
 
     for (let attempt = 0; attempt < 3; attempt += 1) {
       const code = await generateApplicationCode();
@@ -54,6 +59,8 @@ export async function POST(request: Request) {
             issueDate: optionalDate(parsed.issueDate),
             issuePlace: parsed.issuePlace,
             secondarySchool: parsed.secondarySchool,
+            secondarySchoolOldAddress: parsed.secondarySchoolOldAddress ?? null,
+            secondarySchoolAddress: parsed.secondarySchoolAddress ?? null,
             schoolYear: parsed.schoolYear,
             permanentAddress,
             houseNumber: parsed.houseNumber,
@@ -66,7 +73,8 @@ export async function POST(request: Request) {
             guardianPhone: parsed.guardianPhone,
             selectedOptionNumber: parsed.selectedOptionNumber,
             selectedSubjects: selected?.subjects ?? parsed.selectedSubjects,
-            bonusScore,
+            bonusScore: scoreDetails.bonusScore,
+            additionalAwardsNote: parsed.additionalAwardsNote ?? null,
             commitmentAccepted: parsed.commitmentAccepted,
             priorities: {
               create: parsed.priorities.map((type) => ({ type: type as PriorityType })),

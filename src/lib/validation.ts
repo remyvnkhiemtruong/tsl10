@@ -1,10 +1,14 @@
 import { z } from "zod";
 import {
   ALLOWED_MIME_TYPES,
+  ADMISSION_BATCH_OPTIONS,
+  ADMISSION_RESULT_STATUSES,
   ALL_FILE_TYPES,
   ALL_PRIORITY_TYPES,
   FILE_SIZE_LIMITS_MB,
   ISSUE_PLACE_OPTIONS,
+  PHYSICAL_DOSSIER_STATUSES,
+  PHYSICAL_DOSSIER_VALIDITY_STATUSES,
   PRIZE_SCORES,
   SCHOOL_YEAR_OPTIONS,
   SUBJECT_OPTIONS,
@@ -27,6 +31,10 @@ const applicationStatusSchema = z.enum([
   "DA_DUYET_XET_TUYEN",
 ]);
 const fileStatusSchema = z.enum(["CHUA_KIEM_TRA", "HOP_LE", "KHONG_HOP_LE", "CAN_BO_SUNG"]);
+const admissionResultStatusSchema = z.enum(ADMISSION_RESULT_STATUSES);
+const admissionBatchSchema = z.enum(ADMISSION_BATCH_OPTIONS).optional().or(z.literal(""));
+const physicalDossierStatusSchema = z.enum(PHYSICAL_DOSSIER_STATUSES);
+const physicalDossierValiditySchema = z.enum(PHYSICAL_DOSSIER_VALIDITY_STATUSES);
 
 const requiredText = (label: string) => z.string().trim().min(1, `${label} là thông tin bắt buộc`);
 
@@ -165,6 +173,8 @@ export const applicationCreateSchema = z
     issueDate: optionalDateString,
     issuePlace: optionalText,
     secondarySchool: requiredText("Trường THCS"),
+    secondarySchoolOldAddress: optionalText,
+    secondarySchoolAddress: optionalText,
     schoolYear: schoolYearSchema,
     permanentAddress: optionalText,
     houseNumber: requiredText("Số nhà"),
@@ -177,7 +187,8 @@ export const applicationCreateSchema = z
     guardianName: requiredText("Họ tên cha/mẹ/người giám hộ"),
     guardianPhone: phoneSchema("Số điện thoại phụ huynh/người giám hộ"),
     priorities: z.array(priorityTypeSchema).default([]),
-    awards: z.array(awardInputSchema).default([]),
+    awards: z.array(awardInputSchema).max(1, "Chỉ được chọn tối đa 01 giải thưởng để cộng điểm khuyến khích").default([]),
+    additionalAwardsNote: optionalText,
     academicRecords: z.array(academicRecordInputSchema).length(4, "Cần đủ điểm lớp 6, 7, 8, 9"),
     selectedOptionNumber: z.number().int().min(1).max(6),
     selectedSubjects: requiredText("Phương án môn học"),
@@ -225,48 +236,15 @@ export const applicationCreateSchema = z
     }
 
     const fileTypes = new Set(value.uploadedFiles.map((file) => file.fileType));
-    const hasFullAcademicPdf = fileTypes.has("HOC_BA_THCS");
-    const hasAllGradeImages = [6, 7, 8, 9].every((grade) => fileTypes.has(`HOC_BA_LOP_${grade}`));
 
     if (!fileTypes.has("PHOTO_4X6")) {
       ctx.addIssue({ code: "custom", path: ["uploadedFiles", "PHOTO_4X6"], message: "Cần tải lên ảnh 4x6" });
-    }
-    if (!hasFullAcademicPdf && !hasAllGradeImages) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["uploadedFiles", "HOC_BA_THCS"],
-        message: "Cần tải học bạ THCS dạng PDF hoặc đủ ảnh học bạ lớp 6, 7, 8, 9",
-      });
     }
     if (!fileTypes.has("GIAY_KHAI_SINH") && !fileTypes.has("CCCD")) {
       ctx.addIssue({
         code: "custom",
         path: ["uploadedFiles", "GIAY_KHAI_SINH"],
         message: "Cần tải lên giấy khai sinh hoặc CCCD/số định danh",
-      });
-    }
-    if (value.priorities.length > 0 && !fileTypes.has("MINH_CHUNG_UU_TIEN")) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["uploadedFiles", "MINH_CHUNG_UU_TIEN"],
-        message: "Cần tải minh chứng cho đối tượng ưu tiên/đối tượng khác đã chọn",
-      });
-    }
-    if (
-      (value.priorities.includes("HO_NGHEO") || value.priorities.includes("HO_CAN_NGHEO")) &&
-      !fileTypes.has("HO_NGHEO_CAN_NGHEO")
-    ) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["uploadedFiles", "HO_NGHEO_CAN_NGHEO"],
-        message: "Cần tải giấy xác nhận hộ nghèo/cận nghèo",
-      });
-    }
-    if (value.awards.length > 0 && !fileTypes.has("MINH_CHUNG_KHUYEN_KHICH")) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["uploadedFiles", "MINH_CHUNG_KHUYEN_KHICH"],
-        message: "Cần tải minh chứng điểm khuyến khích",
       });
     }
   });
@@ -286,6 +264,8 @@ export const adminApplicationUpdateSchema = z
     issueDate: optionalDateString,
     issuePlace: optionalText,
     secondarySchool: requiredText("Trường THCS"),
+    secondarySchoolOldAddress: optionalText,
+    secondarySchoolAddress: optionalText,
     schoolYear: schoolYearSchema,
     houseNumber: requiredText("Số nhà"),
     hamlet: requiredText("Ấp/khóm"),
@@ -297,7 +277,8 @@ export const adminApplicationUpdateSchema = z
     guardianName: requiredText("Họ tên cha/mẹ/người giám hộ"),
     guardianPhone: phoneSchema("Số điện thoại phụ huynh/người giám hộ"),
     priorities: z.array(priorityTypeSchema).default([]),
-    awards: z.array(awardInputSchema).default([]),
+    awards: z.array(awardInputSchema).max(1, "Chỉ được chọn tối đa 01 giải thưởng để cộng điểm khuyến khích").default([]),
+    additionalAwardsNote: optionalText,
     academicRecords: z.array(academicRecordInputSchema).length(4, "Cần đủ điểm lớp 6, 7, 8, 9"),
     selectedOptionNumber: z.number().int().min(1).max(6),
     selectedSubjects: requiredText("Phương án môn học"),
@@ -364,6 +345,92 @@ export const applicationUpdateSchema = z.object({
 export const fileReviewSchema = z.object({
   status: fileStatusSchema,
   note: z.string().trim().optional(),
+});
+
+export const physicalDossierUpdateSchema = z
+  .object({
+    physicalDossierStatus: physicalDossierStatusSchema,
+    physicalDossierValidity: physicalDossierValiditySchema,
+    physicalDossierPublicNote: optionalText,
+    physicalDossierInternalNote: optionalText,
+  })
+  .superRefine((value, ctx) => {
+    if (
+      value.physicalDossierStatus === "CHUA_NOP_TRUC_TIEP" &&
+      value.physicalDossierValidity === "HOP_LE"
+    ) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["physicalDossierValidity"],
+        message: "Chưa nộp hồ sơ trực tiếp thì không thể ghi nhận hợp lệ",
+      });
+    }
+    if (
+      ["CHUA_HOP_LE", "CAN_BO_SUNG"].includes(value.physicalDossierValidity) &&
+      !value.physicalDossierPublicNote &&
+      !value.physicalDossierInternalNote
+    ) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["physicalDossierPublicNote"],
+        message: "Nên nhập ghi chú khi hồ sơ trực tiếp chưa hợp lệ hoặc cần bổ sung",
+      });
+    }
+  });
+
+export const admissionResultSchema = z.object({
+  admissionResult: admissionResultStatusSchema,
+  admissionRank: z.preprocess(
+    (value) => (value === "" || value === null || value === undefined ? undefined : Number(value)),
+    z.number().int().positive().optional()
+  ),
+  admissionBatch: admissionBatchSchema,
+  admissionPublicNote: optionalText,
+  admissionNote: optionalText,
+  snapshotScore: z.boolean().default(true),
+});
+
+export const admissionPublicationSchema = z.object({
+  publicNote: optionalText,
+  reason: optionalText,
+  snapshotScore: z.boolean().default(true),
+});
+
+export const adminAdmissionPublishSchema = z.object({
+  applicationIds: z.array(z.string().trim().min(1)).min(1),
+  publish: z.boolean().default(true),
+  snapshotScore: z.boolean().default(true),
+  publicNote: optionalText,
+});
+
+export const registrationFormPdfRequestSchema = lookupSchema;
+
+export const schoolContactSchema = z.object({
+  contact: z.object({
+    schoolName: requiredText("Tên trường"),
+    address: requiredText("Địa chỉ trường"),
+    phone: z.string().trim().optional().default(""),
+    email: z.string().trim().email("Email trường không hợp lệ"),
+    website: z.string().trim().url("Website trường không hợp lệ"),
+    note: z.string().trim().optional().default(""),
+  }),
+  leadershipContacts: z
+    .array(
+      z.object({
+        name: requiredText("Tên lãnh đạo"),
+        title: requiredText("Chức vụ"),
+        extraRole: z.string().trim().optional().default(""),
+        publicContact: z.string().trim().optional().default(""),
+        sortOrder: z.number().int().positive(),
+      })
+    )
+    .default([]),
+  publicLeadershipPhones: z.boolean().default(true),
+  registrationDeadline: dateString("Hạn khóa đăng ký"),
+  admissionRound1PublishAt: dateString("Ngày công bố đợt 1"),
+  admissionRound2PublishAt: dateString("Ngày công bố đợt 2"),
+  personalResultLookupEnabled: z.boolean().default(true),
+  registrationLockedNote: z.string().trim().optional().default(""),
 });
 
 export function prizeScore(prize: string) {

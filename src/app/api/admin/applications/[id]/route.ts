@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { redirect } from "next/navigation";
 import { Prisma, PriorityType, Prize } from "@prisma/client";
 import { ZodError } from "zod";
+import { calculateAdmissionScoreWithBonuses } from "@/lib/admission-score";
 import { WARD_OTHER_VALUE } from "@/lib/administrative-units";
 import { composePermanentAddress } from "@/lib/address";
 import { prisma } from "@/lib/prisma";
@@ -98,7 +99,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       ward: finalWard,
       province: parsed.province,
     });
-    const bonusScore = parsed.awards.reduce((sum, award) => sum + prizeScore(award.prize), 0);
+    const scoreDetails = calculateAdmissionScoreWithBonuses(parsed.academicRecords, parsed.priorities, parsed.awards);
 
     const updated = await prisma.$transaction(async (tx) => {
       await tx.priorityRecord.deleteMany({ where: { applicationId: id } });
@@ -118,6 +119,8 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
           issueDate: optionalDate(parsed.issueDate),
           issuePlace: parsed.issuePlace ?? null,
           secondarySchool: parsed.secondarySchool,
+          secondarySchoolOldAddress: parsed.secondarySchoolOldAddress ?? null,
+          secondarySchoolAddress: parsed.secondarySchoolAddress ?? null,
           schoolYear: parsed.schoolYear,
           permanentAddress,
           houseNumber: parsed.houseNumber,
@@ -130,7 +133,8 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
           guardianPhone: parsed.guardianPhone,
           selectedOptionNumber: parsed.selectedOptionNumber,
           selectedSubjects: selected?.subjects ?? parsed.selectedSubjects,
-          bonusScore,
+          bonusScore: scoreDetails.bonusScore,
+          additionalAwardsNote: parsed.additionalAwardsNote ?? null,
           publicNote: parsed.publicNote ?? null,
           internalNote: parsed.internalNote ?? null,
           priorities: {

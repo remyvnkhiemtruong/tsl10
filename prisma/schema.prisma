@@ -43,6 +43,9 @@ enum Prize {
 }
 
 enum PriorityType {
+  CON_LIET_SI
+  CON_THUONG_BINH_BENH_BINH
+  CON_ANH_HUNG_LLD_BA_ME_VNAH
   CON_THUONG_BINH_LIET_SI
   DAN_TOC_THIEU_SO
   CHA_ME_DAN_TOC_THIEU_SO
@@ -86,6 +89,15 @@ enum LogAction {
   REQUESTED_SUPPLEMENT
   APPROVED
   REJECTED
+  ADMISSION_RESULT_UPDATED
+  ADMISSION_PUBLISHED
+  ADMISSION_UNPUBLISHED
+  ADMISSION_BULK_PUBLISHED
+  PUBLIC_RANKING_EXPORTED
+  CONTACT_UPDATED
+  REGISTRATION_FORM_PDF_EXPORTED
+  PHYSICAL_DOSSIER_RECEIVED
+  PHYSICAL_DOSSIER_STATUS_UPDATED
 }
 
 model User {
@@ -115,6 +127,8 @@ model Application {
   issuePlace         String?
 
   secondarySchool    String
+  secondarySchoolAddress String?
+  secondarySchoolOldAddress String?
   schoolYear         String
 
   permanentAddress   String
@@ -130,9 +144,33 @@ model Application {
   selectedOptionNumber Int
   selectedSubjects   String
   bonusScore         Float             @default(0)
+  additionalAwardsNote String?
   commitmentAccepted Boolean           @default(false)
   publicNote         String?
   internalNote       String?
+
+  admissionResult        String   @default("CHUA_XET")
+  admissionPublished     Boolean  @default(false)
+  admissionPublishedAt   DateTime?
+  admissionPublishedById String?
+  admissionDecisionAt    DateTime?
+  admissionDecisionById  String?
+  admissionNote          String?
+  admissionPublicNote    String?
+  admissionRank          Int?
+  admissionBatch         String?
+  admissionScoreSnapshot Float?
+
+  physicalDossierStatus       String   @default("CHUA_NOP_TRUC_TIEP")
+  physicalDossierValidity     String   @default("CHUA_KIEM_TRA")
+  physicalDossierReceivedAt   DateTime?
+  physicalDossierReceivedById String?
+  physicalDossierCheckedAt    DateTime?
+  physicalDossierCheckedById  String?
+  physicalDossierPublicNote   String?
+  physicalDossierInternalNote String?
+  registrationFormPdfPrintedAt DateTime?
+
   deletedAt          DateTime?
   deletedById        String?
   deleteReason       String?
@@ -147,6 +185,11 @@ model Application {
   logs               ApplicationLog[]
 
   @@index([status])
+  @@index([admissionResult])
+  @@index([admissionPublished])
+  @@index([admissionBatch])
+  @@index([physicalDossierStatus])
+  @@index([physicalDossierValidity])
   @@index([fullName])
   @@index([secondarySchool])
   @@index([selectedOptionNumber])
@@ -219,14 +262,33 @@ model UploadedFile {
 
 model ApplicationLog {
   id            String     @id @default(cuid())
-  applicationId String
+  applicationId String?
   userId        String?
   action        LogAction
   oldValue      String?
   newValue      String?
   note          String?
+  metadata      Json?
   createdAt     DateTime   @default(now())
 
-  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  application   Application? @relation(fields: [applicationId], references: [id], onDelete: Cascade)
   user          User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([action])
+  @@index([createdAt])
+}
+
+model SchoolSetting {
+  id                         String   @id @default("default")
+  schoolContactJson          Json?
+  leadershipContactsJson     Json?
+  publicLeadershipPhones     Boolean  @default(true)
+  registrationDeadline       DateTime?
+  admissionRound1PublishAt   DateTime?
+  admissionRound2PublishAt   DateTime?
+  personalResultLookupEnabled Boolean @default(true)
+  registrationLockedNote     String?
+  updatedById                String?
+  createdAt                  DateTime @default(now())
+  updatedAt                  DateTime @updatedAt
 }

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, FileCheck2, LockKeyhole, SearchCheck, UploadCloud } from "lucide-react";
+import { PublicFooter } from "@/components/PublicFooter";
 import { PublicHeader } from "@/components/PublicHeader";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
@@ -31,6 +32,8 @@ const features = [
     description: "Tài liệu riêng tư chỉ được xử lý qua luồng kiểm tra của nhà trường.",
   },
 ];
+
+export const dynamic = "force-dynamic";
 
 export default function HomePage() {
   return (
@@ -107,6 +110,7 @@ export default function HomePage() {
           })}
         </div>
       </section>
+      <PublicFooter />
     </main>
   );
 }

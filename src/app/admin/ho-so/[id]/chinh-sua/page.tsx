@@ -38,6 +38,8 @@ export default async function EditAdminApplicationPage({ params }: { params: Pro
     issueDate: dateInput(app.issueDate),
     issuePlace: app.issuePlace ?? "",
     secondarySchool: app.secondarySchool,
+    secondarySchoolOldAddress: app.secondarySchoolOldAddress ?? "",
+    secondarySchoolAddress: app.secondarySchoolAddress ?? "",
     schoolYear: app.schoolYear,
     houseNumber: app.houseNumber ?? "",
     hamlet: app.hamlet ?? "",
@@ -59,6 +61,7 @@ export default async function EditAdminApplicationPage({ params }: { params: Pro
       year: award.year ?? undefined,
       prize: award.prize,
     })),
+    additionalAwardsNote: app.additionalAwardsNote ?? "",
     academicRecords: app.academicRecords.map((record) => ({
       grade: record.grade,
       literature: record.literature ?? undefined,
