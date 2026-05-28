@@ -20,8 +20,8 @@ async function main() {
     throw new Error("Production seed cần SEED_ADMIN_EMAIL và SEED_ADMIN_PASSWORD rõ ràng, không dùng tài khoản mặc định.");
   }
 
-  const email = process.env.SEED_ADMIN_EMAIL ?? "admin@vovankiet.edu.vn";
-  const password = process.env.SEED_ADMIN_PASSWORD ?? "Admin@123456";
+  const email = process.env.SEED_ADMIN_EMAIL ?? "admin@gmail.com";
+  const password = process.env.SEED_ADMIN_PASSWORD ?? "Admin123@";
   const passwordHash = await bcrypt.hash(password, 12);
 
   await prisma.user.upsert({
