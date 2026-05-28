@@ -8,9 +8,9 @@
 4. Tạo Vercel Blob Store private.
 5. Đặt `STORAGE_PROVIDER=vercel_blob`, `BLOB_ACCESS=private`, `BLOB_READ_WRITE_TOKEN`.
 6. Đặt `JWT_SECRET` mạnh và `NEXT_PUBLIC_APP_URL`.
-7. Deploy.
-8. Chạy `npx prisma migrate deploy` cho production database.
-9. Tạo admin production bằng seed thủ công nếu cần.
+7. Đặt `RUN_PRISMA_MIGRATE_DEPLOY=true`, `RUN_PRISMA_SEED=true`, `SEED_SAMPLE_DATA=false`.
+8. Build command: `npm run vercel-build`.
+9. Deploy.
 10. Kiểm tra `/api/health`, `/dang-ky`, `/tra-cuu`, `/admin/login`.
 
 ## Environment Variables trên Vercel
@@ -23,19 +23,33 @@ STORAGE_PROVIDER=vercel_blob
 BLOB_READ_WRITE_TOKEN=vercel_blob_rw_xxxxxxxxxxxxxxxxxxxxx
 BLOB_ACCESS=private
 MAX_UPLOAD_MB=25
-RUN_PRISMA_MIGRATE_DEPLOY=false
+RUN_PRISMA_MIGRATE_DEPLOY=true
+RUN_PRISMA_SEED=true
+SEED_SAMPLE_DATA=false
+SEED_ADMIN_EMAIL=admin@gmail.com
+SEED_ADMIN_PASSWORD=Admin123@
 NODE_ENV=production
 ```
 
-## Migration production
+## Migration và seed production
 
-Khuyến nghị chạy migration thủ công từ máy local/CI có quyền truy cập database:
+Vercel không lưu database trong repo. Schema được tạo bằng Prisma migration trên PostgreSQL production. Khi bật env ở trên, `npm run vercel-build` sẽ chạy:
 
-```bash
-DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE?sslmode=require" npx prisma migrate deploy
+```text
+npx prisma generate
+npx prisma migrate deploy
+npm run prisma:seed
+npx next build
 ```
 
-Chỉ dùng `RUN_PRISMA_MIGRATE_DEPLOY=true` khi chấp nhận migration chạy trong build Vercel.
+Nếu bật migration hoặc seed mà thiếu `DATABASE_URL`, build sẽ fail với lỗi rõ ràng.
+
+Admin mặc định sau deploy:
+
+```text
+admin@gmail.com
+Admin123@
+```
 
 ## Upload file production
 

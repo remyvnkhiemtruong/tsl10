@@ -12,7 +12,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
 
   const { id } = await params;
   const app = await prisma.application.findFirst({
-    where: { OR: [{ id }, { applicationCode: id }] },
+    where: { deletedAt: null, OR: [{ id }, { applicationCode: id }] },
     include: { academicRecords: true, priorities: true, awards: true, files: true }
   });
 

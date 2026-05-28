@@ -29,6 +29,7 @@ export default async function AdminApplicationsPage({
   const q = params.q?.trim() ?? "";
   const status = params.status && STATUS_LABELS[params.status] ? params.status : "";
   const where: Prisma.ApplicationWhereInput = {
+    deletedAt: null,
     ...(status ? { status: status as Prisma.EnumApplicationStatusFilter<"Application"> } : {}),
     ...(q
       ? {

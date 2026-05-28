@@ -9,6 +9,7 @@ export async function GET() {
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const applications = await prisma.application.findMany({
+    where: { deletedAt: null },
     orderBy: { submittedAt: "desc" },
     take: 200,
     include: { files: true, priorities: true, awards: true }

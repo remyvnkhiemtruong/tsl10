@@ -78,6 +78,8 @@ enum FileStatus {
 enum LogAction {
   CREATED
   VIEWED
+  UPDATED
+  DELETED
   STATUS_UPDATED
   FILE_REVIEWED
   NOTE_UPDATED
@@ -131,6 +133,9 @@ model Application {
   commitmentAccepted Boolean           @default(false)
   publicNote         String?
   internalNote       String?
+  deletedAt          DateTime?
+  deletedById        String?
+  deleteReason       String?
   submittedAt        DateTime          @default(now())
   createdAt          DateTime          @default(now())
   updatedAt          DateTime          @updatedAt
@@ -145,6 +150,7 @@ model Application {
   @@index([fullName])
   @@index([secondarySchool])
   @@index([selectedOptionNumber])
+  @@index([deletedAt])
 }
 
 model AcademicRecord {

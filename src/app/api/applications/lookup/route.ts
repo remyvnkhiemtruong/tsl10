@@ -21,6 +21,7 @@ export async function GET(request: Request) {
 
   const app = await prisma.application.findFirst({
     where: {
+      deletedAt: null,
       applicationCode: parsed.data.applicationCode.trim(),
       citizenId: parsed.data.citizenId.trim(),
       dateOfBirth: new Date(parsed.data.dateOfBirth)

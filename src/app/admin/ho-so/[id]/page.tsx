@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Download, Eye } from "lucide-react";
+import { Download, Eye, Pencil } from "lucide-react";
 import { AdminShell } from "@/components/AdminShell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -20,6 +20,7 @@ import {
   STATUS_LABELS,
 } from "@/lib/constants";
 import { formatDate, formatBytes } from "@/lib/utils";
+import { DeleteApplicationButton } from "./DeleteApplicationButton";
 
 export const dynamic = "force-dynamic";
 
@@ -32,8 +33,8 @@ function statusVariant(status: string): "secondary" | "success" | "warning" | "d
 
 export default async function AdminApplicationDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const app = await prisma.application.findUnique({
-    where: { id },
+  const app = await prisma.application.findFirst({
+    where: { id, deletedAt: null },
     include: {
       academicRecords: { orderBy: { grade: "asc" } },
       priorities: true,
@@ -56,12 +57,21 @@ export default async function AdminApplicationDetailPage({ params }: { params: P
             <Badge variant={statusVariant(app.status)}>{STATUS_LABELS[app.status] ?? app.status}</Badge>
           </div>
         </div>
-        <Link
-          className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800"
-          href={`/api/admin/applications/${app.id}/pdf`}
-        >
-          <Download size={16} /> Xuất PDF
-        </Link>
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <Link
+            className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-slate-50"
+            href={`/admin/ho-so/${app.id}/chinh-sua`}
+          >
+            <Pencil size={16} /> Chỉnh sửa hồ sơ
+          </Link>
+          <Link
+            className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800"
+            href={`/api/admin/applications/${app.id}/pdf`}
+          >
+            <Download size={16} /> Xuất PDF
+          </Link>
+          <DeleteApplicationButton applicationId={app.id} />
+        </div>
       </div>
 
       <div className="mt-6 grid gap-4 lg:grid-cols-[1.2fr_.8fr]">

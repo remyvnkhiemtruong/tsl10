@@ -9,7 +9,7 @@ Hệ thống đăng ký dự tuyển vào lớp 10 cho **Trường THPT Võ Văn
 - Upload ảnh 4x6, học bạ, giấy khai sinh/CCCD, minh chứng ưu tiên/khuyến khích.
 - Tính điểm xét tuyển dự kiến A + B + C phục vụ hội đồng tuyển sinh, không tự kết luận trúng tuyển.
 - Tra cứu hồ sơ bằng mã hồ sơ, số định danh và ngày sinh.
-- Admin đăng nhập, xem danh sách/chi tiết hồ sơ, duyệt file, cập nhật trạng thái và xuất Excel/PDF.
+- Admin đăng nhập, xem danh sách/chi tiết hồ sơ, duyệt file, cập nhật trạng thái, chỉnh sửa/xóa mềm hồ sơ và xuất Excel/PDF.
 
 ## Chạy local
 
@@ -30,9 +30,9 @@ docker compose up -d
 
 Mở `http://localhost:3000`.
 
-## Tài khoản admin local
+## Tài khoản admin
 
-Seed local mặc định:
+Seed mặc định tạo tài khoản:
 
 ```text
 Email: admin@gmail.com
@@ -45,7 +45,7 @@ Có thể đổi bằng biến môi trường khi seed:
 SEED_ADMIN_EMAIL="admin@example.com" SEED_ADMIN_PASSWORD="MatKhauManh" npm run prisma:seed
 ```
 
-Không seed tài khoản mặc định trong production. Production cần `SEED_ADMIN_EMAIL` và `SEED_ADMIN_PASSWORD` rõ ràng nếu chạy seed thủ công.
+Nếu dùng tài khoản mặc định ở production, hãy đổi mật khẩu sau lần đăng nhập đầu tiên khi hệ thống có màn đổi mật khẩu.
 
 ## Upload file
 
@@ -68,24 +68,43 @@ STORAGE_PROVIDER=vercel_blob
 BLOB_READ_WRITE_TOKEN=vercel_blob_rw_xxxxxxxxxxxxxxxxxxxxx
 BLOB_ACCESS=private
 MAX_UPLOAD_MB=25
-RUN_PRISMA_MIGRATE_DEPLOY=false
+RUN_PRISMA_MIGRATE_DEPLOY=true
+RUN_PRISMA_SEED=true
+SEED_SAMPLE_DATA=false
+SEED_ADMIN_EMAIL=admin@gmail.com
+SEED_ADMIN_PASSWORD=Admin123@
 NODE_ENV=production
 ```
 
-## Deploy Vercel
+## Deploy Vercel dùng ngay
 
 1. Import repo vào Vercel.
-2. Tạo PostgreSQL production và đặt `DATABASE_URL`.
-3. Tạo Vercel Blob Store, đặt `BLOB_READ_WRITE_TOKEN`, `STORAGE_PROVIDER=vercel_blob`, `BLOB_ACCESS=private`.
-4. Đặt `JWT_SECRET` mạnh và `NEXT_PUBLIC_APP_URL`.
-5. Build command trong `vercel.json`: `npm run vercel-build`.
-6. Chạy migration production thủ công:
+2. Tạo PostgreSQL hoặc liên kết Vercel Postgres/Neon/Supabase.
+3. Tạo Vercel Blob Store.
+4. Set env:
 
-```bash
-DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE?sslmode=require" npx prisma migrate deploy
+```text
+NEXT_PUBLIC_APP_URL=https://your-project.vercel.app
+DATABASE_URL=postgresql://USER:PASSWORD@HOST:PORT/DATABASE?sslmode=require
+JWT_SECRET=replace-with-a-long-random-secret
+BLOB_READ_WRITE_TOKEN=vercel_blob_rw_xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+STORAGE_PROVIDER=vercel_blob
+BLOB_ACCESS=private
+RUN_PRISMA_MIGRATE_DEPLOY=true
+RUN_PRISMA_SEED=true
+SEED_SAMPLE_DATA=false
+SEED_ADMIN_EMAIL=admin@gmail.com
+SEED_ADMIN_PASSWORD=Admin123@
 ```
 
-Script Vercel build chạy `npx prisma generate` trước `next build`. Chỉ bật `RUN_PRISMA_MIGRATE_DEPLOY=true` nếu chủ động muốn migration chạy trong build.
+5. Build command trong `vercel.json`: `npm run vercel-build`.
+6. Khi build, script chạy `npx prisma generate`, `npx prisma migrate deploy`, `npm run prisma:seed`, rồi `npx next build`.
+7. Sau deploy kiểm tra:
+   - `/api/health`
+   - `/admin/login`
+   - `/dang-ky`
+   - `/tra-cuu`
+8. Admin login: `admin@gmail.com` / `Admin123@`.
 
 ## Kiểm tra trước deploy
 
@@ -98,12 +117,13 @@ npx prisma generate
 Sau deploy, kiểm tra:
 
 - `/api/health`
+- `/admin/login`
 - `/dang-ky`
 - `/tra-cuu`
-- `/admin/login`
 - Xuất Excel tại `/api/admin/export/excel`
 
 ## Tài liệu nghiệp vụ
 
 - `docs/quy-che-tuyen-sinh-2026-2027.md`
 - `docs/danh-muc-hanh-chinh-34-tinh-thanh-2025.md`
+- `docs/vercel-database-bootstrap.md`

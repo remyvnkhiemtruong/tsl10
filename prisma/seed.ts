@@ -16,12 +16,17 @@ const subjectsByOption = Object.fromEntries(
 ) as Record<number, string>;
 
 async function main() {
-  if (process.env.NODE_ENV === "production" && (!process.env.SEED_ADMIN_EMAIL || !process.env.SEED_ADMIN_PASSWORD)) {
-    throw new Error("Production seed cần SEED_ADMIN_EMAIL và SEED_ADMIN_PASSWORD rõ ràng, không dùng tài khoản mặc định.");
+  const defaultEmail = "admin@gmail.com";
+  const defaultPassword = "Admin123@";
+  const email = process.env.SEED_ADMIN_EMAIL?.trim() || defaultEmail;
+  const password = process.env.SEED_ADMIN_PASSWORD?.trim() || defaultPassword;
+
+  if (email === defaultEmail && password === defaultPassword) {
+    console.warn(
+      "Seed đang dùng tài khoản admin mặc định admin@gmail.com / Admin123@. Hãy đổi mật khẩu sau khi triển khai production."
+    );
   }
 
-  const email = process.env.SEED_ADMIN_EMAIL ?? "admin@gmail.com";
-  const password = process.env.SEED_ADMIN_PASSWORD ?? "Admin123@";
   const passwordHash = await bcrypt.hash(password, 12);
 
   await prisma.user.upsert({
@@ -38,6 +43,12 @@ async function main() {
       role: Role.SUPER_ADMIN
     }
   });
+  console.log(`Seeded admin user: ${email}`);
+
+  if (process.env.SEED_SAMPLE_DATA !== "true") {
+    console.log("Skipping sample applications. Set SEED_SAMPLE_DATA=true to seed demo data.");
+    return;
+  }
 
   const samples = [
     {

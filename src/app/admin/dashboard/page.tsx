@@ -15,10 +15,14 @@ function statusVariant(status: string): "secondary" | "success" | "warning" | "d
 
 export default async function AdminDashboardPage() {
   const [total, byStatus, byOption, recent] = await Promise.all([
-    prisma.application.count(),
-    prisma.application.groupBy({ by: ["status"], _count: { status: true } }),
-    prisma.application.groupBy({ by: ["selectedOptionNumber"], _count: { selectedOptionNumber: true } }),
-    prisma.application.findMany({ orderBy: { submittedAt: "desc" }, take: 5 }),
+    prisma.application.count({ where: { deletedAt: null } }),
+    prisma.application.groupBy({ by: ["status"], where: { deletedAt: null }, _count: { status: true } }),
+    prisma.application.groupBy({
+      by: ["selectedOptionNumber"],
+      where: { deletedAt: null },
+      _count: { selectedOptionNumber: true },
+    }),
+    prisma.application.findMany({ where: { deletedAt: null }, orderBy: { submittedAt: "desc" }, take: 5 }),
   ]);
 
   return (

@@ -46,6 +46,12 @@ const optionalDateString = z
 const dateString = (label: string) =>
   requiredText(label).refine((value) => !Number.isNaN(new Date(value).getTime()), `${label} không hợp lệ`);
 
+function normalizePhoneValue(value: string) {
+  const trimmed = value.trim();
+  const digits = trimmed.replace(/\D/g, "");
+  return trimmed.startsWith("+") ? `+${digits}` : digits;
+}
+
 const requiredScore = (label: string) =>
   z.preprocess(
     (value) => {
@@ -58,24 +64,21 @@ const requiredScore = (label: string) =>
       .max(10, "Điểm tối đa là 10")
   );
 
-const optionalEmail = z.preprocess(
-  (value) => (typeof value === "string" && value.trim() === "" ? undefined : value),
-  z.string().trim().email("Email không hợp lệ").optional()
-);
-
-const optionalPhone = (label: string) =>
-  z
-    .string()
-    .trim()
-    .transform((value) => value.replace(/\s+/g, ""))
-    .optional()
-    .refine((value) => !value || /^\+?\d{8,15}$/.test(value), `${label} chưa hợp lệ`)
-    .transform((value) => value || undefined);
-
-const requiredPhone = (label: string) =>
+const phoneSchema = (label: string) =>
   requiredText(label)
-    .transform((value) => value.replace(/\s+/g, ""))
-    .refine((value) => /^\+?\d{8,15}$/.test(value), `${label} chưa hợp lệ`);
+    .refine((value) => /^\+?[\d\s.-]+$/.test(value), `${label} chưa hợp lệ`)
+    .refine((value) => {
+      const digits = value.replace(/\D/g, "");
+      return digits.length >= 9 && digits.length <= 15;
+    }, `${label} chưa hợp lệ`)
+    .transform(normalizePhoneValue);
+
+const requiredEmail = z
+  .string()
+  .trim()
+  .min(1, "Email thí sinh là thông tin bắt buộc")
+  .email("Email thí sinh không hợp lệ")
+  .transform((value) => value.toLowerCase());
 
 export const uploadedFileInputSchema = z
   .object({
@@ -169,10 +172,10 @@ export const applicationCreateSchema = z
     ward: requiredText("Xã/phường"),
     wardOther: optionalText,
     province: provinceSchema,
-    studentPhone: optionalPhone("Số điện thoại thí sinh"),
-    email: optionalEmail,
+    studentPhone: phoneSchema("Số điện thoại thí sinh"),
+    email: requiredEmail,
     guardianName: requiredText("Họ tên cha/mẹ/người giám hộ"),
-    guardianPhone: requiredPhone("Điện thoại liên hệ"),
+    guardianPhone: phoneSchema("Số điện thoại phụ huynh/người giám hộ"),
     priorities: z.array(priorityTypeSchema).default([]),
     awards: z.array(awardInputSchema).default([]),
     academicRecords: z.array(academicRecordInputSchema).length(4, "Cần đủ điểm lớp 6, 7, 8, 9"),
@@ -270,6 +273,77 @@ export const applicationCreateSchema = z
 
 export type ApplicationCreateInput = z.infer<typeof applicationCreateSchema>;
 
+export const adminApplicationUpdateSchema = z
+  .object({
+    fullName: requiredText("Họ và tên")
+      .min(2, "Họ và tên quá ngắn")
+      .transform((value) => value.toUpperCase()),
+    dateOfBirth: dateString("Ngày sinh"),
+    gender: z.enum(["NAM", "NU", "KHAC"]),
+    ethnicity: requiredText("Dân tộc"),
+    birthPlace: provinceSchema,
+    citizenId: z.string().trim().regex(/^\d{9,12}$/, "Số định danh/CCCD phải gồm 9-12 chữ số"),
+    issueDate: optionalDateString,
+    issuePlace: optionalText,
+    secondarySchool: requiredText("Trường THCS"),
+    schoolYear: schoolYearSchema,
+    houseNumber: requiredText("Số nhà"),
+    hamlet: requiredText("Ấp/khóm"),
+    ward: requiredText("Xã/phường"),
+    wardOther: optionalText,
+    province: provinceSchema,
+    studentPhone: phoneSchema("Số điện thoại thí sinh"),
+    email: requiredEmail,
+    guardianName: requiredText("Họ tên cha/mẹ/người giám hộ"),
+    guardianPhone: phoneSchema("Số điện thoại phụ huynh/người giám hộ"),
+    priorities: z.array(priorityTypeSchema).default([]),
+    awards: z.array(awardInputSchema).default([]),
+    academicRecords: z.array(academicRecordInputSchema).length(4, "Cần đủ điểm lớp 6, 7, 8, 9"),
+    selectedOptionNumber: z.number().int().min(1).max(6),
+    selectedSubjects: requiredText("Phương án môn học"),
+    status: applicationStatusSchema,
+    publicNote: optionalText,
+    internalNote: optionalText,
+  })
+  .superRefine((value, ctx) => {
+    if (value.issueDate && !value.issuePlace) {
+      ctx.addIssue({ code: "custom", path: ["issuePlace"], message: "Nếu có ngày cấp thì cần chọn nơi cấp" });
+    }
+    if (value.issuePlace && !ISSUE_PLACE_OPTIONS.includes(value.issuePlace as (typeof ISSUE_PLACE_OPTIONS)[number])) {
+      ctx.addIssue({ code: "custom", path: ["issuePlace"], message: "Nơi cấp không hợp lệ" });
+    }
+    if (!isKnownProvinceName(value.province) || !isKnownProvinceName(value.birthPlace)) {
+      ctx.addIssue({ code: "custom", path: ["province"], message: "Tỉnh/thành phố không hợp lệ" });
+    }
+    if (value.ward === WARD_OTHER_VALUE) {
+      if (!value.wardOther || value.wardOther.trim().length < 2) {
+        ctx.addIssue({ code: "custom", path: ["wardOther"], message: "Vui lòng nhập xã/phường khác" });
+      }
+    } else if (!isKnownWardName(value.province, value.ward)) {
+      ctx.addIssue({ code: "custom", path: ["ward"], message: "Xã/phường không thuộc tỉnh/thành phố đã chọn" });
+    }
+    const selected = SUBJECT_OPTIONS.find((option) => option.optionNumber === value.selectedOptionNumber);
+    if (!selected || selected.subjects !== value.selectedSubjects) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["selectedOptionNumber"],
+        message: "Phương án môn học không hợp lệ",
+      });
+    }
+    const grades = new Set(value.academicRecords.map((record) => record.grade));
+    for (const grade of [6, 7, 8, 9]) {
+      if (!grades.has(grade)) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["academicRecords"],
+          message: `Thiếu kết quả học tập lớp ${grade}`,
+        });
+      }
+    }
+  });
+
+export type AdminApplicationUpdateInput = z.infer<typeof adminApplicationUpdateSchema>;
+
 export const lookupSchema = z.object({
   applicationCode: requiredText("Mã hồ sơ"),
   citizenId: z.string().trim().min(9, "Số định danh chưa hợp lệ"),
@@ -277,7 +351,7 @@ export const lookupSchema = z.object({
 });
 
 export const loginSchema = z.object({
-  email: z.string().trim().email("Email không hợp lệ"),
+  email: z.string().trim().email("Email không hợp lệ").transform((value) => value.toLowerCase()),
   password: z.string().min(1, "Mật khẩu là thông tin bắt buộc"),
 });
 

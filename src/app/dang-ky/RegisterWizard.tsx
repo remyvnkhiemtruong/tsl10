@@ -167,7 +167,18 @@ function uniqueMessages(fieldErrors: FieldErrors) {
 }
 
 function normalizePhone(value: string) {
-  return value.replace(/\s+/g, "");
+  const trimmed = value.trim();
+  const digits = trimmed.replace(/\D/g, "");
+  return trimmed.startsWith("+") ? `+${digits}` : digits;
+}
+
+function phoneError(value: string, label: string) {
+  const trimmed = value.trim();
+  if (!trimmed) return `${label} là thông tin bắt buộc.`;
+  if (!/^\+?[\d\s.-]+$/.test(trimmed)) return `${label} chưa hợp lệ.`;
+  const digits = trimmed.replace(/\D/g, "");
+  if (digits.length < 9 || digits.length > 15) return `${label} chưa hợp lệ.`;
+  return "";
 }
 
 function formatScore(value: number) {
@@ -306,14 +317,13 @@ export function RegisterWizard() {
       if (!form.province) nextErrors.province = "Vui lòng chọn tỉnh/thành phố thường trú.";
       if (!form.ward) nextErrors.ward = "Vui lòng chọn xã/phường thường trú.";
       if (form.ward === WARD_OTHER_VALUE && form.wardOther.trim().length < 2) nextErrors.wardOther = "Vui lòng nhập xã/phường khác.";
-      if (form.studentPhone && !/^\+?\d{8,15}$/.test(normalizePhone(form.studentPhone))) {
-        nextErrors.studentPhone = "Số điện thoại thí sinh chưa hợp lệ.";
-      }
-      if (form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) nextErrors.email = "Email không hợp lệ.";
+      const studentPhoneError = phoneError(form.studentPhone, "Số điện thoại thí sinh");
+      if (studentPhoneError) nextErrors.studentPhone = studentPhoneError;
+      if (!form.email.trim()) nextErrors.email = "Email thí sinh là thông tin bắt buộc.";
+      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) nextErrors.email = "Email thí sinh không hợp lệ.";
       if (!form.guardianName.trim()) nextErrors.guardianName = "Vui lòng nhập họ tên cha/mẹ/người giám hộ.";
-      if (!/^\+?\d{8,15}$/.test(normalizePhone(form.guardianPhone))) {
-        nextErrors.guardianPhone = "Điện thoại liên hệ tối thiểu 8 số.";
-      }
+      const guardianPhoneError = phoneError(form.guardianPhone, "Số điện thoại phụ huynh/người giám hộ");
+      if (guardianPhoneError) nextErrors.guardianPhone = guardianPhoneError;
     }
     if (targetStep === 3) {
       form.awards.forEach((award, index) => {
@@ -420,6 +430,7 @@ export function RegisterWizard() {
         ...form,
         permanentAddress,
         studentPhone: normalizePhone(form.studentPhone),
+        email: form.email.trim().toLowerCase(),
         guardianPhone: normalizePhone(form.guardianPhone),
         uploadedFiles: files,
       };
@@ -725,7 +736,7 @@ export function RegisterWizard() {
                   />
                 </Field>
               )}
-              <Field label="Số điện thoại thí sinh" error={fieldError("studentPhone")}>
+              <Field label="Số điện thoại thí sinh *" error={fieldError("studentPhone")}>
                 <Input
                   inputMode="tel"
                   value={form.studentPhone}
@@ -733,7 +744,7 @@ export function RegisterWizard() {
                   className={controlErrorClass(Boolean(fieldError("studentPhone")))}
                 />
               </Field>
-              <Field label="Email" error={fieldError("email")}>
+              <Field label="Email thí sinh *" error={fieldError("email")}>
                 <Input
                   type="email"
                   value={form.email}
@@ -741,14 +752,14 @@ export function RegisterWizard() {
                   className={controlErrorClass(Boolean(fieldError("email")))}
                 />
               </Field>
-              <Field label="Họ tên cha/mẹ/người giám hộ" error={fieldError("guardianName")}>
+              <Field label="Họ tên cha/mẹ/người giám hộ *" error={fieldError("guardianName")}>
                 <Input
                   value={form.guardianName}
                   onChange={(event) => update("guardianName", event.target.value)}
                   className={controlErrorClass(Boolean(fieldError("guardianName")))}
                 />
               </Field>
-              <Field label="Điện thoại liên hệ" error={fieldError("guardianPhone")}>
+              <Field label="Điện thoại liên hệ phụ huynh/người giám hộ *" error={fieldError("guardianPhone")}>
                 <Input
                   inputMode="tel"
                   value={form.guardianPhone}
@@ -992,6 +1003,10 @@ export function RegisterWizard() {
               <Summary label="Nơi sinh" value={form.birthPlace} />
               <Summary label="Trường THCS" value={form.secondarySchool} />
               <Summary label="Địa chỉ thường trú" value={permanentAddress} className="sm:col-span-2" />
+              <Summary label="Số điện thoại thí sinh" value={normalizePhone(form.studentPhone)} />
+              <Summary label="Email thí sinh" value={form.email.trim().toLowerCase()} />
+              <Summary label="Phụ huynh/người giám hộ" value={form.guardianName} />
+              <Summary label="SĐT phụ huynh/người giám hộ" value={normalizePhone(form.guardianPhone)} />
               <Summary label="Phương án" value={`${form.selectedOptionNumber} - ${form.selectedSubjects}`} className="sm:col-span-2" />
               <Summary label="A - Tổng điểm TB môn THCS" value={formatScore(scoreDetails.academicAverageSum)} />
               <Summary label="B - Điểm quy đổi học tập/rèn luyện" value={formatScore(scoreDetails.convertedScoreSum)} />

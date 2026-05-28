@@ -24,6 +24,7 @@ export async function buildApplicationsWorkbook(applications: ApplicationExportR
     { header: "Xã/phường", key: "ward", width: 20 },
     { header: "Tỉnh/thành phố", key: "province", width: 20 },
     { header: "Địa chỉ thường trú ghép", key: "permanentAddress", width: 38 },
+    { header: "Email thí sinh", key: "email", width: 28 },
     { header: "SĐT học sinh", key: "studentPhone", width: 16 },
     { header: "Phụ huynh", key: "guardianName", width: 24 },
     { header: "SĐT phụ huynh", key: "guardianPhone", width: 16 },
@@ -57,6 +58,7 @@ export async function buildApplicationsWorkbook(applications: ApplicationExportR
       ward: app.ward ?? "",
       province: app.province ?? "",
       permanentAddress: app.permanentAddress,
+      email: app.email ?? "",
       studentPhone: app.studentPhone ?? "",
       guardianName: app.guardianName,
       guardianPhone: app.guardianPhone,
@@ -73,7 +75,7 @@ export async function buildApplicationsWorkbook(applications: ApplicationExportR
 
   sheet.autoFilter = {
     from: "A1",
-    to: "U1",
+    to: "V1",
   };
 
   return workbook;
