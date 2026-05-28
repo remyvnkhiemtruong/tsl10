@@ -4,9 +4,9 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import bcrypt from "bcryptjs";
 import { SUBJECT_OPTIONS } from "../src/lib/constants";
 import { DEFAULT_SCHOOL_SETTINGS } from "../src/lib/school-contact";
+import { resolveDatabaseUrl } from "../src/lib/database-url";
 
-const connectionString =
-  process.env.DATABASE_URL ?? "postgresql://postgres:postgres@localhost:5432/vvk_admission?schema=public";
+const connectionString = resolveDatabaseUrl(process.env, true);
 
 const prisma = new PrismaClient({
   adapter: new PrismaPg({ connectionString })
@@ -46,20 +46,10 @@ async function main() {
   });
   console.log(`Seeded admin user: ${email}`);
 
-  await prisma.schoolSetting.upsert({
-    where: { id: "default" },
-    update: {},
-    create: {
-      id: "default",
-      schoolContactJson: DEFAULT_SCHOOL_SETTINGS.contact,
-      leadershipContactsJson: DEFAULT_SCHOOL_SETTINGS.leadershipContacts,
-      publicLeadershipPhones: DEFAULT_SCHOOL_SETTINGS.publicLeadershipPhones,
-      registrationDeadline: new Date(DEFAULT_SCHOOL_SETTINGS.registrationDeadline),
-      admissionRound1PublishAt: new Date(DEFAULT_SCHOOL_SETTINGS.admissionRound1PublishAt),
-      admissionRound2PublishAt: new Date(DEFAULT_SCHOOL_SETTINGS.admissionRound2PublishAt),
-      personalResultLookupEnabled: DEFAULT_SCHOOL_SETTINGS.personalResultLookupEnabled,
-      registrationLockedNote: DEFAULT_SCHOOL_SETTINGS.registrationLockedNote,
-    },
+  await prisma.schoolSettings.upsert({
+    where: { id: DEFAULT_SCHOOL_SETTINGS.id },
+    update: DEFAULT_SCHOOL_SETTINGS,
+    create: DEFAULT_SCHOOL_SETTINGS
   });
   console.log("Seeded school settings");
 
