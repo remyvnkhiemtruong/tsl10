@@ -66,8 +66,7 @@ export const FILE_TYPE_LABELS: Record<string, string> = {
   HOC_BA_LOP_7: "Ảnh học bạ lớp 7",
   HOC_BA_LOP_8: "Ảnh học bạ lớp 8",
   HOC_BA_LOP_9: "Ảnh học bạ lớp 9",
-  GIAY_KHAI_SINH: "Giấy khai sinh",
-  CCCD: "CCCD/Số định danh",
+  GIAY_KHAI_SINH: "Giấy khai sinh hoặc CCCD/Số định danh",
   MINH_CHUNG_UU_TIEN: "Minh chứng ưu tiên/đối tượng khác",
   MINH_CHUNG_KHUYEN_KHICH: "Minh chứng khuyến khích",
   HO_NGHEO_CAN_NGHEO: "Giấy xác nhận hộ nghèo/cận nghèo",
@@ -104,7 +103,15 @@ export const ACADEMIC_LEVEL_LABELS: Record<string, string> = {
   CHUA_DAT: "Chưa đạt",
 };
 
-export const ALLOWED_MIME_TYPES = ["image/jpeg", "image/png", "application/pdf"] as const;
+export const ALLOWED_MIME_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+  "image/heic",
+  "image/heif",
+  "application/pdf",
+] as const;
 
 export const FILE_SIZE_LIMITS_MB: Record<string, number> = {
   PHOTO_4X6: 5,
