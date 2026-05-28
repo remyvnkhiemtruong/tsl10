@@ -1,10 +1,13 @@
 import { NextResponse } from "next/server";
 import { Prisma, FileType, PriorityType, Prize } from "@prisma/client";
 import { ZodError } from "zod";
+import { calculateAdmissionScoreDetails } from "@/lib/admission-score";
+import { WARD_OTHER_VALUE } from "@/lib/administrative-units";
+import { composePermanentAddress } from "@/lib/address";
 import { generateApplicationCode } from "@/lib/application-code";
 import { SUBJECT_OPTIONS } from "@/lib/constants";
 import { prisma } from "@/lib/prisma";
-import { applicationCreateSchema, prizeScore } from "@/lib/validation";
+import { applicationCreateSchema, prizeScore, zodFieldErrors } from "@/lib/validation";
 
 export const runtime = "nodejs";
 
@@ -27,6 +30,14 @@ export async function POST(request: Request) {
 
     const selected = SUBJECT_OPTIONS.find((item) => item.optionNumber === parsed.selectedOptionNumber);
     const bonusScore = parsed.awards.reduce((sum, award) => sum + prizeScore(award.prize), 0);
+    const finalWard = parsed.ward === WARD_OTHER_VALUE ? parsed.wardOther : parsed.ward;
+    const permanentAddress = composePermanentAddress({
+      houseNumber: parsed.houseNumber,
+      hamlet: parsed.hamlet,
+      ward: finalWard,
+      province: parsed.province,
+    });
+    const scoreDetails = calculateAdmissionScoreDetails(parsed.academicRecords, bonusScore);
 
     for (let attempt = 0; attempt < 3; attempt += 1) {
       const code = await generateApplicationCode();
@@ -44,10 +55,10 @@ export async function POST(request: Request) {
             issuePlace: parsed.issuePlace,
             secondarySchool: parsed.secondarySchool,
             schoolYear: parsed.schoolYear,
-            permanentAddress: parsed.permanentAddress,
+            permanentAddress,
             houseNumber: parsed.houseNumber,
             hamlet: parsed.hamlet,
-            ward: parsed.ward,
+            ward: finalWard,
             province: parsed.province,
             studentPhone: parsed.studentPhone,
             email: parsed.email || null,
@@ -98,7 +109,14 @@ export async function POST(request: Request) {
                 publicUrl: file.publicUrl || null,
               })),
             },
-            logs: { create: [{ action: "CREATED", note: "Học sinh nộp hồ sơ trực tuyến" }] },
+            logs: {
+              create: [
+                {
+                  action: "CREATED",
+                  note: `Học sinh nộp hồ sơ trực tuyến. Điểm xét tuyển dự kiến: ${scoreDetails.totalScore}`,
+                },
+              ],
+            },
           },
         });
 
@@ -118,7 +136,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error(error);
     if (error instanceof ZodError) {
-      return NextResponse.json({ error: zodMessage(error) }, { status: 400 });
+      return NextResponse.json({ error: zodMessage(error), fieldErrors: zodFieldErrors(error) }, { status: 400 });
     }
     return NextResponse.json({ error: error instanceof Error ? error.message : "Không thể tạo hồ sơ" }, { status: 400 });
   }

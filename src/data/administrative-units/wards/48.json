@@ -1,0 +1,472 @@
+[
+  {
+    "code": "20194",
+    "name": "Phường Hải Vân",
+    "type": "phường"
+  },
+  {
+    "code": "20197",
+    "name": "Phường Liên Chiểu",
+    "type": "phường"
+  },
+  {
+    "code": "20200",
+    "name": "Phường Hòa Khánh",
+    "type": "phường"
+  },
+  {
+    "code": "20209",
+    "name": "Phường Thanh Khê",
+    "type": "phường"
+  },
+  {
+    "code": "20242",
+    "name": "Phường Hải Châu",
+    "type": "phường"
+  },
+  {
+    "code": "20257",
+    "name": "Phường Hòa Cường",
+    "type": "phường"
+  },
+  {
+    "code": "20260",
+    "name": "Phường Cẩm Lệ",
+    "type": "phường"
+  },
+  {
+    "code": "20263",
+    "name": "Phường Sơn Trà",
+    "type": "phường"
+  },
+  {
+    "code": "20275",
+    "name": "Phường An Hải",
+    "type": "phường"
+  },
+  {
+    "code": "20285",
+    "name": "Phường Ngũ Hành Sơn",
+    "type": "phường"
+  },
+  {
+    "code": "20305",
+    "name": "Phường An Khê",
+    "type": "phường"
+  },
+  {
+    "code": "20308",
+    "name": "Xã Bà Nà",
+    "type": "xã"
+  },
+  {
+    "code": "20314",
+    "name": "Phường Hòa Xuân",
+    "type": "phường"
+  },
+  {
+    "code": "20320",
+    "name": "Xã Hòa Vang",
+    "type": "xã"
+  },
+  {
+    "code": "20332",
+    "name": "Xã Hòa Tiến",
+    "type": "xã"
+  },
+  {
+    "code": "20333",
+    "name": "Đặc khu Hoàng Sa",
+    "type": "đặc khu"
+  },
+  {
+    "code": "20335",
+    "name": "Phường Bàn Thạch",
+    "type": "phường"
+  },
+  {
+    "code": "20341",
+    "name": "Phường Tam Kỳ",
+    "type": "phường"
+  },
+  {
+    "code": "20350",
+    "name": "Phường Hương Trà",
+    "type": "phường"
+  },
+  {
+    "code": "20356",
+    "name": "Phường Quảng Phú",
+    "type": "phường"
+  },
+  {
+    "code": "20364",
+    "name": "Xã Chiên Đàn",
+    "type": "xã"
+  },
+  {
+    "code": "20380",
+    "name": "Xã Tây Hồ",
+    "type": "xã"
+  },
+  {
+    "code": "20392",
+    "name": "Xã Phú Ninh",
+    "type": "xã"
+  },
+  {
+    "code": "20401",
+    "name": "Phường Hội An Tây",
+    "type": "phường"
+  },
+  {
+    "code": "20410",
+    "name": "Phường Hội An",
+    "type": "phường"
+  },
+  {
+    "code": "20413",
+    "name": "Phường Hội An Đông",
+    "type": "phường"
+  },
+  {
+    "code": "20434",
+    "name": "Xã Tân Hiệp",
+    "type": "xã"
+  },
+  {
+    "code": "20443",
+    "name": "Xã Hùng Sơn",
+    "type": "xã"
+  },
+  {
+    "code": "20455",
+    "name": "Xã Tây Giang",
+    "type": "xã"
+  },
+  {
+    "code": "20458",
+    "name": "Xã Avương",
+    "type": "xã"
+  },
+  {
+    "code": "20467",
+    "name": "Xã Đông Giang",
+    "type": "xã"
+  },
+  {
+    "code": "20476",
+    "name": "Xã Sông Kôn",
+    "type": "xã"
+  },
+  {
+    "code": "20485",
+    "name": "Xã Sông Vàng",
+    "type": "xã"
+  },
+  {
+    "code": "20494",
+    "name": "Xã Bến Hiên",
+    "type": "xã"
+  },
+  {
+    "code": "20500",
+    "name": "Xã Đại Lộc",
+    "type": "xã"
+  },
+  {
+    "code": "20506",
+    "name": "Xã Thượng Đức",
+    "type": "xã"
+  },
+  {
+    "code": "20515",
+    "name": "Xã Hà Nha",
+    "type": "xã"
+  },
+  {
+    "code": "20539",
+    "name": "Xã Vu Gia",
+    "type": "xã"
+  },
+  {
+    "code": "20542",
+    "name": "Xã Phú Thuận",
+    "type": "xã"
+  },
+  {
+    "code": "20551",
+    "name": "Phường Điện Bàn",
+    "type": "phường"
+  },
+  {
+    "code": "20557",
+    "name": "Phường Điện Bàn Bắc",
+    "type": "phường"
+  },
+  {
+    "code": "20569",
+    "name": "Xã Điện Bàn Tây",
+    "type": "xã"
+  },
+  {
+    "code": "20575",
+    "name": "Phường An Thắng",
+    "type": "phường"
+  },
+  {
+    "code": "20579",
+    "name": "Phường Điện Bàn Đông",
+    "type": "phường"
+  },
+  {
+    "code": "20587",
+    "name": "Xã Gò Nổi",
+    "type": "xã"
+  },
+  {
+    "code": "20599",
+    "name": "Xã Nam Phước",
+    "type": "xã"
+  },
+  {
+    "code": "20611",
+    "name": "Xã Thu Bồn",
+    "type": "xã"
+  },
+  {
+    "code": "20623",
+    "name": "Xã Duy Xuyên",
+    "type": "xã"
+  },
+  {
+    "code": "20635",
+    "name": "Xã Duy Nghĩa",
+    "type": "xã"
+  },
+  {
+    "code": "20641",
+    "name": "Xã Quế Sơn",
+    "type": "xã"
+  },
+  {
+    "code": "20650",
+    "name": "Xã Xuân Phú",
+    "type": "xã"
+  },
+  {
+    "code": "20656",
+    "name": "Xã Nông Sơn",
+    "type": "xã"
+  },
+  {
+    "code": "20662",
+    "name": "Xã Quế Sơn Trung",
+    "type": "xã"
+  },
+  {
+    "code": "20669",
+    "name": "Xã Quế Phước",
+    "type": "xã"
+  },
+  {
+    "code": "20695",
+    "name": "Xã Thạnh Mỹ",
+    "type": "xã"
+  },
+  {
+    "code": "20698",
+    "name": "Xã La Êê",
+    "type": "xã"
+  },
+  {
+    "code": "20704",
+    "name": "Xã La Dêê",
+    "type": "xã"
+  },
+  {
+    "code": "20707",
+    "name": "Xã Nam Giang",
+    "type": "xã"
+  },
+  {
+    "code": "20710",
+    "name": "Xã Bến Giằng",
+    "type": "xã"
+  },
+  {
+    "code": "20716",
+    "name": "Xã Đắc Pring",
+    "type": "xã"
+  },
+  {
+    "code": "20722",
+    "name": "Xã Khâm Đức",
+    "type": "xã"
+  },
+  {
+    "code": "20728",
+    "name": "Xã Phước Hiệp",
+    "type": "xã"
+  },
+  {
+    "code": "20734",
+    "name": "Xã Phước Năng",
+    "type": "xã"
+  },
+  {
+    "code": "20740",
+    "name": "Xã Phước Chánh",
+    "type": "xã"
+  },
+  {
+    "code": "20752",
+    "name": "Xã Phước Thành",
+    "type": "xã"
+  },
+  {
+    "code": "20767",
+    "name": "Xã Việt An",
+    "type": "xã"
+  },
+  {
+    "code": "20770",
+    "name": "Xã Phước Trà",
+    "type": "xã"
+  },
+  {
+    "code": "20779",
+    "name": "Xã Hiệp Đức",
+    "type": "xã"
+  },
+  {
+    "code": "20791",
+    "name": "Xã Thăng Bình",
+    "type": "xã"
+  },
+  {
+    "code": "20794",
+    "name": "Xã Thăng An",
+    "type": "xã"
+  },
+  {
+    "code": "20818",
+    "name": "Xã Đồng Dương",
+    "type": "xã"
+  },
+  {
+    "code": "20827",
+    "name": "Xã Thăng Phú",
+    "type": "xã"
+  },
+  {
+    "code": "20836",
+    "name": "Xã Thăng Trường",
+    "type": "xã"
+  },
+  {
+    "code": "20848",
+    "name": "Xã Thăng Điền",
+    "type": "xã"
+  },
+  {
+    "code": "20854",
+    "name": "Xã Tiên Phước",
+    "type": "xã"
+  },
+  {
+    "code": "20857",
+    "name": "Xã Sơn Cẩm Hà",
+    "type": "xã"
+  },
+  {
+    "code": "20875",
+    "name": "Xã Lãnh Ngọc",
+    "type": "xã"
+  },
+  {
+    "code": "20878",
+    "name": "Xã Thạnh Bình",
+    "type": "xã"
+  },
+  {
+    "code": "20900",
+    "name": "Xã Trà My",
+    "type": "xã"
+  },
+  {
+    "code": "20908",
+    "name": "Xã Trà Liên",
+    "type": "xã"
+  },
+  {
+    "code": "20920",
+    "name": "Xã Trà Đốc",
+    "type": "xã"
+  },
+  {
+    "code": "20923",
+    "name": "Xã Trà Tân",
+    "type": "xã"
+  },
+  {
+    "code": "20929",
+    "name": "Xã Trà Giáp",
+    "type": "xã"
+  },
+  {
+    "code": "20938",
+    "name": "Xã Trà Leng",
+    "type": "xã"
+  },
+  {
+    "code": "20941",
+    "name": "Xã Trà Tập",
+    "type": "xã"
+  },
+  {
+    "code": "20944",
+    "name": "Xã Nam Trà My",
+    "type": "xã"
+  },
+  {
+    "code": "20950",
+    "name": "Xã Trà Linh",
+    "type": "xã"
+  },
+  {
+    "code": "20959",
+    "name": "Xã Trà Vân",
+    "type": "xã"
+  },
+  {
+    "code": "20965",
+    "name": "Xã Núi Thành",
+    "type": "xã"
+  },
+  {
+    "code": "20971",
+    "name": "Xã Tam Xuân",
+    "type": "xã"
+  },
+  {
+    "code": "20977",
+    "name": "Xã Đức Phú",
+    "type": "xã"
+  },
+  {
+    "code": "20984",
+    "name": "Xã Tam Anh",
+    "type": "xã"
+  },
+  {
+    "code": "20992",
+    "name": "Xã Tam Hải",
+    "type": "xã"
+  },
+  {
+    "code": "21004",
+    "name": "Xã Tam Mỹ",
+    "type": "xã"
+  }
+]

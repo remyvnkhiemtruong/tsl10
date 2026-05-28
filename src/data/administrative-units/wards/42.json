@@ -1,0 +1,347 @@
+[
+  {
+    "code": "18073",
+    "name": "Phường Thành Sen",
+    "type": "phường"
+  },
+  {
+    "code": "18100",
+    "name": "Phường Trần Phú",
+    "type": "phường"
+  },
+  {
+    "code": "18115",
+    "name": "Phường Bắc Hồng Lĩnh",
+    "type": "phường"
+  },
+  {
+    "code": "18118",
+    "name": "Phường Nam Hồng Lĩnh",
+    "type": "phường"
+  },
+  {
+    "code": "18133",
+    "name": "Xã Hương Sơn",
+    "type": "xã"
+  },
+  {
+    "code": "18160",
+    "name": "Xã Sơn Hồng",
+    "type": "xã"
+  },
+  {
+    "code": "18163",
+    "name": "Xã Sơn Tiến",
+    "type": "xã"
+  },
+  {
+    "code": "18172",
+    "name": "Xã Sơn Tây",
+    "type": "xã"
+  },
+  {
+    "code": "18184",
+    "name": "Xã Sơn Giang",
+    "type": "xã"
+  },
+  {
+    "code": "18196",
+    "name": "Xã Sơn Kim 1",
+    "type": "xã"
+  },
+  {
+    "code": "18199",
+    "name": "Xã Sơn Kim 2",
+    "type": "xã"
+  },
+  {
+    "code": "18202",
+    "name": "Xã Tứ Mỹ",
+    "type": "xã"
+  },
+  {
+    "code": "18223",
+    "name": "Xã Kim Hoa",
+    "type": "xã"
+  },
+  {
+    "code": "18229",
+    "name": "Xã Đức Thọ",
+    "type": "xã"
+  },
+  {
+    "code": "18244",
+    "name": "Xã Đức Minh",
+    "type": "xã"
+  },
+  {
+    "code": "18262",
+    "name": "Xã Đức Quang",
+    "type": "xã"
+  },
+  {
+    "code": "18277",
+    "name": "Xã Đức Thịnh",
+    "type": "xã"
+  },
+  {
+    "code": "18304",
+    "name": "Xã Đức Đồng",
+    "type": "xã"
+  },
+  {
+    "code": "18313",
+    "name": "Xã Vũ Quang",
+    "type": "xã"
+  },
+  {
+    "code": "18322",
+    "name": "Xã Mai Hoa",
+    "type": "xã"
+  },
+  {
+    "code": "18328",
+    "name": "Xã Thượng Đức",
+    "type": "xã"
+  },
+  {
+    "code": "18352",
+    "name": "Xã Nghi Xuân",
+    "type": "xã"
+  },
+  {
+    "code": "18364",
+    "name": "Xã Đan Hải",
+    "type": "xã"
+  },
+  {
+    "code": "18373",
+    "name": "Xã Tiên Điền",
+    "type": "xã"
+  },
+  {
+    "code": "18394",
+    "name": "Xã Cổ Đạm",
+    "type": "xã"
+  },
+  {
+    "code": "18406",
+    "name": "Xã Can Lộc",
+    "type": "xã"
+  },
+  {
+    "code": "18409",
+    "name": "Xã Hồng Lộc",
+    "type": "xã"
+  },
+  {
+    "code": "18418",
+    "name": "Xã Tùng Lộc",
+    "type": "xã"
+  },
+  {
+    "code": "18436",
+    "name": "Xã Trường Lưu",
+    "type": "xã"
+  },
+  {
+    "code": "18466",
+    "name": "Xã Gia Hanh",
+    "type": "xã"
+  },
+  {
+    "code": "18481",
+    "name": "Xã Xuân Lộc",
+    "type": "xã"
+  },
+  {
+    "code": "18484",
+    "name": "Xã Đồng Lộc",
+    "type": "xã"
+  },
+  {
+    "code": "18496",
+    "name": "Xã Hương Khê",
+    "type": "xã"
+  },
+  {
+    "code": "18502",
+    "name": "Xã Hà Linh",
+    "type": "xã"
+  },
+  {
+    "code": "18523",
+    "name": "Xã Hương Bình",
+    "type": "xã"
+  },
+  {
+    "code": "18532",
+    "name": "Xã Hương Phố",
+    "type": "xã"
+  },
+  {
+    "code": "18544",
+    "name": "Xã Hương Xuân",
+    "type": "xã"
+  },
+  {
+    "code": "18547",
+    "name": "Xã Phúc Trạch",
+    "type": "xã"
+  },
+  {
+    "code": "18550",
+    "name": "Xã Hương Đô",
+    "type": "xã"
+  },
+  {
+    "code": "18562",
+    "name": "Xã Thạch Hà",
+    "type": "xã"
+  },
+  {
+    "code": "18568",
+    "name": "Xã Lộc Hà",
+    "type": "xã"
+  },
+  {
+    "code": "18583",
+    "name": "Xã Mai Phụ",
+    "type": "xã"
+  },
+  {
+    "code": "18586",
+    "name": "Xã Đông Kinh",
+    "type": "xã"
+  },
+  {
+    "code": "18601",
+    "name": "Xã Việt Xuyên",
+    "type": "xã"
+  },
+  {
+    "code": "18604",
+    "name": "Xã Thạch Khê",
+    "type": "xã"
+  },
+  {
+    "code": "18619",
+    "name": "Xã Đồng Tiến",
+    "type": "xã"
+  },
+  {
+    "code": "18628",
+    "name": "Xã Thạch Lạc",
+    "type": "xã"
+  },
+  {
+    "code": "18634",
+    "name": "Xã Toàn Lưu",
+    "type": "xã"
+  },
+  {
+    "code": "18652",
+    "name": "Phường Hà Huy Tập",
+    "type": "phường"
+  },
+  {
+    "code": "18667",
+    "name": "Xã Thạch Xuân",
+    "type": "xã"
+  },
+  {
+    "code": "18673",
+    "name": "Xã Cẩm Xuyên",
+    "type": "xã"
+  },
+  {
+    "code": "18676",
+    "name": "Xã Thiên Cầm",
+    "type": "xã"
+  },
+  {
+    "code": "18682",
+    "name": "Xã Yên Hòa",
+    "type": "xã"
+  },
+  {
+    "code": "18685",
+    "name": "Xã Cẩm Bình",
+    "type": "xã"
+  },
+  {
+    "code": "18736",
+    "name": "Xã Cẩm Hưng",
+    "type": "xã"
+  },
+  {
+    "code": "18739",
+    "name": "Xã Cẩm Duệ",
+    "type": "xã"
+  },
+  {
+    "code": "18742",
+    "name": "Xã Cẩm Trung",
+    "type": "xã"
+  },
+  {
+    "code": "18748",
+    "name": "Xã Cẩm Lạc",
+    "type": "xã"
+  },
+  {
+    "code": "18754",
+    "name": "Phường Sông Trí",
+    "type": "phường"
+  },
+  {
+    "code": "18766",
+    "name": "Xã Kỳ Xuân",
+    "type": "xã"
+  },
+  {
+    "code": "18775",
+    "name": "Xã Kỳ Anh",
+    "type": "xã"
+  },
+  {
+    "code": "18781",
+    "name": "Phường Hải Ninh",
+    "type": "phường"
+  },
+  {
+    "code": "18787",
+    "name": "Xã Kỳ Văn",
+    "type": "xã"
+  },
+  {
+    "code": "18790",
+    "name": "Xã Kỳ Khang",
+    "type": "xã"
+  },
+  {
+    "code": "18814",
+    "name": "Xã Kỳ Hoa",
+    "type": "xã"
+  },
+  {
+    "code": "18823",
+    "name": "Phường Vũng Áng",
+    "type": "phường"
+  },
+  {
+    "code": "18832",
+    "name": "Phường Hoành Sơn",
+    "type": "phường"
+  },
+  {
+    "code": "18838",
+    "name": "Xã Kỳ Lạc",
+    "type": "xã"
+  },
+  {
+    "code": "18844",
+    "name": "Xã Kỳ Thượng",
+    "type": "xã"
+  }
+]

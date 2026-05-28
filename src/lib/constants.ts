@@ -1,6 +1,13 @@
 export const SCHOOL_NAME = "Trường THPT Võ Văn Kiệt";
 export const SCHOOL_YEAR = "2026 - 2027";
 
+export const SCHOOL_YEAR_OPTIONS = ["2022 - 2023", "2023 - 2024", "2024 - 2025", "2025 - 2026"] as const;
+
+export const ISSUE_PLACE_OPTIONS = [
+  "Cục Cảnh sát Quản lý Hành chính về Trật tự xã hội",
+  "Bộ Công an",
+] as const;
+
 export const SUBJECT_OPTIONS = [
   { optionNumber: 1, subjects: "Vật lí; Hoá học; Tin học; Công nghệ Công nghiệp" },
   { optionNumber: 2, subjects: "Vật lí; Hoá học; Tin học; Âm nhạc" },

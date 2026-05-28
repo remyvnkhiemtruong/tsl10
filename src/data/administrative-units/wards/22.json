@@ -1,0 +1,272 @@
+[
+  {
+    "code": "6652",
+    "name": "Phường Hà Tu",
+    "type": "phường"
+  },
+  {
+    "code": "6658",
+    "name": "Phường Cao Xanh",
+    "type": "phường"
+  },
+  {
+    "code": "6661",
+    "name": "Phường Việt Hưng",
+    "type": "phường"
+  },
+  {
+    "code": "6673",
+    "name": "Phường Bãi Cháy",
+    "type": "phường"
+  },
+  {
+    "code": "6676",
+    "name": "Phường Hà Lầm",
+    "type": "phường"
+  },
+  {
+    "code": "6685",
+    "name": "Phường Hồng Gai",
+    "type": "phường"
+  },
+  {
+    "code": "6688",
+    "name": "Phường Hạ Long",
+    "type": "phường"
+  },
+  {
+    "code": "6706",
+    "name": "Phường Tuần Châu",
+    "type": "phường"
+  },
+  {
+    "code": "6709",
+    "name": "Phường Móng Cái 2",
+    "type": "phường"
+  },
+  {
+    "code": "6712",
+    "name": "Phường Móng Cái 1",
+    "type": "phường"
+  },
+  {
+    "code": "6724",
+    "name": "Xã Hải Sơn",
+    "type": "xã"
+  },
+  {
+    "code": "6733",
+    "name": "Xã Hải Ninh",
+    "type": "xã"
+  },
+  {
+    "code": "6736",
+    "name": "Phường Móng Cái 3",
+    "type": "phường"
+  },
+  {
+    "code": "6757",
+    "name": "Xã Vĩnh Thực",
+    "type": "xã"
+  },
+  {
+    "code": "6760",
+    "name": "Phường Mông Dương",
+    "type": "phường"
+  },
+  {
+    "code": "6778",
+    "name": "Phường Quang Hanh",
+    "type": "phường"
+  },
+  {
+    "code": "6781",
+    "name": "Phường Cửa Ông",
+    "type": "phường"
+  },
+  {
+    "code": "6793",
+    "name": "Phường Cẩm Phả",
+    "type": "phường"
+  },
+  {
+    "code": "6799",
+    "name": "Xã Hải Hòa",
+    "type": "xã"
+  },
+  {
+    "code": "6811",
+    "name": "Phường Uông Bí",
+    "type": "phường"
+  },
+  {
+    "code": "6820",
+    "name": "Phường Vàng Danh",
+    "type": "phường"
+  },
+  {
+    "code": "6832",
+    "name": "Phường Yên Tử",
+    "type": "phường"
+  },
+  {
+    "code": "6838",
+    "name": "Xã Bình Liêu",
+    "type": "xã"
+  },
+  {
+    "code": "6841",
+    "name": "Xã Hoành Mô",
+    "type": "xã"
+  },
+  {
+    "code": "6856",
+    "name": "Xã Lục Hồn",
+    "type": "xã"
+  },
+  {
+    "code": "6862",
+    "name": "Xã Tiên Yên",
+    "type": "xã"
+  },
+  {
+    "code": "6874",
+    "name": "Xã Điền Xá",
+    "type": "xã"
+  },
+  {
+    "code": "6877",
+    "name": "Xã Đông Ngũ",
+    "type": "xã"
+  },
+  {
+    "code": "6886",
+    "name": "Xã Hải Lạng",
+    "type": "xã"
+  },
+  {
+    "code": "6895",
+    "name": "Xã Đầm Hà",
+    "type": "xã"
+  },
+  {
+    "code": "6913",
+    "name": "Xã Quảng Tân",
+    "type": "xã"
+  },
+  {
+    "code": "6922",
+    "name": "Xã Quảng Hà",
+    "type": "xã"
+  },
+  {
+    "code": "6931",
+    "name": "Xã Quảng Đức",
+    "type": "xã"
+  },
+  {
+    "code": "6946",
+    "name": "Xã Đường Hoa",
+    "type": "xã"
+  },
+  {
+    "code": "6967",
+    "name": "Xã Cái Chiên",
+    "type": "xã"
+  },
+  {
+    "code": "6970",
+    "name": "Xã Ba Chẽ",
+    "type": "xã"
+  },
+  {
+    "code": "6979",
+    "name": "Xã Kỳ Thượng",
+    "type": "xã"
+  },
+  {
+    "code": "6985",
+    "name": "Xã Lương Minh",
+    "type": "xã"
+  },
+  {
+    "code": "6994",
+    "name": "Đặc khu Vân Đồn",
+    "type": "đặc khu"
+  },
+  {
+    "code": "7030",
+    "name": "Phường Hoành Bồ",
+    "type": "phường"
+  },
+  {
+    "code": "7054",
+    "name": "Xã Quảng La",
+    "type": "xã"
+  },
+  {
+    "code": "7060",
+    "name": "Xã Thống Nhất",
+    "type": "xã"
+  },
+  {
+    "code": "7069",
+    "name": "Phường Mạo Khê",
+    "type": "phường"
+  },
+  {
+    "code": "7081",
+    "name": "Phường Bình Khê",
+    "type": "phường"
+  },
+  {
+    "code": "7090",
+    "name": "Phường An Sinh",
+    "type": "phường"
+  },
+  {
+    "code": "7093",
+    "name": "Phường Đông Triều",
+    "type": "phường"
+  },
+  {
+    "code": "7114",
+    "name": "Phường Hoàng Quế",
+    "type": "phường"
+  },
+  {
+    "code": "7132",
+    "name": "Phường Quảng Yên",
+    "type": "phường"
+  },
+  {
+    "code": "7135",
+    "name": "Phường Đông Mai",
+    "type": "phường"
+  },
+  {
+    "code": "7147",
+    "name": "Phường Hiệp Hòa",
+    "type": "phường"
+  },
+  {
+    "code": "7168",
+    "name": "Phường Hà An",
+    "type": "phường"
+  },
+  {
+    "code": "7180",
+    "name": "Phường Liên Hòa",
+    "type": "phường"
+  },
+  {
+    "code": "7183",
+    "name": "Phường Phong Cốc",
+    "type": "phường"
+  },
+  {
+    "code": "7192",
+    "name": "Đặc khu Cô Tô",
+    "type": "đặc khu"
+  }
+]

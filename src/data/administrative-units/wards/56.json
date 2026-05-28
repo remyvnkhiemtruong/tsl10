@@ -1,0 +1,327 @@
+[
+  {
+    "code": "22333",
+    "name": "Phường Bắc Nha Trang",
+    "type": "phường"
+  },
+  {
+    "code": "22366",
+    "name": "Phường Nha Trang",
+    "type": "phường"
+  },
+  {
+    "code": "22390",
+    "name": "Phường Tây Nha Trang",
+    "type": "phường"
+  },
+  {
+    "code": "22402",
+    "name": "Phường Nam Nha Trang",
+    "type": "phường"
+  },
+  {
+    "code": "22411",
+    "name": "Phường Bắc Cam Ranh",
+    "type": "phường"
+  },
+  {
+    "code": "22420",
+    "name": "Phường Cam Ranh",
+    "type": "phường"
+  },
+  {
+    "code": "22423",
+    "name": "Phường Ba Ngòi",
+    "type": "phường"
+  },
+  {
+    "code": "22432",
+    "name": "Phường Cam Linh",
+    "type": "phường"
+  },
+  {
+    "code": "22435",
+    "name": "Xã Cam Hiệp",
+    "type": "xã"
+  },
+  {
+    "code": "22453",
+    "name": "Xã Cam Lâm",
+    "type": "xã"
+  },
+  {
+    "code": "22465",
+    "name": "Xã Cam An",
+    "type": "xã"
+  },
+  {
+    "code": "22480",
+    "name": "Xã Nam Cam Ranh",
+    "type": "xã"
+  },
+  {
+    "code": "22489",
+    "name": "Xã Vạn Ninh",
+    "type": "xã"
+  },
+  {
+    "code": "22498",
+    "name": "Xã Tu Bông",
+    "type": "xã"
+  },
+  {
+    "code": "22504",
+    "name": "Xã Đại Lãnh",
+    "type": "xã"
+  },
+  {
+    "code": "22516",
+    "name": "Xã Vạn Thắng",
+    "type": "xã"
+  },
+  {
+    "code": "22525",
+    "name": "Xã Vạn Hưng",
+    "type": "xã"
+  },
+  {
+    "code": "22528",
+    "name": "Phường Ninh Hòa",
+    "type": "phường"
+  },
+  {
+    "code": "22546",
+    "name": "Xã Bắc Ninh Hòa",
+    "type": "xã"
+  },
+  {
+    "code": "22552",
+    "name": "Xã Tây Ninh Hòa",
+    "type": "xã"
+  },
+  {
+    "code": "22558",
+    "name": "Xã Hòa Trí",
+    "type": "xã"
+  },
+  {
+    "code": "22561",
+    "name": "Phường Đông Ninh Hòa",
+    "type": "phường"
+  },
+  {
+    "code": "22576",
+    "name": "Xã Tân Định",
+    "type": "xã"
+  },
+  {
+    "code": "22591",
+    "name": "Phường Hòa Thắng",
+    "type": "phường"
+  },
+  {
+    "code": "22597",
+    "name": "Xã Nam Ninh Hòa",
+    "type": "xã"
+  },
+  {
+    "code": "22609",
+    "name": "Xã Khánh Vĩnh",
+    "type": "xã"
+  },
+  {
+    "code": "22612",
+    "name": "Xã Trung Khánh Vĩnh",
+    "type": "xã"
+  },
+  {
+    "code": "22615",
+    "name": "Xã Bắc Khánh Vĩnh",
+    "type": "xã"
+  },
+  {
+    "code": "22624",
+    "name": "Xã Tây Khánh Vĩnh",
+    "type": "xã"
+  },
+  {
+    "code": "22648",
+    "name": "Xã Nam Khánh Vĩnh",
+    "type": "xã"
+  },
+  {
+    "code": "22651",
+    "name": "Xã Diên Khánh",
+    "type": "xã"
+  },
+  {
+    "code": "22657",
+    "name": "Xã Diên Điền",
+    "type": "xã"
+  },
+  {
+    "code": "22660",
+    "name": "Xã Diên Lâm",
+    "type": "xã"
+  },
+  {
+    "code": "22672",
+    "name": "Xã Diên Thọ",
+    "type": "xã"
+  },
+  {
+    "code": "22678",
+    "name": "Xã Diên Lạc",
+    "type": "xã"
+  },
+  {
+    "code": "22702",
+    "name": "Xã Suối Hiệp",
+    "type": "xã"
+  },
+  {
+    "code": "22708",
+    "name": "Xã Suối Dầu",
+    "type": "xã"
+  },
+  {
+    "code": "22714",
+    "name": "Xã Khánh Sơn",
+    "type": "xã"
+  },
+  {
+    "code": "22720",
+    "name": "Xã Tây Khánh Sơn",
+    "type": "xã"
+  },
+  {
+    "code": "22732",
+    "name": "Xã Đông Khánh Sơn",
+    "type": "xã"
+  },
+  {
+    "code": "22736",
+    "name": "Đặc khu Trường Sa",
+    "type": "đặc khu"
+  },
+  {
+    "code": "22738",
+    "name": "Phường Đô Vinh",
+    "type": "phường"
+  },
+  {
+    "code": "22741",
+    "name": "Phường Bảo An",
+    "type": "phường"
+  },
+  {
+    "code": "22759",
+    "name": "Phường Phan Rang",
+    "type": "phường"
+  },
+  {
+    "code": "22780",
+    "name": "Phường Đông Hải",
+    "type": "phường"
+  },
+  {
+    "code": "22786",
+    "name": "Xã Bác Ái Tây",
+    "type": "xã"
+  },
+  {
+    "code": "22795",
+    "name": "Xã Bác Ái",
+    "type": "xã"
+  },
+  {
+    "code": "22801",
+    "name": "Xã Bác Ái Đông",
+    "type": "xã"
+  },
+  {
+    "code": "22810",
+    "name": "Xã Ninh Sơn",
+    "type": "xã"
+  },
+  {
+    "code": "22813",
+    "name": "Xã Lâm Sơn",
+    "type": "xã"
+  },
+  {
+    "code": "22822",
+    "name": "Xã Mỹ Sơn",
+    "type": "xã"
+  },
+  {
+    "code": "22828",
+    "name": "Xã Anh Dũng",
+    "type": "xã"
+  },
+  {
+    "code": "22834",
+    "name": "Phường Ninh Chử",
+    "type": "phường"
+  },
+  {
+    "code": "22840",
+    "name": "Xã Công Hải",
+    "type": "xã"
+  },
+  {
+    "code": "22846",
+    "name": "Xã Vĩnh Hải",
+    "type": "xã"
+  },
+  {
+    "code": "22849",
+    "name": "Xã Thuận Bắc",
+    "type": "xã"
+  },
+  {
+    "code": "22852",
+    "name": "Xã Ninh Hải",
+    "type": "xã"
+  },
+  {
+    "code": "22861",
+    "name": "Xã Xuân Hải",
+    "type": "xã"
+  },
+  {
+    "code": "22870",
+    "name": "Xã Ninh Phước",
+    "type": "xã"
+  },
+  {
+    "code": "22873",
+    "name": "Xã Phước Hậu",
+    "type": "xã"
+  },
+  {
+    "code": "22888",
+    "name": "Xã Phước Dinh",
+    "type": "xã"
+  },
+  {
+    "code": "22891",
+    "name": "Xã Phước Hữu",
+    "type": "xã"
+  },
+  {
+    "code": "22897",
+    "name": "Xã Thuận Nam",
+    "type": "xã"
+  },
+  {
+    "code": "22900",
+    "name": "Xã Phước Hà",
+    "type": "xã"
+  },
+  {
+    "code": "22909",
+    "name": "Xã Cà Ná",
+    "type": "xã"
+  }
+]

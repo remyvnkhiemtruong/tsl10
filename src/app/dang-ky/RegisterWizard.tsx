@@ -13,33 +13,31 @@ import {
   Trash2,
   Upload,
 } from "lucide-react";
+import { Field, controlErrorClass } from "@/components/admission/Field";
+import { ProvinceSelect } from "@/components/admission/ProvinceSelect";
+import { WardSelect } from "@/components/admission/WardSelect";
 import { Alert } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+import { calculateAdmissionScoreDetails } from "@/lib/admission-score";
+import { WARD_OTHER_LABEL, WARD_OTHER_VALUE } from "@/lib/administrative-units";
+import { composePermanentAddress } from "@/lib/address";
 import {
   ACADEMIC_LEVEL_LABELS,
+  ALL_FILE_TYPES,
   FILE_TYPE_LABELS,
+  ISSUE_PLACE_OPTIONS,
   PRIZE_LABELS,
   PRIZE_SCORES,
   PRIORITY_LABELS,
+  SCHOOL_YEAR_OPTIONS,
   SUBJECT_OPTIONS,
 } from "@/lib/constants";
 import { cn, formatBytes } from "@/lib/utils";
-import {
-  AcademicRecordInput,
-  ApplicationCreateInput,
-  AwardInput,
-  UploadedFileInput,
-  applicationCreateSchema,
-} from "@/lib/validation";
-
-type RegisterForm = Omit<ApplicationCreateInput, "commitmentAccepted" | "uploadedFiles"> & {
-  commitmentAccepted: boolean;
-};
+import type { AwardInput, UploadedFileInput } from "@/lib/validation";
 
 type AcademicScoreKey =
   | "literature"
@@ -50,6 +48,46 @@ type AcademicScoreKey =
   | "civicEducation"
   | "technology"
   | "informatics";
+
+type AcademicLevelValue = "TOT" | "KHA" | "DAT" | "CHUA_DAT";
+
+type AcademicRecordForm = {
+  grade: number;
+  note?: string;
+  academicLevel: AcademicLevelValue;
+  conductLevel: AcademicLevelValue;
+} & Partial<Record<AcademicScoreKey, number>>;
+
+type RegisterForm = {
+  fullName: string;
+  dateOfBirth: string;
+  gender: "NAM" | "NU" | "KHAC";
+  ethnicity: string;
+  birthPlace: string;
+  citizenId: string;
+  issueDate: string;
+  issuePlace: string;
+  secondarySchool: string;
+  schoolYear: string;
+  permanentAddress: string;
+  houseNumber: string;
+  hamlet: string;
+  ward: string;
+  wardOther: string;
+  province: string;
+  studentPhone: string;
+  email: string;
+  guardianName: string;
+  guardianPhone: string;
+  priorities: string[];
+  awards: AwardInput[];
+  academicRecords: AcademicRecordForm[];
+  selectedOptionNumber: number;
+  selectedSubjects: string;
+  commitmentAccepted: boolean;
+};
+
+type FieldErrors = Record<string, string>;
 
 const scoreFields: Array<{ key: AcademicScoreKey; label: string }> = [
   { key: "literature", label: "Văn" },
@@ -65,24 +103,15 @@ const scoreFields: Array<{ key: AcademicScoreKey; label: string }> = [
 const steps = [
   { label: "Học sinh", description: "Thông tin cá nhân và giấy tờ định danh." },
   { label: "Học tập", description: "Trường THCS và kết quả học tập lớp 6-9." },
-  { label: "Liên hệ", description: "Địa chỉ và thông tin phụ huynh/người giám hộ." },
+  { label: "Liên hệ", description: "Địa chỉ thường trú và thông tin phụ huynh/người giám hộ." },
   { label: "Ưu tiên", description: "Diện ưu tiên và điểm khuyến khích nếu có." },
   { label: "Nguyện vọng", description: "Chọn phương án môn học dự tuyển." },
   { label: "Upload", description: "Tải lên ảnh, học bạ và minh chứng." },
   { label: "Xác nhận", description: "Kiểm tra lại thông tin trước khi nộp." },
 ];
 
-const initialAcademic: AcademicRecordInput[] = [6, 7, 8, 9].map((grade) => ({
+const initialAcademic: AcademicRecordForm[] = [6, 7, 8, 9].map((grade) => ({
   grade,
-  literature: undefined,
-  math: undefined,
-  english: undefined,
-  naturalScience: undefined,
-  historyGeography: undefined,
-  civicEducation: undefined,
-  technology: undefined,
-  informatics: undefined,
-  note: undefined,
   academicLevel: "TOT",
   conductLevel: "TOT",
 }));
@@ -102,6 +131,7 @@ const initialForm: RegisterForm = {
   houseNumber: "",
   hamlet: "",
   ward: "",
+  wardOther: "",
   province: "Cà Mau",
   studentPhone: "",
   email: "",
@@ -115,22 +145,57 @@ const initialForm: RegisterForm = {
   commitmentAccepted: false,
 };
 
-const requiredUploadTypes = ["PHOTO_4X6", "HOC_BA_THCS", "GIAY_KHAI_SINH", "CCCD"] as const;
-
 const uploadDescriptions: Record<string, string> = {
-  PHOTO_4X6: "Ảnh chân dung rõ mặt, nền sáng.",
-  HOC_BA_THCS: "Bản PDF đầy đủ học bạ THCS.",
-  HOC_BA_LOP_6: "Ảnh trang học bạ lớp 6 nếu không có PDF đầy đủ.",
-  HOC_BA_LOP_7: "Ảnh trang học bạ lớp 7 nếu không có PDF đầy đủ.",
-  HOC_BA_LOP_8: "Ảnh trang học bạ lớp 8 nếu không có PDF đầy đủ.",
-  HOC_BA_LOP_9: "Ảnh trang học bạ lớp 9 nếu không có PDF đầy đủ.",
-  GIAY_KHAI_SINH: "Ảnh/PDF giấy khai sinh.",
-  CCCD: "Ảnh/PDF CCCD hoặc giấy xác nhận số định danh.",
-  MINH_CHUNG_UU_TIEN: "Minh chứng cho diện ưu tiên đã chọn.",
+  PHOTO_4X6: "Ảnh chân dung rõ mặt, JPG/JPEG/PNG, tối đa 5MB.",
+  HOC_BA_THCS: "Bản PDF đầy đủ học bạ THCS; có thể thay bằng đủ ảnh lớp 6, 7, 8, 9.",
+  HOC_BA_LOP_6: "Ảnh trang học bạ lớp 6 nếu không có PDF học bạ đầy đủ.",
+  HOC_BA_LOP_7: "Ảnh trang học bạ lớp 7 nếu không có PDF học bạ đầy đủ.",
+  HOC_BA_LOP_8: "Ảnh trang học bạ lớp 8 nếu không có PDF học bạ đầy đủ.",
+  HOC_BA_LOP_9: "Ảnh trang học bạ lớp 9 nếu không có PDF học bạ đầy đủ.",
+  GIAY_KHAI_SINH: "Ảnh/PDF giấy khai sinh; có thể thay bằng CCCD/số định danh.",
+  CCCD: "Ảnh/PDF CCCD hoặc giấy xác nhận số định danh; có thể thay bằng giấy khai sinh.",
+  MINH_CHUNG_UU_TIEN: "Minh chứng cho diện ưu tiên/đối tượng khác đã chọn.",
   MINH_CHUNG_KHUYEN_KHICH: "Minh chứng giải thưởng/điểm khuyến khích.",
   HO_NGHEO_CAN_NGHEO: "Giấy xác nhận hộ nghèo/cận nghèo.",
   GIAY_TO_KHAC: "Tài liệu bổ sung khác nếu nhà trường yêu cầu.",
 };
+
+const fileTypesInOrder = ALL_FILE_TYPES;
+
+function uniqueMessages(fieldErrors: FieldErrors) {
+  return Array.from(new Set(Object.values(fieldErrors).filter(Boolean)));
+}
+
+function normalizePhone(value: string) {
+  return value.replace(/\s+/g, "");
+}
+
+function formatScore(value: number) {
+  return Number.isInteger(value) ? String(value) : value.toFixed(2).replace(/0+$/, "").replace(/\.$/, "");
+}
+
+function firstStepForErrors(fieldErrors: FieldErrors) {
+  const firstKey = Object.keys(fieldErrors)[0] ?? "";
+  if (firstKey.startsWith("academicRecords") || ["secondarySchool", "schoolYear"].includes(firstKey)) return 1;
+  if (["houseNumber", "hamlet", "province", "ward", "wardOther", "studentPhone", "email", "guardianName", "guardianPhone"].includes(firstKey)) {
+    return 2;
+  }
+  if (firstKey.startsWith("priorities") || firstKey.startsWith("awards")) return 3;
+  if (firstKey.startsWith("selected")) return 4;
+  if (firstKey.startsWith("uploadedFiles")) return 5;
+  if (firstKey.startsWith("commitment")) return 6;
+  return 0;
+}
+
+function focusFirstError() {
+  window.requestAnimationFrame(() => {
+    const target = document.querySelector<HTMLElement>(
+      "[data-field-error='true'] input, [data-field-error='true'] select, [data-field-error='true'] button, [data-upload-error='true'] input"
+    );
+    target?.focus();
+    target?.scrollIntoView({ behavior: "smooth", block: "center" });
+  });
+}
 
 export function RegisterWizard() {
   const router = useRouter();
@@ -139,19 +204,57 @@ export function RegisterWizard() {
   const [uploadingType, setUploadingType] = useState<string | null>(null);
   const [files, setFiles] = useState<UploadedFileInput[]>([]);
   const [errors, setErrors] = useState<string[]>([]);
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const [uploadErrors, setUploadErrors] = useState<FieldErrors>({});
   const [form, setForm] = useState<RegisterForm>(initialForm);
 
   const bonusScore = form.awards.reduce((sum, award) => sum + (PRIZE_SCORES[award.prize] ?? 0), 0);
+  const scoreDetails = useMemo(
+    () => calculateAdmissionScoreDetails(form.academicRecords, bonusScore),
+    [form.academicRecords, bonusScore]
+  );
   const progress = useMemo(() => Math.round(((step + 1) / steps.length) * 100), [step]);
+  const finalWard = form.ward === WARD_OTHER_VALUE ? form.wardOther.trim() : form.ward;
+  const permanentAddress = composePermanentAddress({
+    houseNumber: form.houseNumber,
+    hamlet: form.hamlet,
+    ward: finalWard,
+    province: form.province,
+  });
 
   function update<K extends keyof RegisterForm>(name: K, value: RegisterForm[K]) {
     setForm((prev) => ({ ...prev, [name]: value }));
+    setFieldErrors((prev) => {
+      const next = { ...prev };
+      delete next[name as string];
+      return next;
+    });
   }
 
-  function updateAcademic(index: number, key: keyof AcademicRecordInput, value: string | number | undefined) {
+  function setValidation(fieldErrorMap: FieldErrors) {
+    setFieldErrors(fieldErrorMap);
+    setErrors(uniqueMessages(fieldErrorMap));
+    if (Object.keys(fieldErrorMap).length > 0) focusFirstError();
+  }
+
+  function fieldError(name: string) {
+    return fieldErrors[name];
+  }
+
+  function uploadError(fileType: string) {
+    return fieldErrors[`uploadedFiles.${fileType}`] ?? uploadErrors[fileType];
+  }
+
+  function updateAcademic(index: number, key: keyof AcademicRecordForm, value: string | number | undefined) {
     const next = [...form.academicRecords];
     next[index] = { ...next[index], [key]: value };
     update("academicRecords", next);
+    setFieldErrors((prev) => {
+      const fieldKey = `academicRecords.${index}.${String(key)}`;
+      const updated = { ...prev };
+      delete updated[fieldKey];
+      return updated;
+    });
   }
 
   function addAward() {
@@ -174,8 +277,106 @@ export function RegisterWizard() {
     );
   }
 
+  function validateStep(targetStep: number): FieldErrors {
+    const nextErrors: FieldErrors = {};
+    if (targetStep === 0) {
+      if (form.fullName.trim().length < 2) nextErrors.fullName = "Vui lòng nhập họ và tên học sinh, tối thiểu 2 ký tự.";
+      if (!form.dateOfBirth) nextErrors.dateOfBirth = "Vui lòng nhập ngày sinh.";
+      if (!form.ethnicity.trim()) nextErrors.ethnicity = "Vui lòng nhập dân tộc.";
+      if (!form.birthPlace) nextErrors.birthPlace = "Vui lòng chọn nơi sinh.";
+      if (!/^\d{9,12}$/.test(form.citizenId)) nextErrors.citizenId = "Số định danh/CCCD phải gồm 9-12 chữ số.";
+      if (form.issueDate && !form.issuePlace) nextErrors.issuePlace = "Nếu có ngày cấp thì cần chọn nơi cấp.";
+    }
+    if (targetStep === 1) {
+      if (!form.secondarySchool.trim()) nextErrors.secondarySchool = "Vui lòng nhập trường THCS.";
+      if (!SCHOOL_YEAR_OPTIONS.includes(form.schoolYear as (typeof SCHOOL_YEAR_OPTIONS)[number])) {
+        nextErrors.schoolYear = "Vui lòng chọn năm học lớp 9.";
+      }
+      form.academicRecords.forEach((record, index) => {
+        scoreFields.forEach(({ key, label }) => {
+          const value = record[key];
+          if (value === undefined || Number.isNaN(value)) nextErrors[`academicRecords.${index}.${key}`] = `Thiếu điểm ${label} lớp ${record.grade}.`;
+          else if (value < 0 || value > 10) nextErrors[`academicRecords.${index}.${key}`] = `Điểm ${label} lớp ${record.grade} phải từ 0 đến 10.`;
+        });
+      });
+    }
+    if (targetStep === 2) {
+      if (!form.houseNumber.trim()) nextErrors.houseNumber = 'Vui lòng nhập số nhà, hoặc nhập "Không có".';
+      if (!form.hamlet.trim()) nextErrors.hamlet = "Vui lòng nhập ấp/khóm.";
+      if (!form.province) nextErrors.province = "Vui lòng chọn tỉnh/thành phố thường trú.";
+      if (!form.ward) nextErrors.ward = "Vui lòng chọn xã/phường thường trú.";
+      if (form.ward === WARD_OTHER_VALUE && form.wardOther.trim().length < 2) nextErrors.wardOther = "Vui lòng nhập xã/phường khác.";
+      if (form.studentPhone && !/^\+?\d{8,15}$/.test(normalizePhone(form.studentPhone))) {
+        nextErrors.studentPhone = "Số điện thoại thí sinh chưa hợp lệ.";
+      }
+      if (form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) nextErrors.email = "Email không hợp lệ.";
+      if (!form.guardianName.trim()) nextErrors.guardianName = "Vui lòng nhập họ tên cha/mẹ/người giám hộ.";
+      if (!/^\+?\d{8,15}$/.test(normalizePhone(form.guardianPhone))) {
+        nextErrors.guardianPhone = "Điện thoại liên hệ tối thiểu 8 số.";
+      }
+    }
+    if (targetStep === 3) {
+      form.awards.forEach((award, index) => {
+        if (!award.competitionName.trim()) nextErrors[`awards.${index}.competitionName`] = "Mỗi giải thưởng cần có tên cuộc thi/giải thưởng.";
+      });
+    }
+    if (targetStep === 4) {
+      const selected = SUBJECT_OPTIONS.find((option) => option.optionNumber === form.selectedOptionNumber);
+      if (!selected || selected.subjects !== form.selectedSubjects) nextErrors.selectedOptionNumber = "Phương án môn học không hợp lệ.";
+    }
+    if (targetStep === 5) {
+      Object.assign(nextErrors, uploadPolicyErrors());
+    }
+    if (targetStep === 6 && !form.commitmentAccepted) {
+      nextErrors.commitmentAccepted = "Cần xác nhận cam kết trước khi nộp.";
+    }
+    return nextErrors;
+  }
+
+  function uploadPolicyErrors() {
+    const fileTypes = new Set(files.map((file) => file.fileType));
+    const nextErrors: FieldErrors = {};
+    if (!fileTypes.has("PHOTO_4X6")) nextErrors["uploadedFiles.PHOTO_4X6"] = "Cần tải ảnh 4x6.";
+    if (!fileTypes.has("HOC_BA_THCS")) {
+      const missingGrades = [6, 7, 8, 9].filter((grade) => !fileTypes.has(`HOC_BA_LOP_${grade}`));
+      if (missingGrades.length > 0) {
+        nextErrors["uploadedFiles.HOC_BA_THCS"] = "Cần tải học bạ THCS dạng PDF hoặc đủ ảnh học bạ lớp 6, 7, 8, 9.";
+        for (const grade of missingGrades) {
+          nextErrors[`uploadedFiles.HOC_BA_LOP_${grade}`] = `Thiếu học bạ lớp ${grade} nếu không nộp PDF học bạ THCS.`;
+        }
+      }
+    }
+    if (!fileTypes.has("GIAY_KHAI_SINH") && !fileTypes.has("CCCD")) {
+      nextErrors["uploadedFiles.GIAY_KHAI_SINH"] = "Cần tải giấy khai sinh hoặc CCCD/số định danh.";
+      nextErrors["uploadedFiles.CCCD"] = "Cần tải CCCD/số định danh hoặc giấy khai sinh.";
+    }
+    if (form.priorities.length > 0 && !fileTypes.has("MINH_CHUNG_UU_TIEN")) {
+      nextErrors["uploadedFiles.MINH_CHUNG_UU_TIEN"] = "Cần tải minh chứng ưu tiên/đối tượng khác.";
+    }
+    if (
+      (form.priorities.includes("HO_NGHEO") || form.priorities.includes("HO_CAN_NGHEO")) &&
+      !fileTypes.has("HO_NGHEO_CAN_NGHEO")
+    ) {
+      nextErrors["uploadedFiles.HO_NGHEO_CAN_NGHEO"] = "Cần tải giấy xác nhận hộ nghèo/cận nghèo.";
+    }
+    if (form.awards.length > 0 && !fileTypes.has("MINH_CHUNG_KHUYEN_KHICH")) {
+      nextErrors["uploadedFiles.MINH_CHUNG_KHUYEN_KHICH"] = "Cần tải minh chứng điểm khuyến khích.";
+    }
+    return nextErrors;
+  }
+
   async function uploadFile(fileType: string, file: File) {
     setUploadingType(fileType);
+    setUploadErrors((prev) => {
+      const next = { ...prev };
+      delete next[fileType];
+      return next;
+    });
+    setFieldErrors((prev) => {
+      const next = { ...prev };
+      delete next[`uploadedFiles.${fileType}`];
+      return next;
+    });
     setErrors([]);
     try {
       const data = new FormData();
@@ -186,7 +387,9 @@ export function RegisterWizard() {
       if (!res.ok || !json.file) throw new Error(json.error ?? "Upload thất bại");
       setFiles((prev) => [...prev, json.file as UploadedFileInput]);
     } catch (error) {
-      setErrors([error instanceof Error ? error.message : "Upload thất bại"]);
+      const message = error instanceof Error ? error.message : "Upload thất bại";
+      setUploadErrors((prev) => ({ ...prev, [fileType]: message }));
+      setErrors([message]);
     } finally {
       setUploadingType(null);
     }
@@ -196,82 +399,45 @@ export function RegisterWizard() {
     setFiles((prev) => prev.filter((file) => file.storageKey !== storageKey));
   }
 
-  function validateStep(targetStep: number) {
-    const stepErrors: string[] = [];
-    if (targetStep === 0) {
-      if (form.fullName.trim().length < 2) stepErrors.push("Vui lòng nhập họ và tên học sinh.");
-      if (!form.dateOfBirth) stepErrors.push("Vui lòng nhập ngày sinh.");
-      if (!/^\d{9,12}$/.test(form.citizenId)) stepErrors.push("Số định danh/CCCD phải gồm 9-12 chữ số.");
-      if (!form.birthPlace.trim()) stepErrors.push("Vui lòng nhập nơi sinh.");
-    }
-    if (targetStep === 1) {
-      if (!form.secondarySchool.trim()) stepErrors.push("Vui lòng nhập trường THCS.");
-      if (form.academicRecords.some((record) => scoreFields.some(({ key }) => record[key] === undefined))) {
-        stepErrors.push("Vui lòng nhập đủ điểm các môn cho lớp 6, 7, 8, 9.");
-      }
-    }
-    if (targetStep === 2) {
-      if (!form.permanentAddress.trim()) stepErrors.push("Vui lòng nhập địa chỉ thường trú.");
-      if (!form.guardianName.trim()) stepErrors.push("Vui lòng nhập cha/mẹ/người giám hộ.");
-      if (form.guardianPhone.trim().length < 8) stepErrors.push("Vui lòng nhập số điện thoại liên hệ hợp lệ.");
-    }
-    if (targetStep === 3 && form.awards.some((award) => !award.competitionName.trim())) {
-      stepErrors.push("Mỗi giải thưởng cần có tên cuộc thi/giải thưởng.");
-    }
-    if (targetStep === 5) {
-      stepErrors.push(...uploadPolicyErrors());
-    }
-    return stepErrors;
-  }
-
-  function uploadPolicyErrors() {
-    const fileTypes = new Set(files.map((file) => file.fileType));
-    const uploadErrors: string[] = [];
-    if (!fileTypes.has("PHOTO_4X6")) uploadErrors.push("Cần tải ảnh 4x6.");
-    if (!fileTypes.has("HOC_BA_THCS") && ![6, 7, 8, 9].every((grade) => fileTypes.has(`HOC_BA_LOP_${grade}`))) {
-      uploadErrors.push("Cần tải học bạ THCS dạng PDF hoặc đủ ảnh học bạ lớp 6, 7, 8, 9.");
-    }
-    if (!fileTypes.has("GIAY_KHAI_SINH") && !fileTypes.has("CCCD")) {
-      uploadErrors.push("Cần tải giấy khai sinh hoặc CCCD/số định danh.");
-    }
-    if (form.priorities.length > 0 && !fileTypes.has("MINH_CHUNG_UU_TIEN")) {
-      uploadErrors.push("Cần tải minh chứng ưu tiên/đối tượng khác.");
-    }
-    if (
-      (form.priorities.includes("HO_NGHEO") || form.priorities.includes("HO_CAN_NGHEO")) &&
-      !fileTypes.has("HO_NGHEO_CAN_NGHEO")
-    ) {
-      uploadErrors.push("Cần tải giấy xác nhận hộ nghèo/cận nghèo.");
-    }
-    if (form.awards.length > 0 && !fileTypes.has("MINH_CHUNG_KHUYEN_KHICH")) {
-      uploadErrors.push("Cần tải minh chứng điểm khuyến khích.");
-    }
-    return uploadErrors;
-  }
-
   function goNext() {
-    const stepErrors = validateStep(step);
-    setErrors(stepErrors);
-    if (stepErrors.length === 0) setStep((current) => current + 1);
+    const currentErrors = validateStep(step);
+    setValidation(currentErrors);
+    if (Object.keys(currentErrors).length === 0) setStep((current) => current + 1);
   }
 
   async function submit() {
     setLoading(true);
     setErrors([]);
     try {
-      const payload = { ...form, uploadedFiles: files };
-      const parsed = applicationCreateSchema.safeParse(payload);
-      if (!parsed.success) {
-        throw new Error(parsed.error.issues.map((issue) => issue.message).join("; "));
+      const allErrors = steps.reduce<FieldErrors>((acc, _, index) => ({ ...acc, ...validateStep(index) }), {});
+      if (Object.keys(allErrors).length > 0) {
+        setStep(firstStepForErrors(allErrors));
+        setValidation(allErrors);
+        return;
       }
+
+      const payload = {
+        ...form,
+        permanentAddress,
+        studentPhone: normalizePhone(form.studentPhone),
+        guardianPhone: normalizePhone(form.guardianPhone),
+        uploadedFiles: files,
+      };
 
       const res = await fetch("/api/applications", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(parsed.data),
+        body: JSON.stringify(payload),
       });
-      const json = (await res.json()) as { applicationCode?: string; error?: string };
-      if (!res.ok || !json.applicationCode) throw new Error(json.error ?? "Không thể nộp hồ sơ");
+      const json = (await res.json()) as { applicationCode?: string; error?: string; fieldErrors?: FieldErrors };
+      if (!res.ok || !json.applicationCode) {
+        if (json.fieldErrors && Object.keys(json.fieldErrors).length > 0) {
+          setStep(firstStepForErrors(json.fieldErrors));
+          setValidation(json.fieldErrors);
+          return;
+        }
+        throw new Error(json.error ?? "Không thể nộp hồ sơ");
+      }
       router.push(`/nop-thanh-cong/${json.applicationCode}`);
     } catch (error) {
       setErrors([error instanceof Error ? error.message : "Không thể nộp hồ sơ"]);
@@ -280,13 +446,23 @@ export function RegisterWizard() {
     }
   }
 
+  function markedRequired(fileType: string) {
+    if (["PHOTO_4X6", "HOC_BA_THCS", "GIAY_KHAI_SINH", "CCCD"].includes(fileType)) return true;
+    if (fileType === "MINH_CHUNG_UU_TIEN" && form.priorities.length > 0) return true;
+    if (fileType === "HO_NGHEO_CAN_NGHEO" && (form.priorities.includes("HO_NGHEO") || form.priorities.includes("HO_CAN_NGHEO"))) return true;
+    if (fileType === "MINH_CHUNG_KHUYEN_KHICH" && form.awards.length > 0) return true;
+    return false;
+  }
+
   return (
     <div className="mt-8">
       <Card className="p-4 sm:p-5">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <p className="text-sm font-semibold text-school-700">Tiến độ hồ sơ</p>
-            <p className="mt-1 text-sm text-slate-500">Bước {step + 1}/7 · {progress}% hoàn tất</p>
+            <p className="mt-1 text-sm text-slate-500">
+              Bước {step + 1}/7 · {progress}% hoàn tất
+            </p>
           </div>
           <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100 lg:max-w-sm">
             <div className="h-full rounded-full bg-school-700 transition-all" style={{ width: `${progress}%` }} />
@@ -345,11 +521,20 @@ export function RegisterWizard() {
 
         {step === 0 && (
           <section className="grid gap-4 md:grid-cols-2">
-            <Field label="Họ và tên viết in hoa">
-              <Input value={form.fullName} onChange={(event) => update("fullName", event.target.value.toUpperCase())} />
+            <Field label="Họ và tên viết in hoa" error={fieldError("fullName")}>
+              <Input
+                value={form.fullName}
+                onChange={(event) => update("fullName", event.target.value.toUpperCase())}
+                className={controlErrorClass(Boolean(fieldError("fullName")))}
+              />
             </Field>
-            <Field label="Ngày sinh">
-              <Input type="date" value={form.dateOfBirth} onChange={(event) => update("dateOfBirth", event.target.value)} />
+            <Field label="Ngày sinh" error={fieldError("dateOfBirth")}>
+              <Input
+                type="date"
+                value={form.dateOfBirth}
+                onChange={(event) => update("dateOfBirth", event.target.value)}
+                className={controlErrorClass(Boolean(fieldError("dateOfBirth")))}
+              />
             </Field>
             <Field label="Giới tính">
               <Select value={form.gender} onChange={(event) => update("gender", event.target.value as RegisterForm["gender"])}>
@@ -358,24 +543,40 @@ export function RegisterWizard() {
                 <option value="KHAC">Khác</option>
               </Select>
             </Field>
-            <Field label="Dân tộc">
-              <Input value={form.ethnicity} onChange={(event) => update("ethnicity", event.target.value)} />
+            <Field label="Dân tộc" error={fieldError("ethnicity")}>
+              <Input
+                value={form.ethnicity}
+                onChange={(event) => update("ethnicity", event.target.value)}
+                className={controlErrorClass(Boolean(fieldError("ethnicity")))}
+              />
             </Field>
-            <Field label="Nơi sinh">
-              <Input value={form.birthPlace} onChange={(event) => update("birthPlace", event.target.value)} />
+            <Field label="Nơi sinh" error={fieldError("birthPlace")}>
+              <ProvinceSelect value={form.birthPlace} onChange={(value) => update("birthPlace", value)} hasError={Boolean(fieldError("birthPlace"))} />
             </Field>
-            <Field label="Số định danh/CCCD">
+            <Field label="Số định danh/CCCD" error={fieldError("citizenId")}>
               <Input
                 inputMode="numeric"
                 value={form.citizenId}
                 onChange={(event) => update("citizenId", event.target.value.replace(/\D/g, ""))}
+                className={controlErrorClass(Boolean(fieldError("citizenId")))}
               />
             </Field>
             <Field label="Ngày cấp">
               <Input type="date" value={form.issueDate} onChange={(event) => update("issueDate", event.target.value)} />
             </Field>
-            <Field label="Nơi cấp">
-              <Input value={form.issuePlace} onChange={(event) => update("issuePlace", event.target.value)} />
+            <Field label="Nơi cấp" error={fieldError("issuePlace")}>
+              <Select
+                value={form.issuePlace}
+                onChange={(event) => update("issuePlace", event.target.value)}
+                className={controlErrorClass(Boolean(fieldError("issuePlace")))}
+              >
+                <option value="">Chọn nơi cấp</option>
+                {ISSUE_PLACE_OPTIONS.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </Select>
             </Field>
           </section>
         )}
@@ -383,11 +584,25 @@ export function RegisterWizard() {
         {step === 1 && (
           <section className="space-y-5">
             <div className="grid gap-4 md:grid-cols-2">
-              <Field label="Trường THCS">
-                <Input value={form.secondarySchool} onChange={(event) => update("secondarySchool", event.target.value)} />
+              <Field label="Trường THCS" error={fieldError("secondarySchool")}>
+                <Input
+                  value={form.secondarySchool}
+                  onChange={(event) => update("secondarySchool", event.target.value)}
+                  className={controlErrorClass(Boolean(fieldError("secondarySchool")))}
+                />
               </Field>
-              <Field label="Năm học lớp 9">
-                <Input value={form.schoolYear} onChange={(event) => update("schoolYear", event.target.value)} />
+              <Field label="Năm học lớp 9" error={fieldError("schoolYear")}>
+                <Select
+                  value={form.schoolYear}
+                  onChange={(event) => update("schoolYear", event.target.value)}
+                  className={controlErrorClass(Boolean(fieldError("schoolYear")))}
+                >
+                  {SCHOOL_YEAR_OPTIONS.map((year) => (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  ))}
+                </Select>
               </Field>
             </div>
 
@@ -401,8 +616,8 @@ export function RegisterWizard() {
                         {field.label}
                       </th>
                     ))}
-                    <th className="p-3">Học lực</th>
-                    <th className="p-3">Hạnh kiểm</th>
+                    <th className="p-3">Học tập</th>
+                    <th className="p-3">Rèn luyện</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -413,6 +628,7 @@ export function RegisterWizard() {
                         <td key={field.key} className="p-2">
                           <ScoreInput
                             value={record[field.key]}
+                            error={fieldError(`academicRecords.${index}.${field.key}`)}
                             onChange={(value) => updateAcademic(index, field.key, value)}
                           />
                         </td>
@@ -435,16 +651,20 @@ export function RegisterWizard() {
                   <h3 className="font-bold text-slate-950">Lớp {record.grade}</h3>
                   <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
                     {scoreFields.map((field) => (
-                      <Field key={field.key} label={field.label}>
-                        <ScoreInput value={record[field.key]} onChange={(value) => updateAcademic(index, field.key, value)} />
+                      <Field key={field.key} label={field.label} error={fieldError(`academicRecords.${index}.${field.key}`)}>
+                        <ScoreInput
+                          value={record[field.key]}
+                          error={fieldError(`academicRecords.${index}.${field.key}`)}
+                          onChange={(value) => updateAcademic(index, field.key, value)}
+                        />
                       </Field>
                     ))}
                   </div>
                   <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                    <Field label="Học lực">
+                    <Field label="Học tập">
                       <LevelSelect value={record.academicLevel} onChange={(value) => updateAcademic(index, "academicLevel", value)} />
                     </Field>
-                    <Field label="Hạnh kiểm">
+                    <Field label="Rèn luyện">
                       <LevelSelect value={record.conductLevel} onChange={(value) => updateAcademic(index, "conductLevel", value)} />
                     </Field>
                   </div>
@@ -455,34 +675,92 @@ export function RegisterWizard() {
         )}
 
         {step === 2 && (
-          <section className="grid gap-4 md:grid-cols-2">
-            <Field label="Địa chỉ thường trú">
-              <Textarea value={form.permanentAddress} onChange={(event) => update("permanentAddress", event.target.value)} />
-            </Field>
-            <Field label="Số nhà">
-              <Input value={form.houseNumber} onChange={(event) => update("houseNumber", event.target.value)} />
-            </Field>
-            <Field label="Ấp/khóm">
-              <Input value={form.hamlet} onChange={(event) => update("hamlet", event.target.value)} />
-            </Field>
-            <Field label="Xã/phường">
-              <Input value={form.ward} onChange={(event) => update("ward", event.target.value)} />
-            </Field>
-            <Field label="Tỉnh/thành phố">
-              <Input value={form.province} onChange={(event) => update("province", event.target.value)} />
-            </Field>
-            <Field label="Số điện thoại thí sinh">
-              <Input inputMode="tel" value={form.studentPhone} onChange={(event) => update("studentPhone", event.target.value)} />
-            </Field>
-            <Field label="Email">
-              <Input type="email" value={form.email} onChange={(event) => update("email", event.target.value)} />
-            </Field>
-            <Field label="Họ tên cha/mẹ/người giám hộ">
-              <Input value={form.guardianName} onChange={(event) => update("guardianName", event.target.value)} />
-            </Field>
-            <Field label="Điện thoại liên hệ">
-              <Input inputMode="tel" value={form.guardianPhone} onChange={(event) => update("guardianPhone", event.target.value)} />
-            </Field>
+          <section className="space-y-4">
+            <Alert>
+              Danh mục hành chính theo sắp xếp năm 2025. Nếu chưa thấy địa phương, chọn &quot;{WARD_OTHER_LABEL}&quot;.
+            </Alert>
+            <div className="grid gap-4 md:grid-cols-2">
+              <Field label="Số nhà" error={fieldError("houseNumber")} hint='Nếu không có số nhà, nhập "Không có".'>
+                <Input
+                  value={form.houseNumber}
+                  onChange={(event) => update("houseNumber", event.target.value)}
+                  className={controlErrorClass(Boolean(fieldError("houseNumber")))}
+                />
+              </Field>
+              <Field label="Ấp/khóm" error={fieldError("hamlet")}>
+                <Input
+                  value={form.hamlet}
+                  onChange={(event) => update("hamlet", event.target.value)}
+                  className={controlErrorClass(Boolean(fieldError("hamlet")))}
+                />
+              </Field>
+              <Field label="Tỉnh/thành phố thường trú" error={fieldError("province")}>
+                <ProvinceSelect
+                  value={form.province}
+                  onChange={(value) => {
+                    update("province", value);
+                    update("ward", "");
+                    update("wardOther", "");
+                  }}
+                  hasError={Boolean(fieldError("province"))}
+                />
+              </Field>
+              <Field label="Xã/phường thường trú" error={fieldError("ward")}>
+                <WardSelect
+                  provinceName={form.province}
+                  value={form.ward}
+                  onChange={(value) => {
+                    update("ward", value);
+                    if (value !== WARD_OTHER_VALUE) update("wardOther", "");
+                  }}
+                  hasError={Boolean(fieldError("ward"))}
+                />
+              </Field>
+              {form.ward === WARD_OTHER_VALUE && (
+                <Field label="Xã/phường khác" error={fieldError("wardOther")} className="md:col-span-2">
+                  <Input
+                    value={form.wardOther}
+                    onChange={(event) => update("wardOther", event.target.value)}
+                    className={controlErrorClass(Boolean(fieldError("wardOther")))}
+                  />
+                </Field>
+              )}
+              <Field label="Số điện thoại thí sinh" error={fieldError("studentPhone")}>
+                <Input
+                  inputMode="tel"
+                  value={form.studentPhone}
+                  onChange={(event) => update("studentPhone", event.target.value)}
+                  className={controlErrorClass(Boolean(fieldError("studentPhone")))}
+                />
+              </Field>
+              <Field label="Email" error={fieldError("email")}>
+                <Input
+                  type="email"
+                  value={form.email}
+                  onChange={(event) => update("email", event.target.value)}
+                  className={controlErrorClass(Boolean(fieldError("email")))}
+                />
+              </Field>
+              <Field label="Họ tên cha/mẹ/người giám hộ" error={fieldError("guardianName")}>
+                <Input
+                  value={form.guardianName}
+                  onChange={(event) => update("guardianName", event.target.value)}
+                  className={controlErrorClass(Boolean(fieldError("guardianName")))}
+                />
+              </Field>
+              <Field label="Điện thoại liên hệ" error={fieldError("guardianPhone")}>
+                <Input
+                  inputMode="tel"
+                  value={form.guardianPhone}
+                  onChange={(event) => update("guardianPhone", event.target.value)}
+                  className={controlErrorClass(Boolean(fieldError("guardianPhone")))}
+                />
+              </Field>
+            </div>
+            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm">
+              <p className="font-semibold text-slate-700">Địa chỉ thường trú ghép tự động</p>
+              <p className="mt-1 text-slate-950">{permanentAddress || "Chưa đủ thông tin địa chỉ"}</p>
+            </div>
           </section>
         )}
 
@@ -531,7 +809,7 @@ export function RegisterWizard() {
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <h2 className="text-lg font-bold text-slate-950">Điểm khuyến khích</h2>
-                  <p className="mt-1 text-sm text-slate-600">Khai báo giải thưởng để hệ thống tính điểm dự kiến.</p>
+                  <p className="mt-1 text-sm text-slate-600">Chỉ tính điểm khuyến khích theo giải thưởng đã khai báo.</p>
                 </div>
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                   <Badge variant="success">Tổng điểm: {bonusScore}</Badge>
@@ -547,26 +825,25 @@ export function RegisterWizard() {
                   </p>
                 )}
                 {form.awards.map((award, index) => (
-                  <div key={index} className="grid gap-3 rounded-2xl border border-slate-200 bg-white p-4 lg:grid-cols-[1.5fr_1fr_1fr_1fr_auto]">
+                  <div
+                    key={index}
+                    className="grid gap-3 rounded-2xl border border-slate-200 bg-white p-4 lg:grid-cols-[1.4fr_.9fr_.9fr_110px_1fr_auto]"
+                  >
                     <Input
                       placeholder="Tên cuộc thi/giải thưởng"
                       value={award.competitionName}
                       onChange={(event) => updateAward(index, { competitionName: event.target.value })}
+                      className={controlErrorClass(Boolean(fieldError(`awards.${index}.competitionName`)))}
                     />
+                    <Input placeholder="Môn/lĩnh vực" value={award.field ?? ""} onChange={(event) => updateAward(index, { field: event.target.value })} />
+                    <Input placeholder="Cấp tổ chức" value={award.level ?? ""} onChange={(event) => updateAward(index, { level: event.target.value })} />
                     <Input
-                      placeholder="Môn/lĩnh vực"
-                      value={award.field ?? ""}
-                      onChange={(event) => updateAward(index, { field: event.target.value })}
+                      inputMode="numeric"
+                      placeholder="Năm"
+                      value={award.year ?? ""}
+                      onChange={(event) => updateAward(index, { year: event.target.value ? Number(event.target.value) : undefined })}
                     />
-                    <Input
-                      placeholder="Cấp tổ chức"
-                      value={award.level ?? ""}
-                      onChange={(event) => updateAward(index, { level: event.target.value })}
-                    />
-                    <Select
-                      value={award.prize}
-                      onChange={(event) => updateAward(index, { prize: event.target.value as AwardInput["prize"] })}
-                    >
+                    <Select value={award.prize} onChange={(event) => updateAward(index, { prize: event.target.value as AwardInput["prize"] })}>
                       {Object.entries(PRIZE_LABELS).map(([value, label]) => (
                         <option key={value} value={value}>
                           {label} ({PRIZE_SCORES[value]} điểm)
@@ -576,6 +853,9 @@ export function RegisterWizard() {
                     <Button variant="destructive" size="icon" onClick={() => removeAward(index)} aria-label="Xóa giải thưởng">
                       <Trash2 size={16} />
                     </Button>
+                    {fieldError(`awards.${index}.competitionName`) && (
+                      <p className="text-xs font-semibold text-red-700 lg:col-span-6">{fieldError(`awards.${index}.competitionName`)}</p>
+                    )}
                   </div>
                 ))}
               </div>
@@ -621,25 +901,30 @@ export function RegisterWizard() {
           <section className="space-y-5">
             <Alert>
               <b>File bắt buộc:</b> ảnh 4x6; học bạ THCS PDF hoặc đủ ảnh học bạ lớp 6-9; giấy khai sinh hoặc CCCD;
-              minh chứng tương ứng nếu có ưu tiên/khuyến khích.
+              minh chứng tương ứng nếu có ưu tiên/khuyến khích. Chỉ nhận JPG/JPEG/PNG/PDF.
             </Alert>
             <div className="grid gap-4 md:grid-cols-2">
-              {Object.entries(FILE_TYPE_LABELS).map(([fileType, label]) => {
-                const required = requiredUploadTypes.includes(fileType as (typeof requiredUploadTypes)[number]);
+              {fileTypesInOrder.map((fileType) => {
+                const fileError = uploadError(fileType);
                 const uploading = uploadingType === fileType;
+                const uploaded = files.filter((file) => file.fileType === fileType);
                 return (
                   <label
                     key={fileType}
-                    className="block cursor-pointer rounded-2xl border border-dashed border-slate-300 bg-white p-4 transition hover:border-school-500 hover:bg-school-50/40"
+                    data-upload-error={fileError ? "true" : undefined}
+                    className={cn(
+                      "block cursor-pointer rounded-2xl border border-dashed bg-white p-4 transition hover:border-school-500 hover:bg-school-50/40",
+                      fileError ? "border-red-400 bg-red-50/70 ring-2 ring-red-100" : "border-slate-300"
+                    )}
                   >
                     <span className="flex items-start justify-between gap-3">
                       <span>
                         <span className="flex items-center gap-2 text-sm font-bold text-slate-950">
-                          <Upload size={16} className="text-school-700" /> {label}
+                          <Upload size={16} className="text-school-700" /> {FILE_TYPE_LABELS[fileType] ?? fileType}
                         </span>
                         <span className="mt-2 block text-sm leading-6 text-slate-600">{uploadDescriptions[fileType]}</span>
                       </span>
-                      {required && <Badge variant="warning">Bắt buộc</Badge>}
+                      {markedRequired(fileType) && <Badge variant="warning">Bắt buộc</Badge>}
                     </span>
                     <input
                       type="file"
@@ -652,15 +937,42 @@ export function RegisterWizard() {
                         event.currentTarget.value = "";
                       }}
                     />
-                    <span className="mt-4 inline-flex h-10 items-center justify-center rounded-xl bg-slate-900 px-4 text-sm font-semibold text-white">
-                      {uploading ? (
-                        <>
-                          <Loader2 size={16} className="mr-2 animate-spin" /> Đang tải lên...
-                        </>
-                      ) : (
-                        "Chọn file"
-                      )}
+                    <span className="mt-4 flex flex-wrap items-center gap-2">
+                      <span className="inline-flex h-10 items-center justify-center rounded-xl bg-slate-900 px-4 text-sm font-semibold text-white">
+                        {uploading ? (
+                          <>
+                            <Loader2 size={16} className="mr-2 animate-spin" /> Đang tải
+                          </>
+                        ) : (
+                          "Chọn file"
+                        )}
+                      </span>
+                      <Badge variant={fileError ? "destructive" : uploaded.length > 0 ? "success" : uploading ? "warning" : "secondary"}>
+                        {fileError ? "Lỗi" : uploaded.length > 0 ? "Đã tải" : uploading ? "Đang tải" : "Chưa tải"}
+                      </Badge>
                     </span>
+                    {uploaded.length > 0 && (
+                      <span className="mt-3 block space-y-2">
+                        {uploaded.map((file) => (
+                          <span key={file.storageKey} className="flex items-center justify-between gap-2 rounded-xl bg-slate-50 px-3 py-2 text-xs text-slate-700">
+                            <span className="min-w-0 truncate">
+                              {file.originalName} · {formatBytes(file.size)}
+                            </span>
+                            <button
+                              type="button"
+                              className="font-semibold text-red-700 hover:text-red-900"
+                              onClick={(event) => {
+                                event.preventDefault();
+                                removeFile(file.storageKey);
+                              }}
+                            >
+                              Xóa
+                            </button>
+                          </span>
+                        ))}
+                      </span>
+                    )}
+                    {fileError && <span className="mt-3 block text-xs font-semibold leading-5 text-red-700">{fileError}</span>}
                   </label>
                 );
               })}
@@ -671,12 +983,20 @@ export function RegisterWizard() {
 
         {step === 6 && (
           <section className="space-y-5">
+            <Alert variant="success">
+              Không thu lệ phí tuyển sinh. Hệ thống chỉ tính điểm xét tuyển dự kiến phục vụ hội đồng tuyển sinh, không tự kết luận trúng tuyển.
+            </Alert>
             <div className="grid gap-4 rounded-2xl border border-slate-200 bg-slate-50/70 p-5 text-sm sm:grid-cols-2">
               <Summary label="Họ tên" value={form.fullName} />
               <Summary label="Số định danh" value={form.citizenId} />
+              <Summary label="Nơi sinh" value={form.birthPlace} />
               <Summary label="Trường THCS" value={form.secondarySchool} />
-              <Summary label="Phương án" value={`${form.selectedOptionNumber} - ${form.selectedSubjects}`} />
-              <Summary label="Điểm khuyến khích" value={`${bonusScore}`} />
+              <Summary label="Địa chỉ thường trú" value={permanentAddress} className="sm:col-span-2" />
+              <Summary label="Phương án" value={`${form.selectedOptionNumber} - ${form.selectedSubjects}`} className="sm:col-span-2" />
+              <Summary label="A - Tổng điểm TB môn THCS" value={formatScore(scoreDetails.academicAverageSum)} />
+              <Summary label="B - Điểm quy đổi học tập/rèn luyện" value={formatScore(scoreDetails.convertedScoreSum)} />
+              <Summary label="C - Điểm ưu tiên/khuyến khích" value={formatScore(scoreDetails.bonusScore)} />
+              <Summary label="Tổng điểm xét tuyển dự kiến" value={formatScore(scoreDetails.totalScore)} />
               <Summary label="Số file upload" value={`${files.length}`} />
               <Summary
                 label="Diện ưu tiên"
@@ -688,7 +1008,13 @@ export function RegisterWizard() {
                 className="sm:col-span-2"
               />
             </div>
-            <label className="flex cursor-pointer gap-3 rounded-2xl border border-slate-200 bg-white p-4 text-sm leading-6 text-slate-700 transition hover:bg-slate-50">
+            <label
+              className={cn(
+                "flex cursor-pointer gap-3 rounded-2xl border bg-white p-4 text-sm leading-6 text-slate-700 transition hover:bg-slate-50",
+                fieldError("commitmentAccepted") ? "border-red-300 bg-red-50" : "border-slate-200"
+              )}
+              data-field-error={fieldError("commitmentAccepted") ? "true" : undefined}
+            >
               <input
                 type="checkbox"
                 className="mt-1 h-4 w-4 shrink-0 rounded border-slate-300 text-school-700 focus:ring-school-700"
@@ -697,6 +1023,9 @@ export function RegisterWizard() {
               />
               <span>
                 Tôi xin cam đoan những thông tin khai trên là đúng sự thật và chịu trách nhiệm về hồ sơ đã nộp.
+                {fieldError("commitmentAccepted") && (
+                  <span className="mt-1 block text-xs font-semibold text-red-700">{fieldError("commitmentAccepted")}</span>
+                )}
               </span>
             </label>
           </section>
@@ -734,38 +1063,32 @@ export function RegisterWizard() {
   );
 }
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <label className="block min-w-0">
-      <span className="form-label">{label}</span>
-      {children}
-    </label>
-  );
-}
-
-function ScoreInput({ value, onChange }: { value: number | undefined; onChange: (value: number | undefined) => void }) {
+function ScoreInput({
+  value,
+  error,
+  onChange,
+}: {
+  value: number | undefined;
+  error?: string;
+  onChange: (value: number | undefined) => void;
+}) {
   return (
     <Input
       type="number"
       min="0"
       max="10"
       step="0.1"
-      className="min-w-0 lg:w-20"
+      className={cn("min-w-0 lg:w-20", controlErrorClass(Boolean(error)))}
       value={value ?? ""}
+      aria-invalid={Boolean(error)}
       onChange={(event) => onChange(event.target.value === "" ? undefined : Number(event.target.value))}
     />
   );
 }
 
-function LevelSelect({
-  value,
-  onChange,
-}: {
-  value: AcademicRecordInput["academicLevel"];
-  onChange: (value: NonNullable<AcademicRecordInput["academicLevel"]>) => void;
-}) {
+function LevelSelect({ value, onChange }: { value: AcademicLevelValue; onChange: (value: AcademicLevelValue) => void }) {
   return (
-    <Select value={value ?? "TOT"} onChange={(event) => onChange(event.target.value as NonNullable<AcademicRecordInput["academicLevel"]>)}>
+    <Select value={value} onChange={(event) => onChange(event.target.value as AcademicLevelValue)}>
       {Object.entries(ACADEMIC_LEVEL_LABELS).map(([key, label]) => (
         <option key={key} value={key}>
           {label}

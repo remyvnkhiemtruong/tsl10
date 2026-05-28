@@ -1,0 +1,572 @@
+[
+  {
+    "code": "10507",
+    "name": "Phường Thành Đông",
+    "type": "phường"
+  },
+  {
+    "code": "10525",
+    "name": "Phường Hải Dương",
+    "type": "phường"
+  },
+  {
+    "code": "10532",
+    "name": "Phường Lê Thanh Nghị",
+    "type": "phường"
+  },
+  {
+    "code": "10537",
+    "name": "Phường Tân Hưng",
+    "type": "phường"
+  },
+  {
+    "code": "10543",
+    "name": "Phường Việt Hòa",
+    "type": "phường"
+  },
+  {
+    "code": "10546",
+    "name": "Phường Chí Linh",
+    "type": "phường"
+  },
+  {
+    "code": "10549",
+    "name": "Phường Chu Văn An",
+    "type": "phường"
+  },
+  {
+    "code": "10552",
+    "name": "Phường Nguyễn Trãi",
+    "type": "phường"
+  },
+  {
+    "code": "10570",
+    "name": "Phường Trần Hưng Đạo",
+    "type": "phường"
+  },
+  {
+    "code": "10573",
+    "name": "Phường Trần Nhân Tông",
+    "type": "phường"
+  },
+  {
+    "code": "10603",
+    "name": "Phường Lê Đại Hành",
+    "type": "phường"
+  },
+  {
+    "code": "10606",
+    "name": "Xã Nam Sách",
+    "type": "xã"
+  },
+  {
+    "code": "10615",
+    "name": "Xã Hợp Tiến",
+    "type": "xã"
+  },
+  {
+    "code": "10633",
+    "name": "Xã Trần Phú",
+    "type": "xã"
+  },
+  {
+    "code": "10642",
+    "name": "Xã Thái Tân",
+    "type": "xã"
+  },
+  {
+    "code": "10645",
+    "name": "Xã An Phú",
+    "type": "xã"
+  },
+  {
+    "code": "10660",
+    "name": "Phường Ái Quốc",
+    "type": "phường"
+  },
+  {
+    "code": "10675",
+    "name": "Phường Kinh Môn",
+    "type": "phường"
+  },
+  {
+    "code": "10678",
+    "name": "Phường Bắc An Phụ",
+    "type": "phường"
+  },
+  {
+    "code": "10705",
+    "name": "Xã Nam An Phụ",
+    "type": "xã"
+  },
+  {
+    "code": "10714",
+    "name": "Phường Nhị Chiểu",
+    "type": "phường"
+  },
+  {
+    "code": "10726",
+    "name": "Phường Phạm Sư Mạnh",
+    "type": "phường"
+  },
+  {
+    "code": "10729",
+    "name": "Phường Trần Liễu",
+    "type": "phường"
+  },
+  {
+    "code": "10744",
+    "name": "Phường Nguyễn Đại Năng",
+    "type": "phường"
+  },
+  {
+    "code": "10750",
+    "name": "Xã Phú Thái",
+    "type": "xã"
+  },
+  {
+    "code": "10756",
+    "name": "Xã Lai Khê",
+    "type": "xã"
+  },
+  {
+    "code": "10792",
+    "name": "Xã An Thành",
+    "type": "xã"
+  },
+  {
+    "code": "10804",
+    "name": "Xã Kim Thành",
+    "type": "xã"
+  },
+  {
+    "code": "10813",
+    "name": "Xã Thanh Hà",
+    "type": "xã"
+  },
+  {
+    "code": "10816",
+    "name": "Xã Hà Bắc",
+    "type": "xã"
+  },
+  {
+    "code": "10837",
+    "name": "Phường Nam Đồng",
+    "type": "phường"
+  },
+  {
+    "code": "10843",
+    "name": "Xã Hà Nam",
+    "type": "xã"
+  },
+  {
+    "code": "10846",
+    "name": "Xã Hà Tây",
+    "type": "xã"
+  },
+  {
+    "code": "10882",
+    "name": "Xã Hà Đông",
+    "type": "xã"
+  },
+  {
+    "code": "10888",
+    "name": "Xã Cẩm Giang",
+    "type": "xã"
+  },
+  {
+    "code": "10891",
+    "name": "Phường Tứ Minh",
+    "type": "phường"
+  },
+  {
+    "code": "10903",
+    "name": "Xã Cẩm Giàng",
+    "type": "xã"
+  },
+  {
+    "code": "10909",
+    "name": "Xã Tuệ Tĩnh",
+    "type": "xã"
+  },
+  {
+    "code": "10930",
+    "name": "Xã Mao Điền",
+    "type": "xã"
+  },
+  {
+    "code": "10945",
+    "name": "Xã Kẻ Sặt",
+    "type": "xã"
+  },
+  {
+    "code": "10966",
+    "name": "Xã Bình Giang",
+    "type": "xã"
+  },
+  {
+    "code": "10972",
+    "name": "Xã Đường An",
+    "type": "xã"
+  },
+  {
+    "code": "10993",
+    "name": "Xã Thượng Hồng",
+    "type": "xã"
+  },
+  {
+    "code": "10999",
+    "name": "Xã Gia Lộc",
+    "type": "xã"
+  },
+  {
+    "code": "11002",
+    "name": "Phường Thạch Khôi",
+    "type": "phường"
+  },
+  {
+    "code": "11020",
+    "name": "Xã Yết Kiêu",
+    "type": "xã"
+  },
+  {
+    "code": "11050",
+    "name": "Xã Gia Phúc",
+    "type": "xã"
+  },
+  {
+    "code": "11065",
+    "name": "Xã Trường Tân",
+    "type": "xã"
+  },
+  {
+    "code": "11074",
+    "name": "Xã Tứ Kỳ",
+    "type": "xã"
+  },
+  {
+    "code": "11086",
+    "name": "Xã Đại Sơn",
+    "type": "xã"
+  },
+  {
+    "code": "11113",
+    "name": "Xã Tân Kỳ",
+    "type": "xã"
+  },
+  {
+    "code": "11131",
+    "name": "Xã Chí Minh",
+    "type": "xã"
+  },
+  {
+    "code": "11140",
+    "name": "Xã Lạc Phượng",
+    "type": "xã"
+  },
+  {
+    "code": "11146",
+    "name": "Xã Nguyên Giáp",
+    "type": "xã"
+  },
+  {
+    "code": "11164",
+    "name": "Xã Vĩnh Lại",
+    "type": "xã"
+  },
+  {
+    "code": "11167",
+    "name": "Xã Tân An",
+    "type": "xã"
+  },
+  {
+    "code": "11203",
+    "name": "Xã Ninh Giang",
+    "type": "xã"
+  },
+  {
+    "code": "11218",
+    "name": "Xã Hồng Châu",
+    "type": "xã"
+  },
+  {
+    "code": "11224",
+    "name": "Xã Khúc Thừa Dụ",
+    "type": "xã"
+  },
+  {
+    "code": "11239",
+    "name": "Xã Thanh Miện",
+    "type": "xã"
+  },
+  {
+    "code": "11242",
+    "name": "Xã Nguyễn Lương Bằng",
+    "type": "xã"
+  },
+  {
+    "code": "11254",
+    "name": "Xã Bắc Thanh Miện",
+    "type": "xã"
+  },
+  {
+    "code": "11257",
+    "name": "Xã Hải Hưng",
+    "type": "xã"
+  },
+  {
+    "code": "11284",
+    "name": "Xã Nam Thanh Miện",
+    "type": "xã"
+  },
+  {
+    "code": "11311",
+    "name": "Phường Hồng Bàng",
+    "type": "phường"
+  },
+  {
+    "code": "11329",
+    "name": "Phường Ngô Quyền",
+    "type": "phường"
+  },
+  {
+    "code": "11359",
+    "name": "Phường Gia Viên",
+    "type": "phường"
+  },
+  {
+    "code": "11383",
+    "name": "Phường Lê Chân",
+    "type": "phường"
+  },
+  {
+    "code": "11407",
+    "name": "Phường An Biên",
+    "type": "phường"
+  },
+  {
+    "code": "11411",
+    "name": "Phường Đông Hải",
+    "type": "phường"
+  },
+  {
+    "code": "11413",
+    "name": "Phường Hải An",
+    "type": "phường"
+  },
+  {
+    "code": "11443",
+    "name": "Phường Kiến An",
+    "type": "phường"
+  },
+  {
+    "code": "11446",
+    "name": "Phường Phù Liễn",
+    "type": "phường"
+  },
+  {
+    "code": "11455",
+    "name": "Phường Đồ Sơn",
+    "type": "phường"
+  },
+  {
+    "code": "11473",
+    "name": "Phường Bạch Đằng",
+    "type": "phường"
+  },
+  {
+    "code": "11488",
+    "name": "Phường Lưu Kiếm",
+    "type": "phường"
+  },
+  {
+    "code": "11503",
+    "name": "Xã Việt Khê",
+    "type": "xã"
+  },
+  {
+    "code": "11506",
+    "name": "Phường Lê Ích Mộc",
+    "type": "phường"
+  },
+  {
+    "code": "11533",
+    "name": "Phường Hòa Bình",
+    "type": "phường"
+  },
+  {
+    "code": "11542",
+    "name": "Phường Nam Triệu",
+    "type": "phường"
+  },
+  {
+    "code": "11557",
+    "name": "Phường Thiên Hương",
+    "type": "phường"
+  },
+  {
+    "code": "11560",
+    "name": "Phường Thủy Nguyên",
+    "type": "phường"
+  },
+  {
+    "code": "11581",
+    "name": "Phường An Dương",
+    "type": "phường"
+  },
+  {
+    "code": "11593",
+    "name": "Phường An Phong",
+    "type": "phường"
+  },
+  {
+    "code": "11602",
+    "name": "Phường Hồng An",
+    "type": "phường"
+  },
+  {
+    "code": "11617",
+    "name": "Phường An Hải",
+    "type": "phường"
+  },
+  {
+    "code": "11629",
+    "name": "Xã An Lão",
+    "type": "xã"
+  },
+  {
+    "code": "11635",
+    "name": "Xã An Trường",
+    "type": "xã"
+  },
+  {
+    "code": "11647",
+    "name": "Xã An Quang",
+    "type": "xã"
+  },
+  {
+    "code": "11668",
+    "name": "Xã An Khánh",
+    "type": "xã"
+  },
+  {
+    "code": "11674",
+    "name": "Xã An Hưng",
+    "type": "xã"
+  },
+  {
+    "code": "11680",
+    "name": "Xã Kiến Thụy",
+    "type": "xã"
+  },
+  {
+    "code": "11689",
+    "name": "Phường Hưng Đạo",
+    "type": "phường"
+  },
+  {
+    "code": "11692",
+    "name": "Phường Dương Kinh",
+    "type": "phường"
+  },
+  {
+    "code": "11713",
+    "name": "Xã Nghi Dương",
+    "type": "xã"
+  },
+  {
+    "code": "11725",
+    "name": "Xã Kiến Minh",
+    "type": "xã"
+  },
+  {
+    "code": "11728",
+    "name": "Xã Kiến Hưng",
+    "type": "xã"
+  },
+  {
+    "code": "11737",
+    "name": "Phường Nam Đồ Sơn",
+    "type": "phường"
+  },
+  {
+    "code": "11749",
+    "name": "Xã Kiến Hải",
+    "type": "xã"
+  },
+  {
+    "code": "11755",
+    "name": "Xã Tiên Lãng",
+    "type": "xã"
+  },
+  {
+    "code": "11761",
+    "name": "Xã Quyết Thắng",
+    "type": "xã"
+  },
+  {
+    "code": "11779",
+    "name": "Xã Tân Minh",
+    "type": "xã"
+  },
+  {
+    "code": "11791",
+    "name": "Xã Tiên Minh",
+    "type": "xã"
+  },
+  {
+    "code": "11806",
+    "name": "Xã Chấn Hưng",
+    "type": "xã"
+  },
+  {
+    "code": "11809",
+    "name": "Xã Hùng Thắng",
+    "type": "xã"
+  },
+  {
+    "code": "11824",
+    "name": "Xã Vĩnh Bảo",
+    "type": "xã"
+  },
+  {
+    "code": "11836",
+    "name": "Xã Vĩnh Thịnh",
+    "type": "xã"
+  },
+  {
+    "code": "11842",
+    "name": "Xã Vĩnh Thuận",
+    "type": "xã"
+  },
+  {
+    "code": "11848",
+    "name": "Xã Vĩnh Hòa",
+    "type": "xã"
+  },
+  {
+    "code": "11875",
+    "name": "Xã Vĩnh Hải",
+    "type": "xã"
+  },
+  {
+    "code": "11887",
+    "name": "Xã Vĩnh Am",
+    "type": "xã"
+  },
+  {
+    "code": "11911",
+    "name": "Xã Nguyễn Bỉnh Khiêm",
+    "type": "xã"
+  },
+  {
+    "code": "11914",
+    "name": "Đặc khu Cát Hải",
+    "type": "đặc khu"
+  },
+  {
+    "code": "11948",
+    "name": "Đặc khu Bạch Long Vĩ",
+    "type": "đặc khu"
+  }
+]

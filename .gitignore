@@ -5,7 +5,7 @@ out
 .env.local
 .env.*.local
 .data
-uploads
+/uploads
 coverage
 .DS_Store
 *.log

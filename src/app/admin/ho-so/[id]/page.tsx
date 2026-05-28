@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { prisma } from "@/lib/prisma";
+import { calculateAdmissionScoreDetails } from "@/lib/admission-score";
 import {
   ACADEMIC_LEVEL_LABELS,
   FILE_STATUS_LABELS,
@@ -42,6 +43,7 @@ export default async function AdminApplicationDetailPage({ params }: { params: P
     },
   });
   if (!app) notFound();
+  const scoreDetails = calculateAdmissionScoreDetails(app.academicRecords, app.bonusScore);
 
   return (
     <AdminShell>
@@ -101,10 +103,11 @@ export default async function AdminApplicationDetailPage({ params }: { params: P
         <Card>
           <CardTitle>Thông tin liên hệ</CardTitle>
           <div className="mt-4 grid gap-3 text-sm">
-            <Info label="Địa chỉ thường trú" value={app.permanentAddress} />
+            <Info label="Số nhà" value={app.houseNumber ?? ""} />
             <Info label="Ấp/khóm" value={app.hamlet ?? ""} />
             <Info label="Xã/phường" value={app.ward ?? ""} />
             <Info label="Tỉnh/thành phố" value={app.province ?? ""} />
+            <Info label="Địa chỉ thường trú ghép" value={app.permanentAddress} />
             <Info label="SĐT học sinh" value={app.studentPhone ?? ""} />
             <Info label="Email" value={app.email ?? ""} />
             <Info label="Phụ huynh/người giám hộ" value={app.guardianName} />
@@ -137,6 +140,19 @@ export default async function AdminApplicationDetailPage({ params }: { params: P
           </div>
         </Card>
       </div>
+
+      <Card className="mt-6">
+        <CardTitle>Điểm xét tuyển dự kiến</CardTitle>
+        <CardDescription className="mt-1">
+          Điểm dự kiến phục vụ hội đồng tuyển sinh; hệ thống không tự kết luận trúng tuyển.
+        </CardDescription>
+        <div className="mt-4 grid gap-3 text-sm sm:grid-cols-4">
+          <Info label="A - Tổng điểm TB môn THCS" value={`${scoreDetails.academicAverageSum}`} />
+          <Info label="B - Điểm quy đổi" value={`${scoreDetails.convertedScoreSum}`} />
+          <Info label="C - Điểm ưu tiên/khuyến khích" value={`${scoreDetails.bonusScore}`} />
+          <Info label="Tổng điểm xét tuyển dự kiến" value={`${scoreDetails.totalScore}`} />
+        </div>
+      </Card>
 
       <Card className="mt-6 overflow-hidden p-0">
         <div className="p-6 pb-0">

@@ -8,7 +8,10 @@ export const runtime = "nodejs";
 export async function GET() {
   const user = await requireAdmin();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  const applications = await prisma.application.findMany({ orderBy: { submittedAt: "desc" } });
+  const applications = await prisma.application.findMany({
+    orderBy: { submittedAt: "desc" },
+    include: { academicRecords: true }
+  });
   const workbook = await buildApplicationsWorkbook(applications);
   const buffer = await workbook.xlsx.writeBuffer();
   return new NextResponse(buffer, {

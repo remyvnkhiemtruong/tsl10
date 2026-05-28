@@ -1,0 +1,512 @@
+[
+  {
+    "code": "28249",
+    "name": "Phường Đạo Thạnh",
+    "type": "phường"
+  },
+  {
+    "code": "28261",
+    "name": "Phường Mỹ Tho",
+    "type": "phường"
+  },
+  {
+    "code": "28270",
+    "name": "Phường Thới Sơn",
+    "type": "phường"
+  },
+  {
+    "code": "28273",
+    "name": "Phường Mỹ Phong",
+    "type": "phường"
+  },
+  {
+    "code": "28285",
+    "name": "Phường Trung An",
+    "type": "phường"
+  },
+  {
+    "code": "28297",
+    "name": "Phường Long Thuận",
+    "type": "phường"
+  },
+  {
+    "code": "28306",
+    "name": "Phường Gò Công",
+    "type": "phường"
+  },
+  {
+    "code": "28315",
+    "name": "Phường Bình Xuân",
+    "type": "phường"
+  },
+  {
+    "code": "28321",
+    "name": "Xã Tân Phước 1",
+    "type": "xã"
+  },
+  {
+    "code": "28327",
+    "name": "Xã Tân Phước 2",
+    "type": "xã"
+  },
+  {
+    "code": "28336",
+    "name": "Xã Hưng Thạnh",
+    "type": "xã"
+  },
+  {
+    "code": "28345",
+    "name": "Xã Tân Phước 3",
+    "type": "xã"
+  },
+  {
+    "code": "28360",
+    "name": "Xã Cái Bè",
+    "type": "xã"
+  },
+  {
+    "code": "28366",
+    "name": "Xã Hậu Mỹ",
+    "type": "xã"
+  },
+  {
+    "code": "28378",
+    "name": "Xã Mỹ Thiện",
+    "type": "xã"
+  },
+  {
+    "code": "28393",
+    "name": "Xã Hội Cư",
+    "type": "xã"
+  },
+  {
+    "code": "28405",
+    "name": "Xã Mỹ Đức Tây",
+    "type": "xã"
+  },
+  {
+    "code": "28414",
+    "name": "Xã Mỹ Lợi",
+    "type": "xã"
+  },
+  {
+    "code": "28426",
+    "name": "Xã Thanh Hưng",
+    "type": "xã"
+  },
+  {
+    "code": "28429",
+    "name": "Xã An Hữu",
+    "type": "xã"
+  },
+  {
+    "code": "28435",
+    "name": "Phường Mỹ Phước Tây",
+    "type": "phường"
+  },
+  {
+    "code": "28436",
+    "name": "Phường Thanh Hòa",
+    "type": "phường"
+  },
+  {
+    "code": "28439",
+    "name": "Phường Cai Lậy",
+    "type": "phường"
+  },
+  {
+    "code": "28444",
+    "name": "Xã Thạnh Phú",
+    "type": "xã"
+  },
+  {
+    "code": "28456",
+    "name": "Xã Mỹ Thành",
+    "type": "xã"
+  },
+  {
+    "code": "28468",
+    "name": "Xã Tân Phú",
+    "type": "xã"
+  },
+  {
+    "code": "28471",
+    "name": "Xã Bình Phú",
+    "type": "xã"
+  },
+  {
+    "code": "28477",
+    "name": "Phường Nhị Quý",
+    "type": "phường"
+  },
+  {
+    "code": "28501",
+    "name": "Xã Hiệp Đức",
+    "type": "xã"
+  },
+  {
+    "code": "28504",
+    "name": "Xã Long Tiên",
+    "type": "xã"
+  },
+  {
+    "code": "28516",
+    "name": "Xã Ngũ Hiệp",
+    "type": "xã"
+  },
+  {
+    "code": "28519",
+    "name": "Xã Châu Thành",
+    "type": "xã"
+  },
+  {
+    "code": "28525",
+    "name": "Xã Tân Hương",
+    "type": "xã"
+  },
+  {
+    "code": "28537",
+    "name": "Xã Long Hưng",
+    "type": "xã"
+  },
+  {
+    "code": "28543",
+    "name": "Xã Long Định",
+    "type": "xã"
+  },
+  {
+    "code": "28564",
+    "name": "Xã Bình Trưng",
+    "type": "xã"
+  },
+  {
+    "code": "28576",
+    "name": "Xã Vĩnh Kim",
+    "type": "xã"
+  },
+  {
+    "code": "28582",
+    "name": "Xã Kim Sơn",
+    "type": "xã"
+  },
+  {
+    "code": "28594",
+    "name": "Xã Chợ Gạo",
+    "type": "xã"
+  },
+  {
+    "code": "28603",
+    "name": "Xã Mỹ Tịnh An",
+    "type": "xã"
+  },
+  {
+    "code": "28615",
+    "name": "Xã Lương Hòa Lạc",
+    "type": "xã"
+  },
+  {
+    "code": "28627",
+    "name": "Xã Tân Thuận Bình",
+    "type": "xã"
+  },
+  {
+    "code": "28633",
+    "name": "Xã An Thạnh Thủy",
+    "type": "xã"
+  },
+  {
+    "code": "28648",
+    "name": "Xã Bình Ninh",
+    "type": "xã"
+  },
+  {
+    "code": "28651",
+    "name": "Xã Vĩnh Bình",
+    "type": "xã"
+  },
+  {
+    "code": "28660",
+    "name": "Xã Đồng Sơn",
+    "type": "xã"
+  },
+  {
+    "code": "28663",
+    "name": "Xã Phú Thành",
+    "type": "xã"
+  },
+  {
+    "code": "28678",
+    "name": "Xã Vĩnh Hựu",
+    "type": "xã"
+  },
+  {
+    "code": "28687",
+    "name": "Xã Long Bình",
+    "type": "xã"
+  },
+  {
+    "code": "28693",
+    "name": "Xã Tân Thới",
+    "type": "xã"
+  },
+  {
+    "code": "28696",
+    "name": "Xã Tân Phú Đông",
+    "type": "xã"
+  },
+  {
+    "code": "28702",
+    "name": "Xã Tân Hòa",
+    "type": "xã"
+  },
+  {
+    "code": "28720",
+    "name": "Xã Gia Thuận",
+    "type": "xã"
+  },
+  {
+    "code": "28723",
+    "name": "Xã Tân Đông",
+    "type": "xã"
+  },
+  {
+    "code": "28729",
+    "name": "Phường Sơn Qui",
+    "type": "phường"
+  },
+  {
+    "code": "28738",
+    "name": "Xã Tân Điền",
+    "type": "xã"
+  },
+  {
+    "code": "28747",
+    "name": "Xã Gò Công Đông",
+    "type": "xã"
+  },
+  {
+    "code": "29869",
+    "name": "Phường Cao Lãnh",
+    "type": "phường"
+  },
+  {
+    "code": "29884",
+    "name": "Phường Mỹ Ngãi",
+    "type": "phường"
+  },
+  {
+    "code": "29888",
+    "name": "Phường Mỹ Trà",
+    "type": "phường"
+  },
+  {
+    "code": "29905",
+    "name": "Phường Sa Đéc",
+    "type": "phường"
+  },
+  {
+    "code": "29926",
+    "name": "Xã Tân Hồng",
+    "type": "xã"
+  },
+  {
+    "code": "29929",
+    "name": "Xã Tân Hộ Cơ",
+    "type": "xã"
+  },
+  {
+    "code": "29938",
+    "name": "Xã Tân Thành",
+    "type": "xã"
+  },
+  {
+    "code": "29944",
+    "name": "Xã An Phước",
+    "type": "xã"
+  },
+  {
+    "code": "29954",
+    "name": "Phường An Bình",
+    "type": "phường"
+  },
+  {
+    "code": "29955",
+    "name": "Phường Hồng Ngự",
+    "type": "phường"
+  },
+  {
+    "code": "29971",
+    "name": "Xã Thường Phước",
+    "type": "xã"
+  },
+  {
+    "code": "29978",
+    "name": "Phường Thường Lạc",
+    "type": "phường"
+  },
+  {
+    "code": "29983",
+    "name": "Xã Long Khánh",
+    "type": "xã"
+  },
+  {
+    "code": "29992",
+    "name": "Xã Long Phú Thuận",
+    "type": "xã"
+  },
+  {
+    "code": "30001",
+    "name": "Xã Tràm Chim",
+    "type": "xã"
+  },
+  {
+    "code": "30010",
+    "name": "Xã Tam Nông",
+    "type": "xã"
+  },
+  {
+    "code": "30019",
+    "name": "Xã An Hòa",
+    "type": "xã"
+  },
+  {
+    "code": "30025",
+    "name": "Xã Phú Cường",
+    "type": "xã"
+  },
+  {
+    "code": "30028",
+    "name": "Xã An Long",
+    "type": "xã"
+  },
+  {
+    "code": "30034",
+    "name": "Xã Phú Thọ",
+    "type": "xã"
+  },
+  {
+    "code": "30037",
+    "name": "Xã Tháp Mười",
+    "type": "xã"
+  },
+  {
+    "code": "30043",
+    "name": "Xã Phương Thịnh",
+    "type": "xã"
+  },
+  {
+    "code": "30046",
+    "name": "Xã Trường Xuân",
+    "type": "xã"
+  },
+  {
+    "code": "30055",
+    "name": "Xã Mỹ Quí",
+    "type": "xã"
+  },
+  {
+    "code": "30061",
+    "name": "Xã Đốc Binh Kiều",
+    "type": "xã"
+  },
+  {
+    "code": "30073",
+    "name": "Xã Thanh Mỹ",
+    "type": "xã"
+  },
+  {
+    "code": "30076",
+    "name": "Xã Mỹ Thọ",
+    "type": "xã"
+  },
+  {
+    "code": "30085",
+    "name": "Xã Ba Sao",
+    "type": "xã"
+  },
+  {
+    "code": "30088",
+    "name": "Xã Phong Mỹ",
+    "type": "xã"
+  },
+  {
+    "code": "30112",
+    "name": "Xã Mỹ Hiệp",
+    "type": "xã"
+  },
+  {
+    "code": "30118",
+    "name": "Xã Bình Hàng Trung",
+    "type": "xã"
+  },
+  {
+    "code": "30130",
+    "name": "Xã Thanh Bình",
+    "type": "xã"
+  },
+  {
+    "code": "30154",
+    "name": "Xã Tân Long",
+    "type": "xã"
+  },
+  {
+    "code": "30157",
+    "name": "Xã Tân Thạnh",
+    "type": "xã"
+  },
+  {
+    "code": "30163",
+    "name": "Xã Bình Thành",
+    "type": "xã"
+  },
+  {
+    "code": "30169",
+    "name": "Xã Lấp Vò",
+    "type": "xã"
+  },
+  {
+    "code": "30178",
+    "name": "Xã Mỹ An Hưng",
+    "type": "xã"
+  },
+  {
+    "code": "30184",
+    "name": "Xã Tân Khánh Trung",
+    "type": "xã"
+  },
+  {
+    "code": "30208",
+    "name": "Xã Hòa Long",
+    "type": "xã"
+  },
+  {
+    "code": "30214",
+    "name": "Xã Tân Dương",
+    "type": "xã"
+  },
+  {
+    "code": "30226",
+    "name": "Xã Lai Vung",
+    "type": "xã"
+  },
+  {
+    "code": "30235",
+    "name": "Xã Phong Hòa",
+    "type": "xã"
+  },
+  {
+    "code": "30244",
+    "name": "Xã Phú Hựu",
+    "type": "xã"
+  },
+  {
+    "code": "30253",
+    "name": "Xã Tân Nhuận Đông",
+    "type": "xã"
+  },
+  {
+    "code": "30259",
+    "name": "Xã Tân Phú Trung",
+    "type": "xã"
+  }
+]

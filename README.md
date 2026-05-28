@@ -1,42 +1,31 @@
-# Cổng đăng ký dự tuyển vào lớp 10 THPT Võ Văn Kiệt
+# Cổng đăng ký dự tuyển lớp 10 THPT Võ Văn Kiệt
 
-Hệ thống web đăng ký dự tuyển lớp 10 trực tuyến cho **Trường THPT Võ Văn Kiệt**, năm học **2026 - 2027**. App dùng Next.js App Router, TypeScript, Tailwind CSS, Prisma, PostgreSQL, JWT cookie auth, Vercel Blob private upload, ExcelJS và Puppeteer Core + Sparticuz Chromium.
+Hệ thống đăng ký dự tuyển vào lớp 10 cho **Trường THPT Võ Văn Kiệt**, năm học **2026 - 2027**. Ứng dụng dùng Next.js App Router, TypeScript, Tailwind CSS, Prisma, PostgreSQL, JWT cookie auth, Vercel Blob private upload, ExcelJS và Puppeteer Core + Sparticuz Chromium.
 
 ## Chức năng chính
 
-- Form đăng ký nhiều bước, validate bằng Zod.
+- Form đăng ký nhiều bước, validate bằng Zod ở server.
+- Dropdown hành chính 34 tỉnh/thành và xã/phường theo sắp xếp năm 2025.
 - Upload ảnh 4x6, học bạ, giấy khai sinh/CCCD, minh chứng ưu tiên/khuyến khích.
-- Chống nộp trùng theo số định danh/CCCD.
+- Tính điểm xét tuyển dự kiến A + B + C phục vụ hội đồng tuyển sinh, không tự kết luận trúng tuyển.
 - Tra cứu hồ sơ bằng mã hồ sơ, số định danh và ngày sinh.
-- Admin đăng nhập, xem danh sách/chi tiết hồ sơ, duyệt file, cập nhật trạng thái và ghi log xử lý.
-- Xuất Excel danh sách hồ sơ và PDF phiếu đăng ký.
-- `/api/health` để kiểm tra deploy.
+- Admin đăng nhập, xem danh sách/chi tiết hồ sơ, duyệt file, cập nhật trạng thái và xuất Excel/PDF.
 
 ## Chạy local
 
 ```bash
 npm install
 cp .env.example .env
-npm run prisma:generate
+npx prisma generate
+npx prisma migrate dev
+npm run prisma:seed
+npm run dev
 ```
 
-Chạy PostgreSQL bằng Docker:
+Nếu cần PostgreSQL local bằng Docker:
 
 ```bash
 docker compose up -d
-```
-
-Tạo schema và seed dữ liệu local:
-
-```bash
-npx prisma migrate dev --name init
-npm run prisma:seed
-```
-
-Chạy dev server:
-
-```bash
-npm run dev
 ```
 
 Mở `http://localhost:3000`.
@@ -46,17 +35,24 @@ Mở `http://localhost:3000`.
 Seed local mặc định:
 
 ```text
-Email: admin@vovankiet.edu.vn
-Password: Admin@123456
+Email: admin@gmail.com
+Password: Admin123@
 ```
 
-Có thể đổi bằng:
+Có thể đổi bằng biến môi trường khi seed:
 
 ```bash
 SEED_ADMIN_EMAIL="admin@example.com" SEED_ADMIN_PASSWORD="MatKhauManh" npm run prisma:seed
 ```
 
-Không seed tài khoản mặc định trong production. Nếu cần tạo admin production lần đầu, chạy seed thủ công với email/mật khẩu mạnh.
+Không seed tài khoản mặc định trong production. Production cần `SEED_ADMIN_EMAIL` và `SEED_ADMIN_PASSWORD` rõ ràng nếu chạy seed thủ công.
+
+## Upload file
+
+- Development dùng local storage trong `.data/uploads`.
+- Vercel production phải dùng Vercel Blob private hoặc storage tương thích, không dùng local filesystem để lưu hồ sơ lâu dài.
+- File hồ sơ riêng tư không được public trực tiếp; admin xem file qua route kiểm tra quyền.
+- Chỉ nhận JPG/JPEG/PNG/PDF theo giới hạn dung lượng trong `src/lib/constants.ts`.
 
 ## Biến môi trường
 
@@ -82,16 +78,16 @@ NODE_ENV=production
 2. Tạo PostgreSQL production và đặt `DATABASE_URL`.
 3. Tạo Vercel Blob Store, đặt `BLOB_READ_WRITE_TOKEN`, `STORAGE_PROVIDER=vercel_blob`, `BLOB_ACCESS=private`.
 4. Đặt `JWT_SECRET` mạnh và `NEXT_PUBLIC_APP_URL`.
-5. Build command giữ nguyên trong `vercel.json`: `npm run vercel-build`.
+5. Build command trong `vercel.json`: `npm run vercel-build`.
 6. Chạy migration production thủ công:
 
 ```bash
 DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE?sslmode=require" npx prisma migrate deploy
 ```
 
-Script Vercel build luôn chạy `npx prisma generate` trước `next build`. Chỉ bật `RUN_PRISMA_MIGRATE_DEPLOY=true` nếu chủ động muốn migration chạy trong build.
+Script Vercel build chạy `npx prisma generate` trước `next build`. Chỉ bật `RUN_PRISMA_MIGRATE_DEPLOY=true` nếu chủ động muốn migration chạy trong build.
 
-## Kiểm tra trước khi bàn giao
+## Kiểm tra trước deploy
 
 ```bash
 npm run lint
@@ -106,3 +102,8 @@ Sau deploy, kiểm tra:
 - `/tra-cuu`
 - `/admin/login`
 - Xuất Excel tại `/api/admin/export/excel`
+
+## Tài liệu nghiệp vụ
+
+- `docs/quy-che-tuyen-sinh-2026-2027.md`
+- `docs/danh-muc-hanh-chinh-34-tinh-thanh-2025.md`

@@ -1,0 +1,206 @@
+[
+  {
+    "code": "1",
+    "name": "Hà Nội",
+    "type": "thành phố",
+    "wardCount": 126
+  },
+  {
+    "code": "46",
+    "name": "Huế",
+    "type": "thành phố",
+    "wardCount": 40
+  },
+  {
+    "code": "12",
+    "name": "Lai Châu",
+    "type": "tỉnh",
+    "wardCount": 38
+  },
+  {
+    "code": "11",
+    "name": "Điện Biên",
+    "type": "tỉnh",
+    "wardCount": 45
+  },
+  {
+    "code": "14",
+    "name": "Sơn La",
+    "type": "tỉnh",
+    "wardCount": 75
+  },
+  {
+    "code": "20",
+    "name": "Lạng Sơn",
+    "type": "tỉnh",
+    "wardCount": 65
+  },
+  {
+    "code": "22",
+    "name": "Quảng Ninh",
+    "type": "tỉnh",
+    "wardCount": 54
+  },
+  {
+    "code": "38",
+    "name": "Thanh Hóa",
+    "type": "tỉnh",
+    "wardCount": 166
+  },
+  {
+    "code": "40",
+    "name": "Nghệ An",
+    "type": "tỉnh",
+    "wardCount": 130
+  },
+  {
+    "code": "42",
+    "name": "Hà Tĩnh",
+    "type": "tỉnh",
+    "wardCount": 69
+  },
+  {
+    "code": "4",
+    "name": "Cao Bằng",
+    "type": "tỉnh",
+    "wardCount": 56
+  },
+  {
+    "code": "8",
+    "name": "Tuyên Quang",
+    "type": "tỉnh",
+    "wardCount": 124
+  },
+  {
+    "code": "15",
+    "name": "Lào Cai",
+    "type": "tỉnh",
+    "wardCount": 99
+  },
+  {
+    "code": "19",
+    "name": "Thái Nguyên",
+    "type": "tỉnh",
+    "wardCount": 92
+  },
+  {
+    "code": "25",
+    "name": "Phú Thọ",
+    "type": "tỉnh",
+    "wardCount": 148
+  },
+  {
+    "code": "24",
+    "name": "Bắc Ninh",
+    "type": "tỉnh",
+    "wardCount": 99
+  },
+  {
+    "code": "33",
+    "name": "Hưng Yên",
+    "type": "tỉnh",
+    "wardCount": 104
+  },
+  {
+    "code": "31",
+    "name": "Hải Phòng",
+    "type": "thành phố",
+    "wardCount": 114
+  },
+  {
+    "code": "37",
+    "name": "Ninh Bình",
+    "type": "tỉnh",
+    "wardCount": 129
+  },
+  {
+    "code": "44",
+    "name": "Quảng Trị",
+    "type": "tỉnh",
+    "wardCount": 78
+  },
+  {
+    "code": "48",
+    "name": "Đà Nẵng",
+    "type": "thành phố",
+    "wardCount": 94
+  },
+  {
+    "code": "51",
+    "name": "Quảng Ngãi",
+    "type": "tỉnh",
+    "wardCount": 96
+  },
+  {
+    "code": "52",
+    "name": "Gia Lai",
+    "type": "tỉnh",
+    "wardCount": 135
+  },
+  {
+    "code": "56",
+    "name": "Khánh Hòa",
+    "type": "tỉnh",
+    "wardCount": 65
+  },
+  {
+    "code": "68",
+    "name": "Lâm Đồng",
+    "type": "tỉnh",
+    "wardCount": 124
+  },
+  {
+    "code": "66",
+    "name": "Đắk Lắk",
+    "type": "tỉnh",
+    "wardCount": 102
+  },
+  {
+    "code": "79",
+    "name": "Thành phố Hồ Chí Minh",
+    "type": "thành phố",
+    "wardCount": 168
+  },
+  {
+    "code": "75",
+    "name": "Đồng Nai",
+    "type": "tỉnh",
+    "wardCount": 95
+  },
+  {
+    "code": "80",
+    "name": "Tây Ninh",
+    "type": "tỉnh",
+    "wardCount": 96
+  },
+  {
+    "code": "92",
+    "name": "Cần Thơ",
+    "type": "thành phố",
+    "wardCount": 103
+  },
+  {
+    "code": "86",
+    "name": "Vĩnh Long",
+    "type": "tỉnh",
+    "wardCount": 124
+  },
+  {
+    "code": "82",
+    "name": "Đồng Tháp",
+    "type": "tỉnh",
+    "wardCount": 102
+  },
+  {
+    "code": "96",
+    "name": "Cà Mau",
+    "type": "tỉnh",
+    "wardCount": 64
+  },
+  {
+    "code": "91",
+    "name": "An Giang",
+    "type": "tỉnh",
+    "wardCount": 102
+  }
+]

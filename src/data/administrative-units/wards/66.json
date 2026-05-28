@@ -1,0 +1,512 @@
+[
+  {
+    "code": "22015",
+    "name": "Phường Tuy Hòa",
+    "type": "phường"
+  },
+  {
+    "code": "22045",
+    "name": "Phường Bình Kiến",
+    "type": "phường"
+  },
+  {
+    "code": "22051",
+    "name": "Phường Sông Cầu",
+    "type": "phường"
+  },
+  {
+    "code": "22057",
+    "name": "Xã Xuân Lộc",
+    "type": "xã"
+  },
+  {
+    "code": "22060",
+    "name": "Xã Xuân Cảnh",
+    "type": "xã"
+  },
+  {
+    "code": "22075",
+    "name": "Xã Xuân Thọ",
+    "type": "xã"
+  },
+  {
+    "code": "22076",
+    "name": "Phường Xuân Đài",
+    "type": "phường"
+  },
+  {
+    "code": "22081",
+    "name": "Xã Đồng Xuân",
+    "type": "xã"
+  },
+  {
+    "code": "22090",
+    "name": "Xã Xuân Lãnh",
+    "type": "xã"
+  },
+  {
+    "code": "22096",
+    "name": "Xã Phú Mỡ",
+    "type": "xã"
+  },
+  {
+    "code": "22111",
+    "name": "Xã Xuân Phước",
+    "type": "xã"
+  },
+  {
+    "code": "22114",
+    "name": "Xã Tuy An Bắc",
+    "type": "xã"
+  },
+  {
+    "code": "22120",
+    "name": "Xã Tuy An Đông",
+    "type": "xã"
+  },
+  {
+    "code": "22132",
+    "name": "Xã Tuy An Tây",
+    "type": "xã"
+  },
+  {
+    "code": "22147",
+    "name": "Xã Ô Loan",
+    "type": "xã"
+  },
+  {
+    "code": "22153",
+    "name": "Xã Tuy An Nam",
+    "type": "xã"
+  },
+  {
+    "code": "22165",
+    "name": "Xã Sơn Hòa",
+    "type": "xã"
+  },
+  {
+    "code": "22171",
+    "name": "Xã Tây Sơn",
+    "type": "xã"
+  },
+  {
+    "code": "22177",
+    "name": "Xã Vân Hòa",
+    "type": "xã"
+  },
+  {
+    "code": "22192",
+    "name": "Xã Suối Trai",
+    "type": "xã"
+  },
+  {
+    "code": "22207",
+    "name": "Xã Sông Hinh",
+    "type": "xã"
+  },
+  {
+    "code": "22222",
+    "name": "Xã Đức Bình",
+    "type": "xã"
+  },
+  {
+    "code": "22225",
+    "name": "Xã Ea Bá",
+    "type": "xã"
+  },
+  {
+    "code": "22237",
+    "name": "Xã Ea Ly",
+    "type": "xã"
+  },
+  {
+    "code": "22240",
+    "name": "Phường Phú Yên",
+    "type": "phường"
+  },
+  {
+    "code": "22250",
+    "name": "Xã Sơn Thành",
+    "type": "xã"
+  },
+  {
+    "code": "22255",
+    "name": "Xã Tây Hòa",
+    "type": "xã"
+  },
+  {
+    "code": "22258",
+    "name": "Phường Đông Hòa",
+    "type": "phường"
+  },
+  {
+    "code": "22261",
+    "name": "Phường Hòa Hiệp",
+    "type": "phường"
+  },
+  {
+    "code": "22276",
+    "name": "Xã Hòa Thịnh",
+    "type": "xã"
+  },
+  {
+    "code": "22285",
+    "name": "Xã Hòa Mỹ",
+    "type": "xã"
+  },
+  {
+    "code": "22291",
+    "name": "Xã Hòa Xuân",
+    "type": "xã"
+  },
+  {
+    "code": "22303",
+    "name": "Xã Phú Hòa 2",
+    "type": "xã"
+  },
+  {
+    "code": "22319",
+    "name": "Xã Phú Hòa 1",
+    "type": "xã"
+  },
+  {
+    "code": "24121",
+    "name": "Phường Tân Lập",
+    "type": "phường"
+  },
+  {
+    "code": "24133",
+    "name": "Phường Buôn Ma Thuột",
+    "type": "phường"
+  },
+  {
+    "code": "24154",
+    "name": "Phường Thành Nhất",
+    "type": "phường"
+  },
+  {
+    "code": "24163",
+    "name": "Phường Tân An",
+    "type": "phường"
+  },
+  {
+    "code": "24169",
+    "name": "Phường Ea Kao",
+    "type": "phường"
+  },
+  {
+    "code": "24175",
+    "name": "Xã Hòa Phú",
+    "type": "xã"
+  },
+  {
+    "code": "24181",
+    "name": "Xã Ea Drăng",
+    "type": "xã"
+  },
+  {
+    "code": "24184",
+    "name": "Xã Ea H’Leo",
+    "type": "xã"
+  },
+  {
+    "code": "24187",
+    "name": "Xã Ea Hiao",
+    "type": "xã"
+  },
+  {
+    "code": "24193",
+    "name": "Xã Ea Wy",
+    "type": "xã"
+  },
+  {
+    "code": "24208",
+    "name": "Xã Ea Khăl",
+    "type": "xã"
+  },
+  {
+    "code": "24211",
+    "name": "Xã Ea Súp",
+    "type": "xã"
+  },
+  {
+    "code": "24214",
+    "name": "Xã Ia Lốp",
+    "type": "xã"
+  },
+  {
+    "code": "24217",
+    "name": "Xã Ea Rốk",
+    "type": "xã"
+  },
+  {
+    "code": "24221",
+    "name": "Xã Ia Rvê",
+    "type": "xã"
+  },
+  {
+    "code": "24229",
+    "name": "Xã Ea Bung",
+    "type": "xã"
+  },
+  {
+    "code": "24235",
+    "name": "Xã Buôn Đôn",
+    "type": "xã"
+  },
+  {
+    "code": "24241",
+    "name": "Xã Ea Wer",
+    "type": "xã"
+  },
+  {
+    "code": "24250",
+    "name": "Xã Ea Nuôl",
+    "type": "xã"
+  },
+  {
+    "code": "24259",
+    "name": "Xã Quảng Phú",
+    "type": "xã"
+  },
+  {
+    "code": "24265",
+    "name": "Xã Ea Kiết",
+    "type": "xã"
+  },
+  {
+    "code": "24277",
+    "name": "Xã Ea Tul",
+    "type": "xã"
+  },
+  {
+    "code": "24280",
+    "name": "Xã Cư M’gar",
+    "type": "xã"
+  },
+  {
+    "code": "24286",
+    "name": "Xã Ea M’Droh",
+    "type": "xã"
+  },
+  {
+    "code": "24301",
+    "name": "Xã Cuôr Đăng",
+    "type": "xã"
+  },
+  {
+    "code": "24305",
+    "name": "Phường Buôn Hồ",
+    "type": "phường"
+  },
+  {
+    "code": "24310",
+    "name": "Xã Krông Búk",
+    "type": "xã"
+  },
+  {
+    "code": "24313",
+    "name": "Xã Cư Pơng",
+    "type": "xã"
+  },
+  {
+    "code": "24316",
+    "name": "Xã Pơng Drang",
+    "type": "xã"
+  },
+  {
+    "code": "24328",
+    "name": "Xã Ea Drông",
+    "type": "xã"
+  },
+  {
+    "code": "24340",
+    "name": "Phường Cư Bao",
+    "type": "phường"
+  },
+  {
+    "code": "24343",
+    "name": "Xã Krông Năng",
+    "type": "xã"
+  },
+  {
+    "code": "24346",
+    "name": "Xã Dliê Ya",
+    "type": "xã"
+  },
+  {
+    "code": "24352",
+    "name": "Xã Tam Giang",
+    "type": "xã"
+  },
+  {
+    "code": "24364",
+    "name": "Xã Phú Xuân",
+    "type": "xã"
+  },
+  {
+    "code": "24373",
+    "name": "Xã Ea Kar",
+    "type": "xã"
+  },
+  {
+    "code": "24376",
+    "name": "Xã Ea Knốp",
+    "type": "xã"
+  },
+  {
+    "code": "24400",
+    "name": "Xã Ea Păl",
+    "type": "xã"
+  },
+  {
+    "code": "24403",
+    "name": "Xã Ea Ô",
+    "type": "xã"
+  },
+  {
+    "code": "24406",
+    "name": "Xã Cư Yang",
+    "type": "xã"
+  },
+  {
+    "code": "24412",
+    "name": "Xã M’Drắk",
+    "type": "xã"
+  },
+  {
+    "code": "24415",
+    "name": "Xã Cư Prao",
+    "type": "xã"
+  },
+  {
+    "code": "24433",
+    "name": "Xã Ea Riêng",
+    "type": "xã"
+  },
+  {
+    "code": "24436",
+    "name": "Xã Cư M’ta",
+    "type": "xã"
+  },
+  {
+    "code": "24444",
+    "name": "Xã Krông Á",
+    "type": "xã"
+  },
+  {
+    "code": "24445",
+    "name": "Xã Ea Trang",
+    "type": "xã"
+  },
+  {
+    "code": "24448",
+    "name": "Xã Krông Bông",
+    "type": "xã"
+  },
+  {
+    "code": "24454",
+    "name": "Xã Dang Kang",
+    "type": "xã"
+  },
+  {
+    "code": "24472",
+    "name": "Xã Hòa Sơn",
+    "type": "xã"
+  },
+  {
+    "code": "24478",
+    "name": "Xã Cư Pui",
+    "type": "xã"
+  },
+  {
+    "code": "24484",
+    "name": "Xã Yang Mao",
+    "type": "xã"
+  },
+  {
+    "code": "24490",
+    "name": "Xã Krông Pắc",
+    "type": "xã"
+  },
+  {
+    "code": "24496",
+    "name": "Xã Ea Kly",
+    "type": "xã"
+  },
+  {
+    "code": "24502",
+    "name": "Xã Ea Phê",
+    "type": "xã"
+  },
+  {
+    "code": "24505",
+    "name": "Xã Ea Knuếc",
+    "type": "xã"
+  },
+  {
+    "code": "24526",
+    "name": "Xã Tân Tiến",
+    "type": "xã"
+  },
+  {
+    "code": "24529",
+    "name": "Xã Vụ Bổn",
+    "type": "xã"
+  },
+  {
+    "code": "24538",
+    "name": "Xã Krông Ana",
+    "type": "xã"
+  },
+  {
+    "code": "24540",
+    "name": "Xã Ea Ning",
+    "type": "xã"
+  },
+  {
+    "code": "24544",
+    "name": "Xã Ea Ktur",
+    "type": "xã"
+  },
+  {
+    "code": "24559",
+    "name": "Xã Ea Na",
+    "type": "xã"
+  },
+  {
+    "code": "24561",
+    "name": "Xã Dray Bhăng",
+    "type": "xã"
+  },
+  {
+    "code": "24568",
+    "name": "Xã Dur Kmăl",
+    "type": "xã"
+  },
+  {
+    "code": "24580",
+    "name": "Xã Liên Sơn Lắk",
+    "type": "xã"
+  },
+  {
+    "code": "24595",
+    "name": "Xã Đắk Liêng",
+    "type": "xã"
+  },
+  {
+    "code": "24598",
+    "name": "Xã Đắk Phơi",
+    "type": "xã"
+  },
+  {
+    "code": "24604",
+    "name": "Xã Krông Nô",
+    "type": "xã"
+  },
+  {
+    "code": "24607",
+    "name": "Xã Nam Ka",
+    "type": "xã"
+  }
+]

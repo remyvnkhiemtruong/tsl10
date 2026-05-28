@@ -1,0 +1,392 @@
+[
+  {
+    "code": "18859",
+    "name": "Phường Đồng Thuận",
+    "type": "phường"
+  },
+  {
+    "code": "18871",
+    "name": "Phường Đồng Sơn",
+    "type": "phường"
+  },
+  {
+    "code": "18880",
+    "name": "Phường Đồng Hới",
+    "type": "phường"
+  },
+  {
+    "code": "18901",
+    "name": "Xã Minh Hóa",
+    "type": "xã"
+  },
+  {
+    "code": "18904",
+    "name": "Xã Dân Hóa",
+    "type": "xã"
+  },
+  {
+    "code": "18919",
+    "name": "Xã Tân Thành",
+    "type": "xã"
+  },
+  {
+    "code": "18922",
+    "name": "Xã Kim Điền",
+    "type": "xã"
+  },
+  {
+    "code": "18943",
+    "name": "Xã Kim Phú",
+    "type": "xã"
+  },
+  {
+    "code": "18949",
+    "name": "Xã Đồng Lê",
+    "type": "xã"
+  },
+  {
+    "code": "18952",
+    "name": "Xã Tuyên Sơn",
+    "type": "xã"
+  },
+  {
+    "code": "18958",
+    "name": "Xã Tuyên Lâm",
+    "type": "xã"
+  },
+  {
+    "code": "18985",
+    "name": "Xã Tuyên Phú",
+    "type": "xã"
+  },
+  {
+    "code": "18991",
+    "name": "Xã Tuyên Bình",
+    "type": "xã"
+  },
+  {
+    "code": "18997",
+    "name": "Xã Tuyên Hóa",
+    "type": "xã"
+  },
+  {
+    "code": "19009",
+    "name": "Phường Ba Đồn",
+    "type": "phường"
+  },
+  {
+    "code": "19021",
+    "name": "Xã Phú Trạch",
+    "type": "xã"
+  },
+  {
+    "code": "19030",
+    "name": "Xã Trung Thuần",
+    "type": "xã"
+  },
+  {
+    "code": "19033",
+    "name": "Xã Hòa Trạch",
+    "type": "xã"
+  },
+  {
+    "code": "19051",
+    "name": "Xã Tân Gianh",
+    "type": "xã"
+  },
+  {
+    "code": "19057",
+    "name": "Xã Quảng Trạch",
+    "type": "xã"
+  },
+  {
+    "code": "19066",
+    "name": "Phường Bắc Gianh",
+    "type": "phường"
+  },
+  {
+    "code": "19075",
+    "name": "Xã Nam Ba Đồn",
+    "type": "xã"
+  },
+  {
+    "code": "19093",
+    "name": "Xã Nam Gianh",
+    "type": "xã"
+  },
+  {
+    "code": "19111",
+    "name": "Xã Hoàn Lão",
+    "type": "xã"
+  },
+  {
+    "code": "19126",
+    "name": "Xã Bắc Trạch",
+    "type": "xã"
+  },
+  {
+    "code": "19138",
+    "name": "Xã Phong Nha",
+    "type": "xã"
+  },
+  {
+    "code": "19141",
+    "name": "Xã Bố Trạch",
+    "type": "xã"
+  },
+  {
+    "code": "19147",
+    "name": "Xã Thượng Trạch",
+    "type": "xã"
+  },
+  {
+    "code": "19159",
+    "name": "Xã Đông Trạch",
+    "type": "xã"
+  },
+  {
+    "code": "19198",
+    "name": "Xã Nam Trạch",
+    "type": "xã"
+  },
+  {
+    "code": "19204",
+    "name": "Xã Trường Sơn",
+    "type": "xã"
+  },
+  {
+    "code": "19207",
+    "name": "Xã Quảng Ninh",
+    "type": "xã"
+  },
+  {
+    "code": "19225",
+    "name": "Xã Ninh Châu",
+    "type": "xã"
+  },
+  {
+    "code": "19237",
+    "name": "Xã Trường Ninh",
+    "type": "xã"
+  },
+  {
+    "code": "19246",
+    "name": "Xã Lệ Ninh",
+    "type": "xã"
+  },
+  {
+    "code": "19249",
+    "name": "Xã Lệ Thủy",
+    "type": "xã"
+  },
+  {
+    "code": "19255",
+    "name": "Xã Cam Hồng",
+    "type": "xã"
+  },
+  {
+    "code": "19288",
+    "name": "Xã Sen Ngư",
+    "type": "xã"
+  },
+  {
+    "code": "19291",
+    "name": "Xã Tân Mỹ",
+    "type": "xã"
+  },
+  {
+    "code": "19309",
+    "name": "Xã Trường Phú",
+    "type": "xã"
+  },
+  {
+    "code": "19318",
+    "name": "Xã Kim Ngân",
+    "type": "xã"
+  },
+  {
+    "code": "19333",
+    "name": "Phường Đông Hà",
+    "type": "phường"
+  },
+  {
+    "code": "19351",
+    "name": "Phường Nam Đông Hà",
+    "type": "phường"
+  },
+  {
+    "code": "19360",
+    "name": "Phường Quảng Trị",
+    "type": "phường"
+  },
+  {
+    "code": "19363",
+    "name": "Xã Vĩnh Linh",
+    "type": "xã"
+  },
+  {
+    "code": "19366",
+    "name": "Xã Bến Quan",
+    "type": "xã"
+  },
+  {
+    "code": "19372",
+    "name": "Xã Vĩnh Hoàng",
+    "type": "xã"
+  },
+  {
+    "code": "19405",
+    "name": "Xã Vĩnh Thủy",
+    "type": "xã"
+  },
+  {
+    "code": "19414",
+    "name": "Xã Cửa Tùng",
+    "type": "xã"
+  },
+  {
+    "code": "19429",
+    "name": "Xã Khe Sanh",
+    "type": "xã"
+  },
+  {
+    "code": "19432",
+    "name": "Xã Lao Bảo",
+    "type": "xã"
+  },
+  {
+    "code": "19435",
+    "name": "Xã Hướng Lập",
+    "type": "xã"
+  },
+  {
+    "code": "19441",
+    "name": "Xã Hướng Phùng",
+    "type": "xã"
+  },
+  {
+    "code": "19462",
+    "name": "Xã Tân Lập",
+    "type": "xã"
+  },
+  {
+    "code": "19483",
+    "name": "Xã A Dơi",
+    "type": "xã"
+  },
+  {
+    "code": "19489",
+    "name": "Xã Lìa",
+    "type": "xã"
+  },
+  {
+    "code": "19495",
+    "name": "Xã Gio Linh",
+    "type": "xã"
+  },
+  {
+    "code": "19496",
+    "name": "Xã Cửa Việt",
+    "type": "xã"
+  },
+  {
+    "code": "19501",
+    "name": "Xã Bến Hải",
+    "type": "xã"
+  },
+  {
+    "code": "19537",
+    "name": "Xã Cồn Tiên",
+    "type": "xã"
+  },
+  {
+    "code": "19555",
+    "name": "Xã Hướng Hiệp",
+    "type": "xã"
+  },
+  {
+    "code": "19564",
+    "name": "Xã Đakrông",
+    "type": "xã"
+  },
+  {
+    "code": "19567",
+    "name": "Xã Ba Lòng",
+    "type": "xã"
+  },
+  {
+    "code": "19588",
+    "name": "Xã Tà Rụt",
+    "type": "xã"
+  },
+  {
+    "code": "19594",
+    "name": "Xã La Lay",
+    "type": "xã"
+  },
+  {
+    "code": "19597",
+    "name": "Xã Cam Lộ",
+    "type": "xã"
+  },
+  {
+    "code": "19603",
+    "name": "Xã Hiếu Giang",
+    "type": "xã"
+  },
+  {
+    "code": "19624",
+    "name": "Xã Triệu Phong",
+    "type": "xã"
+  },
+  {
+    "code": "19639",
+    "name": "Xã Nam Cửa Việt",
+    "type": "xã"
+  },
+  {
+    "code": "19645",
+    "name": "Xã Triệu Bình",
+    "type": "xã"
+  },
+  {
+    "code": "19654",
+    "name": "Xã Triệu Cơ",
+    "type": "xã"
+  },
+  {
+    "code": "19669",
+    "name": "Xã Ái Tử",
+    "type": "xã"
+  },
+  {
+    "code": "19681",
+    "name": "Xã Diên Sanh",
+    "type": "xã"
+  },
+  {
+    "code": "19699",
+    "name": "Xã Vĩnh Định",
+    "type": "xã"
+  },
+  {
+    "code": "19702",
+    "name": "Xã Hải Lăng",
+    "type": "xã"
+  },
+  {
+    "code": "19735",
+    "name": "Xã Nam Hải Lăng",
+    "type": "xã"
+  },
+  {
+    "code": "19741",
+    "name": "Xã Mỹ Thủy",
+    "type": "xã"
+  },
+  {
+    "code": "19742",
+    "name": "Đặc khu Cồn Cỏ",
+    "type": "đặc khu"
+  }
+]

@@ -1,5 +1,6 @@
 import type { Prisma } from "@prisma/client";
 import QRCode from "qrcode";
+import { calculateAdmissionScoreDetails } from "@/lib/admission-score";
 import { ACADEMIC_LEVEL_LABELS, GENDER_LABELS, PRIORITY_LABELS, PRIZE_LABELS, STATUS_LABELS } from "@/lib/constants";
 
 export type PdfApplication = Prisma.ApplicationGetPayload<{
@@ -36,6 +37,7 @@ export async function buildApplicationPdfHtml(application: PdfApplication) {
   const awardText = application.awards
     .map((award) => `${award.competitionName} - ${PRIZE_LABELS[award.prize] ?? award.prize} (${award.bonusScore} điểm)`)
     .join("; ");
+  const scoreDetails = calculateAdmissionScoreDetails(application.academicRecords, application.bonusScore);
 
   return `<!doctype html>
 <html lang="vi">
@@ -91,8 +93,11 @@ export async function buildApplicationPdfHtml(application: PdfApplication) {
 
   <h2>III. Thông tin liên hệ</h2>
   <table>${rows([
-    ["Địa chỉ thường trú", application.permanentAddress],
-    ["Ấp/khóm - Xã/phường - Tỉnh", [application.hamlet, application.ward, application.province].filter(Boolean).join(" - ")],
+    ["Số nhà", application.houseNumber ?? ""],
+    ["Ấp/khóm", application.hamlet ?? ""],
+    ["Xã/phường", application.ward ?? ""],
+    ["Tỉnh/thành phố", application.province ?? ""],
+    ["Địa chỉ thường trú ghép", application.permanentAddress],
     ["Số điện thoại học sinh", application.studentPhone ?? ""],
     ["Email", application.email ?? ""],
     ["Cha/mẹ/người giám hộ", application.guardianName],
@@ -106,10 +111,19 @@ export async function buildApplicationPdfHtml(application: PdfApplication) {
     ["Điểm khuyến khích", String(application.bonusScore)],
   ])}</table>
 
-  <h2>V. Nguyện vọng học các môn lựa chọn lớp 10</h2>
+  <h2>V. Điểm xét tuyển dự kiến</h2>
+  <table>${rows([
+    ["A - Tổng điểm trung bình môn THCS", String(scoreDetails.academicAverageSum)],
+    ["B - Tổng điểm quy đổi học tập/rèn luyện", String(scoreDetails.convertedScoreSum)],
+    ["C - Điểm ưu tiên, khuyến khích", String(scoreDetails.bonusScore)],
+    ["Tổng điểm xét tuyển dự kiến", String(scoreDetails.totalScore)],
+    ["Ghi chú", "Điểm dự kiến phục vụ hội đồng tuyển sinh, không tự kết luận trúng tuyển."],
+  ])}</table>
+
+  <h2>VI. Nguyện vọng học các môn lựa chọn lớp 10</h2>
   <p>Phương án ${esc(application.selectedOptionNumber)}: <b>${esc(application.selectedSubjects)}</b></p>
 
-  <h2>VI. Cam kết</h2>
+  <h2>VII. Cam kết</h2>
   <p>Tôi xin cam đoan những thông tin khai trên là đúng sự thật. Nếu trúng tuyển vào lớp 10 của trường, tôi sẽ chấp hành nghiêm túc các quy định của nhà trường.</p>
 
   <table class="no-border">
