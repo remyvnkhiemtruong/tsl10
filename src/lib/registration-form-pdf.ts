@@ -2,9 +2,8 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import fontkit from "@pdf-lib/fontkit";
 import { PDFDocument, rgb, type PDFFont, type PDFPage } from "pdf-lib";
-import type { Prisma } from "@prisma/client";
-import { ACADEMIC_LEVEL_LABELS, PRIORITY_LABELS, PRIZE_LABELS, PRIZE_SCORES, SUBJECT_OPTIONS } from "@/lib/constants";
-import { readStoredFile } from "@/lib/storage";
+import type { AcademicRecord, Prisma } from "@prisma/client";
+import { ACADEMIC_LEVEL_LABELS, GENDER_LABELS, SUBJECT_OPTIONS } from "@/lib/constants";
 
 export type RegistrationFormPdfApplication = Prisma.ApplicationGetPayload<{
   include: {
@@ -18,283 +17,460 @@ export type RegistrationFormPdfApplication = Prisma.ApplicationGetPayload<{
 const PAGE_WIDTH = 595.28;
 const PAGE_HEIGHT = 841.89;
 const MARGIN = 36;
-const LINE = rgb(0.15, 0.18, 0.23);
-const LIGHT = rgb(0.82, 0.85, 0.9);
+const CONTENT_WIDTH = PAGE_WIDTH - MARGIN * 2;
+const LINE = rgb(0.08, 0.08, 0.08);
+const BODY = 11.2;
+const SMALL = 9.2;
 
-function date(value: Date | string | null | undefined) {
+type Fonts = {
+  regular: PDFFont;
+  bold: PDFFont;
+};
+
+function formatDateVi(value: Date | string | null | undefined) {
   if (!value) return "";
-  return new Date(value).toLocaleDateString("vi-VN");
+  return new Intl.DateTimeFormat("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" }).format(new Date(value));
 }
 
-function valueOrDots(value: unknown, dots = "................................................") {
-  const text = String(value ?? "").trim();
-  return text || dots;
+function text(value: unknown) {
+  return String(value ?? "").trim();
 }
 
-function drawText(page: PDFPage, text: string, x: number, y: number, font: PDFFont, size = 10, options?: { bold?: boolean; maxWidth?: number }) {
-  const maxWidth = options?.maxWidth;
-  if (!maxWidth) {
-    page.drawText(text, { x, y, font, size, color: LINE });
-    return y;
-  }
+function formatLongDateVi(value: Date | string | null | undefined) {
+  const date = value ? new Date(value) : new Date();
+  return `Phước Long, ngày ${date.getDate()} tháng ${date.getMonth() + 1} năm ${date.getFullYear()}`;
+}
 
-  const words = text.split(/\s+/);
+function score(value: number | null | undefined) {
+  if (value == null) return "";
+  return Number.isInteger(value) ? String(value) : value.toFixed(2).replace(/0+$/, "").replace(/\.$/, "");
+}
+
+function drawCentered(page: PDFPage, value: string, y: number, font: PDFFont, size: number) {
+  const width = font.widthOfTextAtSize(value, size);
+  page.drawText(value, { x: (PAGE_WIDTH - width) / 2, y, font, size, color: LINE });
+}
+
+function wrap(value: string, font: PDFFont, size: number, maxWidth: number) {
+  const words = value.split(/\s+/).filter(Boolean);
+  const lines: string[] = [];
   let line = "";
-  let currentY = y;
   for (const word of words) {
     const next = line ? `${line} ${word}` : word;
     if (font.widthOfTextAtSize(next, size) > maxWidth && line) {
-      page.drawText(line, { x, y: currentY, font, size, color: LINE });
-      currentY -= size + 3;
+      lines.push(line);
       line = word;
     } else {
       line = next;
     }
   }
-  if (line) page.drawText(line, { x, y: currentY, font, size, color: LINE });
-  return currentY;
+  if (line) lines.push(line);
+  return lines.length > 0 ? lines : [""];
 }
 
-function drawCentered(page: PDFPage, text: string, y: number, font: PDFFont, size: number) {
-  const width = font.widthOfTextAtSize(text, size);
-  page.drawText(text, { x: (PAGE_WIDTH - width) / 2, y, font, size, color: LINE });
+function drawWrapped(page: PDFPage, value: string, x: number, y: number, font: PDFFont, size: number, maxWidth: number, lineGap = 3) {
+  const lines = wrap(value, font, size, maxWidth);
+  lines.forEach((line, index) => page.drawText(line, { x, y: y - index * (size + lineGap), font, size, color: LINE }));
+  return y - (lines.length - 1) * (size + lineGap);
 }
 
-function drawSection(page: PDFPage, title: string, y: number, bold: PDFFont) {
-  page.drawText(title, { x: MARGIN, y, font: bold, size: 11, color: LINE });
-  page.drawLine({ start: { x: MARGIN, y: y - 4 }, end: { x: PAGE_WIDTH - MARGIN, y: y - 4 }, thickness: 0.5, color: LIGHT });
+function drawSection(page: PDFPage, title: string, y: number, fonts: Fonts) {
+  const nextY = drawWrapped(page, title, MARGIN, y, fonts.bold, 12.4, CONTENT_WIDTH);
+  return nextY - 21;
+}
+
+function drawFilledField(
+  page: PDFPage,
+  label: string,
+  value: string,
+  x: number,
+  y: number,
+  width: number,
+  fonts: Fonts,
+  size = BODY
+) {
+  page.drawText(label, { x, y, font: fonts.regular, size, color: LINE });
+  const labelWidth = fonts.regular.widthOfTextAtSize(label, size);
+  const valueX = x + labelWidth + 4;
+  const cleanValue = text(value);
+  if (cleanValue) {
+    drawWrapped(page, cleanValue, valueX, y, fonts.bold, size, width - labelWidth - 6);
+  }
   return y - 18;
 }
 
-function drawField(page: PDFPage, label: string, value: unknown, x: number, y: number, width: number, regular: PDFFont, bold: PDFFont) {
-  page.drawText(`${label}:`, { x, y, font: bold, size: 9.5, color: LINE });
-  drawText(page, valueOrDots(value), x + bold.widthOfTextAtSize(`${label}: `, 9.5), y, regular, 9.5, { maxWidth: width });
-  return y - 15;
-}
-
-function drawCheckbox(page: PDFPage, label: string, checked: boolean, x: number, y: number, regular: PDFFont) {
-  page.drawRectangle({ x, y: y - 1, width: 8, height: 8, borderColor: LINE, borderWidth: 0.8 });
+function drawCheckbox(page: PDFPage, x: number, y: number, checked: boolean) {
+  page.drawRectangle({ x, y: y - 1, width: 9, height: 9, borderColor: LINE, borderWidth: 0.8 });
   if (checked) {
-    page.drawLine({ start: { x: x + 1.5, y: y + 1 }, end: { x: x + 7, y: y + 6 }, thickness: 1, color: LINE });
-    page.drawLine({ start: { x: x + 7, y: y + 1 }, end: { x: x + 1.5, y: y + 6 }, thickness: 1, color: LINE });
+    page.drawLine({ start: { x: x + 1.6, y: y + 3 }, end: { x: x + 4, y: y }, thickness: 1, color: LINE });
+    page.drawLine({ start: { x: x + 4, y }, end: { x: x + 8, y: y + 7 }, thickness: 1, color: LINE });
   }
-  drawText(page, label, x + 12, y, regular, 9, { maxWidth: 225 });
 }
 
-function drawTable(
+function drawCheckboxLine(page: PDFPage, label: string, checked: boolean, x: number, y: number, fonts: Fonts, maxWidth = CONTENT_WIDTH - 20) {
+  drawCheckbox(page, x, y, checked);
+  return drawWrapped(page, label, x + 15, y, fonts.regular, BODY, maxWidth);
+}
+
+function drawCell(
   page: PDFPage,
-  rows: string[][],
+  value: string,
   x: number,
   y: number,
-  widths: number[],
-  rowHeight: number,
-  regular: PDFFont,
-  bold: PDFFont,
-  headerRows = 1
+  width: number,
+  height: number,
+  font: PDFFont,
+  size: number,
+  options: { center?: boolean; fill?: boolean } = {}
 ) {
-  let currentY = y;
-  rows.forEach((row, rowIndex) => {
-    let currentX = x;
-    row.forEach((cell, index) => {
-      page.drawRectangle({
-        x: currentX,
-        y: currentY - rowHeight,
-        width: widths[index],
-        height: rowHeight,
-        borderColor: LIGHT,
-        borderWidth: 0.7,
-        color: rowIndex < headerRows ? rgb(0.96, 0.97, 0.99) : undefined,
-      });
-      drawText(page, cell, currentX + 3, currentY - 12, rowIndex < headerRows ? bold : regular, 7.2, {
-        maxWidth: widths[index] - 6,
-      });
-      currentX += widths[index];
+  page.drawRectangle({
+    x,
+    y: y - height,
+    width,
+    height,
+    borderColor: LINE,
+    borderWidth: 0.45,
+    color: options.fill ? rgb(0.95, 0.95, 0.95) : undefined,
+  });
+  const lines = wrap(value, font, size, width - 6).slice(0, 3);
+  const blockHeight = lines.length * size + (lines.length - 1) * 2;
+  const startY = y - (height - blockHeight) / 2 - size;
+  lines.forEach((line, index) => {
+    const lineWidth = font.widthOfTextAtSize(line, size);
+    page.drawText(line, {
+      x: options.center ? x + Math.max(3, (width - lineWidth) / 2) : x + 3,
+      y: startY - index * (size + 2),
+      font,
+      size,
+      color: LINE,
     });
-    currentY -= rowHeight;
+  });
+}
+
+function drawScoreTable(page: PDFPage, records: AcademicRecord[], y: number, fonts: Fonts) {
+  const cols = [28, 45, 38, 45, 60, 65, 40, 45, 45, 112];
+  const x0 = MARGIN;
+  const titleH = 18;
+  const headerH = 28;
+  const rowH = 22;
+  const subjectWidth = cols.slice(1, 9).reduce((sum, item) => sum + item, 0);
+  const noteX = x0 + cols.slice(0, 9).reduce((sum, item) => sum + item, 0);
+
+  drawCell(page, "Lớp", x0, y, cols[0], titleH + headerH, fonts.bold, 8.2, { center: true, fill: true });
+  drawCell(page, "Điểm các môn học tính điểm cấp THCS", x0 + cols[0], y, subjectWidth, titleH, fonts.bold, 9, {
+    center: true,
+    fill: true,
+  });
+  drawCell(page, "Ghi chú", noteX, y, cols[9], titleH + headerH, fonts.bold, 9, { center: true, fill: true });
+
+  let x = x0 + cols[0];
+  ["Ngữ văn", "Toán", "Tiếng Anh", "Khoa học tự nhiên", "Lịch sử và Địa lí", "GDCD", "Công nghệ", "Tin học"].forEach(
+    (heading, index) => {
+      drawCell(page, heading, x, y - titleH, cols[index + 1], headerH, fonts.bold, 7.8, { center: true, fill: true });
+      x += cols[index + 1];
+    }
+  );
+
+  let currentY = y - titleH - headerH;
+  [6, 7, 8, 9].forEach((grade) => {
+    const item = records.find((record) => record.grade === grade);
+    const values = [
+      String(grade),
+      score(item?.literature),
+      score(item?.math),
+      score(item?.english),
+      score(item?.naturalScience),
+      score(item?.historyGeography),
+      score(item?.civicEducation),
+      score(item?.technology),
+      score(item?.informatics),
+      item?.note ?? "",
+    ];
+    let cellX = x0;
+    values.forEach((value, index) => {
+      drawCell(page, value, cellX, currentY, cols[index], rowH, index === 0 ? fonts.bold : fonts.regular, 8.6, { center: index !== 9 });
+      cellX += cols[index];
+    });
+    currentY -= rowH;
   });
   return currentY;
 }
 
-async function embedPhoto(doc: PDFDocument, page: PDFPage, application: RegistrationFormPdfApplication, x: number, y: number, font: PDFFont) {
-  const photo = application.files.find((file) => file.fileType === "PHOTO_4X6" && file.status === "HOP_LE" && file.mimeType.startsWith("image/"));
-  page.drawRectangle({ x, y, width: 75, height: 100, borderColor: LINE, borderWidth: 0.8 });
-  if (!photo) {
-    page.drawText("Ảnh 4x6", { x: x + 18, y: y + 46, font, size: 10, color: LINE });
-    return;
-  }
-  try {
-    const buffer = await readStoredFile(photo);
-    const image = photo.mimeType === "image/png" ? await doc.embedPng(buffer) : await doc.embedJpg(buffer);
-    page.drawImage(image, { x: x + 2, y: y + 2, width: 71, height: 96 });
-  } catch {
-    page.drawText("Ảnh 4x6", { x: x + 18, y: y + 46, font, size: 10, color: LINE });
-  }
+function drawLevelTable(page: PDFPage, records: AcademicRecord[], y: number, fonts: Fonts) {
+  const x0 = MARGIN;
+  const first = 45;
+  const sub = (CONTENT_WIDTH - first) / 8;
+  const row1 = 18;
+  const row2 = 18;
+  const row3 = 24;
+
+  drawCell(page, "Lớp", x0, y, first, row1 + row2, fonts.bold, 9, { center: true, fill: true });
+  [6, 7, 8, 9].forEach((grade, index) => {
+    drawCell(page, String(grade), x0 + first + index * sub * 2, y, sub * 2, row1, fonts.bold, 9, { center: true, fill: true });
+    drawCell(page, "Học tập", x0 + first + index * sub * 2, y - row1, sub, row2, fonts.bold, 8.3, { center: true, fill: true });
+    drawCell(page, "Rèn luyện", x0 + first + index * sub * 2 + sub, y - row1, sub, row2, fonts.bold, 8.3, {
+      center: true,
+      fill: true,
+    });
+  });
+
+  const dataY = y - row1 - row2;
+  drawCell(page, "Xếp loại", x0, dataY, first, row3, fonts.bold, 8.6, { center: true });
+  [6, 7, 8, 9].forEach((grade, index) => {
+    const item = records.find((record) => record.grade === grade);
+    drawCell(
+      page,
+      item?.academicLevel ? ACADEMIC_LEVEL_LABELS[item.academicLevel] ?? item.academicLevel : "",
+      x0 + first + index * sub * 2,
+      dataY,
+      sub,
+      row3,
+      fonts.regular,
+      8.8,
+      { center: true }
+    );
+    drawCell(
+      page,
+      item?.conductLevel ? ACADEMIC_LEVEL_LABELS[item.conductLevel] ?? item.conductLevel : "",
+      x0 + first + index * sub * 2 + sub,
+      dataY,
+      sub,
+      row3,
+      fonts.regular,
+      8.8,
+      { center: true }
+    );
+  });
+  return dataY - row3;
+}
+
+function hasPriority(application: RegistrationFormPdfApplication, types: string[]) {
+  const selected = new Set<string>(application.priorities.map((priority) => priority.type));
+  return types.some((type) => selected.has(type));
+}
+
+function awardText(application: RegistrationFormPdfApplication, prize: string) {
+  const award = application.awards.find((item) => item.prize === prize);
+  if (!award) return "";
+  return [award.competitionName, award.field, award.level, award.year ? String(award.year) : ""].filter(Boolean).join(", ");
+}
+
+function drawOption(page: PDFPage, textValue: string, checked: boolean, y: number, fonts: Fonts) {
+  page.drawText(textValue, { x: MARGIN + 18, y, font: fonts.regular, size: BODY, color: LINE });
+  drawCheckbox(page, PAGE_WIDTH - MARGIN - 13, y, checked);
 }
 
 export async function buildRegistrationFormPdf(application: RegistrationFormPdfApplication) {
   const doc = await PDFDocument.create();
   doc.registerFontkit(fontkit);
-  doc.setTitle("Đơn đăng ký dự tuyển vào lớp 10 năm học 2026-2027");
+  doc.setTitle("Phiếu đăng ký dự tuyển vào lớp 10 năm học 2026-2027");
   doc.setAuthor("Trường THPT Võ Văn Kiệt");
-  doc.setSubject("Đơn đăng ký dự tuyển vào lớp 10 năm học 2026-2027");
+  doc.setSubject("Phiếu đăng ký dự tuyển vào lớp 10 năm học 2026-2027");
 
   const [regularBytes, boldBytes] = await Promise.all([
-    readFile(path.join(process.cwd(), "public/fonts/NotoSans-Regular.ttf")),
-    readFile(path.join(process.cwd(), "public/fonts/NotoSans-Bold.ttf")),
+    readFile(path.join(process.cwd(), "public/fonts/LiberationSerif-Regular.ttf")),
+    readFile(path.join(process.cwd(), "public/fonts/LiberationSerif-Bold.ttf")),
   ]);
-  const regular = await doc.embedFont(regularBytes);
-  const bold = await doc.embedFont(boldBytes);
+  const fonts: Fonts = {
+    regular: await doc.embedFont(regularBytes),
+    bold: await doc.embedFont(boldBytes),
+  };
 
   const page1 = doc.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
-  drawCentered(page1, "CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM", 796, bold, 12);
-  drawCentered(page1, "Độc lập - Tự do - Hạnh phúc", 779, bold, 11);
-  page1.drawText(`Mã phiếu: ${application.applicationCode}`, { x: 438, y: 748, font: bold, size: 10, color: LINE });
-  drawCentered(page1, "ĐƠN ĐĂNG KÝ DỰ TUYỂN VÀO LỚP 10", 742, bold, 14);
-  drawCentered(page1, "Năm học 2026 - 2027", 724, regular, 11);
-  drawText(page1, "Kính gửi: Hiệu trưởng trường THPT Võ Văn Kiệt", MARGIN + 88, 697, regular, 10.5);
-  await embedPhoto(doc, page1, application, MARGIN, 612, regular);
+  drawCentered(page1, "CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM", 800, fonts.bold, 13);
+  drawCentered(page1, "Độc lập - Tự do - Hạnh phúc", 782, fonts.bold, 12.2);
+  page1.drawLine({ start: { x: 226, y: 777 }, end: { x: 369, y: 777 }, thickness: 0.7, color: LINE });
+  page1.drawRectangle({ x: PAGE_WIDTH - MARGIN - 118, y: 746, width: 118, height: 24, borderColor: LINE, borderWidth: 0.8 });
+  page1.drawText(`Số phiếu: ${text(application.registrationFormNumber)}`, {
+    x: PAGE_WIDTH - MARGIN - 111,
+    y: 754,
+    font: fonts.bold,
+    size: 9.8,
+    color: LINE,
+  });
+  drawCentered(page1, "PHIẾU ĐĂNG KÝ DỰ TUYỂN VÀO LỚP 10", 735, fonts.bold, 14.4);
+  drawCentered(page1, "Năm học 2026 - 2027", 718, fonts.bold, 12);
+  page1.drawLine({ start: { x: 276, y: 711 }, end: { x: 319, y: 711 }, thickness: 0.7, color: LINE });
+  page1.drawText("Kính gửi: Hiệu trưởng trường THPT Võ Văn Kiệt", {
+    x: MARGIN + 105,
+    y: 689,
+    font: fonts.bold,
+    size: BODY,
+    color: LINE,
+  });
 
-  let y = drawSection(page1, "I. THÔNG TIN HỌC SINH", 674, bold);
-  const infoX = MARGIN + 88;
-  y = drawField(page1, "Họ và tên", application.fullName.toUpperCase(), infoX, y, 380, regular, bold);
-  y = drawField(page1, "Ngày, tháng, năm sinh", date(application.dateOfBirth), infoX, y, 300, regular, bold);
-  y = drawField(page1, "Giới tính", application.gender, infoX, y, 300, regular, bold);
-  y = drawField(page1, "Dân tộc", application.ethnicity, infoX, y, 300, regular, bold);
-  y = drawField(page1, "Nơi sinh", application.birthPlace, infoX, y, 380, regular, bold);
-  y = drawField(page1, "Số định danh/CCCD/CC", application.citizenId, infoX, y, 350, regular, bold);
-  y = drawField(page1, "Ngày cấp", date(application.issueDate), infoX, y, 350, regular, bold);
-  y = drawField(page1, "Nơi cấp", application.issuePlace ?? "", infoX, y, 350, regular, bold);
-
-  y = drawSection(page1, "II. THÔNG TIN HỌC TẬP", y - 6, bold);
-  drawText(
+  let y = drawSection(page1, "I. THÔNG TIN HỌC SINH", 656, fonts);
+  page1.drawRectangle({ x: MARGIN, y: 520, width: 82, height: 123, borderColor: LINE, borderWidth: 0.9 });
+  page1.drawText("Ảnh 4x6", { x: MARGIN + 22, y: 578, font: fonts.regular, size: 12, color: LINE });
+  const infoX = MARGIN + 96;
+  y = drawFilledField(page1, "1. Họ và tên (viết in hoa):", application.fullName.toUpperCase(), infoX, y, CONTENT_WIDTH - 96, fonts);
+  y = drawFilledField(page1, "2. Ngày, tháng, năm sinh:", formatDateVi(application.dateOfBirth), infoX, y, CONTENT_WIDTH - 96, fonts);
+  y = drawFilledField(page1, "3. Giới tính:", GENDER_LABELS[application.gender] ?? application.gender, infoX, y, CONTENT_WIDTH - 96, fonts);
+  y = drawFilledField(page1, "4. Dân tộc:", application.ethnicity, infoX, y, CONTENT_WIDTH - 96, fonts);
+  y = drawFilledField(page1, "5. Nơi sinh (tỉnh/thành phố):", application.birthPlace, infoX, y, CONTENT_WIDTH - 96, fonts);
+  y = drawFilledField(
     page1,
-    `Học sinh lớp 9 trường THCS ${valueOrDots(application.secondarySchool, "........................")} năm học ${valueOrDots(application.schoolYear, "20.... - 20....")}.`,
+    "6. Số định danh cá nhân (hoặc số CCCD/CC):",
+    application.citizenId,
     MARGIN,
-    y,
-    regular,
-    9.5,
-    { maxWidth: PAGE_WIDTH - MARGIN * 2 }
+    507,
+    CONTENT_WIDTH,
+    fonts
   );
-  y -= 18;
+  const issueLine = `   Ngày cấp: ${text(formatDateVi(application.issueDate))}     Nơi cấp: ${text(application.issuePlace)}`;
+  page1.drawText(issueLine, { x: MARGIN, y, font: fonts.regular, size: BODY, color: LINE });
+
+  y = drawSection(page1, "II. THÔNG TIN HỌC TẬP", y - 25, fonts);
+  const schoolLine = `1. Học sinh lớp 9 trường THCS ${text(application.secondarySchool)} năm học ${text(application.schoolYear)}`;
+  y = drawWrapped(page1, schoolLine, MARGIN, y, fonts.regular, BODY, CONTENT_WIDTH) - 20;
+  page1.drawText("2. Kết quả học tập và rèn luyện cấp THCS", { x: MARGIN, y, font: fonts.regular, size: BODY, color: LINE });
+  y -= 17;
+  page1.drawText("- Điểm trung bình các môn học:", { x: MARGIN, y, font: fonts.regular, size: BODY, color: LINE });
+  y -= 9;
   const records = [...application.academicRecords].sort((a, b) => a.grade - b.grade);
-  y = drawTable(
-    page1,
-    [
-      ["Lớp", "Ngữ văn", "Toán", "Tiếng Anh", "KHTN", "LS&ĐL", "GDCD", "Công nghệ", "Tin học", "Ghi chú"],
-      ...[6, 7, 8, 9].map((grade) => {
-        const item = records.find((record) => record.grade === grade);
-        return [
-          String(grade),
-          String(item?.literature ?? ""),
-          String(item?.math ?? ""),
-          String(item?.english ?? ""),
-          String(item?.naturalScience ?? ""),
-          String(item?.historyGeography ?? ""),
-          String(item?.civicEducation ?? ""),
-          String(item?.technology ?? ""),
-          String(item?.informatics ?? ""),
-          item?.note ?? "",
-        ];
-      }),
-    ],
-    MARGIN,
+  y = drawScoreTable(page1, records, y, fonts) - 16;
+  page1.drawText("- Xếp loại học tập và rèn luyện cuối năm các lớp cấp THCS:", {
+    x: MARGIN,
     y,
-    [28, 50, 44, 54, 45, 45, 42, 55, 45, 95],
-    24,
-    regular,
-    bold
-  );
-  y -= 12;
-  drawTable(
-    page1,
-    [
-      ["Lớp", "Học tập", "Rèn luyện"],
-      ...[6, 7, 8, 9].map((grade) => {
-        const item = records.find((record) => record.grade === grade);
-        return [
-          String(grade),
-          item?.academicLevel ? ACADEMIC_LEVEL_LABELS[item.academicLevel] ?? item.academicLevel : "",
-          item?.conductLevel ? ACADEMIC_LEVEL_LABELS[item.conductLevel] ?? item.conductLevel : "",
-        ];
-      }),
-    ],
-    MARGIN,
-    y,
-    [70, 220, 220],
-    22,
-    regular,
-    bold
-  );
+    font: fonts.regular,
+    size: BODY,
+    color: LINE,
+  });
+  y -= 9;
+  y = drawLevelTable(page1, records, y, fonts) - 20;
+
+  y = drawSection(page1, "III. THÔNG TIN LIÊN HỆ", y, fonts);
+  const addressParts = {
+    houseNumber: text(application.houseNumber),
+    hamlet: text(application.hamlet),
+    ward: text(application.ward),
+    province: text(application.province),
+  };
+  const addressLine =
+    addressParts.houseNumber || addressParts.hamlet || addressParts.ward || addressParts.province
+      ? `1. Địa chỉ thường trú: Số nhà ${addressParts.houseNumber}, ấp/khóm ${addressParts.hamlet}; xã/phường ${addressParts.ward}, tỉnh/thành phố ${addressParts.province}.`
+      : `1. Địa chỉ thường trú: ${text(application.permanentAddress)}`;
+  drawWrapped(page1, addressLine, MARGIN, y, fonts.regular, BODY, CONTENT_WIDTH);
 
   const page2 = doc.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
-  y = drawSection(page2, "III. THÔNG TIN LIÊN HỆ", 792, bold);
-  y = drawField(page2, "Địa chỉ thường trú", application.permanentAddress, MARGIN, y, 480, regular, bold);
-  y = drawField(page2, "Số điện thoại thí sinh", application.studentPhone ?? "", MARGIN, y, 430, regular, bold);
-  y = drawField(page2, "Email", application.email ?? "", MARGIN, y, 430, regular, bold);
-  y = drawField(page2, "Cha/mẹ/người giám hộ", application.guardianName, MARGIN, y, 430, regular, bold);
-  y = drawField(page2, "Điện thoại liên hệ", application.guardianPhone, MARGIN, y, 430, regular, bold);
+  y = 792;
+  y = drawFilledField(page2, "2. Số điện thoại thí sinh:", application.studentPhone ?? "", MARGIN, y, CONTENT_WIDTH, fonts);
+  y = drawFilledField(page2, "3. Địa chỉ email:", application.email ?? "", MARGIN, y, CONTENT_WIDTH, fonts);
+  y = drawFilledField(page2, "4. Họ tên cha mẹ/người giám hộ:", application.guardianName, MARGIN, y, CONTENT_WIDTH, fonts);
+  y = drawFilledField(page2, "   Điện thoại liên hệ:", application.guardianPhone, MARGIN + 24, y, CONTENT_WIDTH - 24, fonts);
 
-  y = drawSection(page2, "IV. ĐỐI TƯỢNG ƯU TIÊN, KHUYẾN KHÍCH NẾU CÓ", y - 8, bold);
-  const priorityTypes = new Set<string>(application.priorities.map((priority) => priority.type));
-  const priorityOptions = [
-    "CON_THUONG_BINH_LIET_SI",
-    "DAN_TOC_THIEU_SO",
-    "CHA_ME_DAN_TOC_THIEU_SO",
-    "VUNG_DAC_BIET_KHO_KHAN",
-    "HO_NGHEO",
-    "HO_CAN_NGHEO",
-    "MO_COI_CHA_HOAC_ME",
-    "MO_COI_CHA_LAN_ME",
+  y = drawSection(page2, "IV. ĐỐI TƯỢNG ƯU TIÊN, KHUYẾN KHÍCH (nếu có)", y - 10, fonts);
+  page2.drawText("1. Đối tượng ưu tiên", { x: MARGIN, y, font: fonts.bold, size: BODY, color: LINE });
+  y -= 20;
+  y = drawCheckboxLine(
+    page2,
+    "Con thương binh/liệt sĩ;",
+    hasPriority(application, ["CON_THUONG_BINH_LIET_SI", "CON_LIET_SI", "CON_THUONG_BINH_BENH_BINH", "CON_ANH_HUNG_LLD_BA_ME_VNAH"]),
+    MARGIN + 26,
+    y,
+    fonts
+  ) - 18;
+  y = drawCheckboxLine(page2, "Dân tộc thiểu số (Khơ me, Hoa, dân tộc khác);", hasPriority(application, ["DAN_TOC_THIEU_SO"]), MARGIN + 26, y, fonts) - 18;
+  y = drawCheckboxLine(
+    page2,
+    "Có cha hoặc mẹ là người dân tộc thiểu số;",
+    hasPriority(application, ["CHA_ME_DAN_TOC_THIEU_SO"]),
+    MARGIN + 26,
+    y,
+    fonts
+  ) - 18;
+  y =
+    drawCheckboxLine(
+      page2,
+      "Học sinh ở vùng có điều kiện kinh tế - xã hội đặc biệt khó khăn (ấp Vĩnh Lộc; ấp Vĩnh Phú B; ấp Long Đức).",
+      hasPriority(application, ["VUNG_DAC_BIET_KHO_KHAN"]),
+      MARGIN + 26,
+      y,
+      fonts,
+      CONTENT_WIDTH - 42
+    ) - 22;
+
+  y =
+    drawWrapped(
+      page2,
+      "2. Đối tượng khuyến khích: Đạt giải cấp tỉnh trở lên các môn văn hóa, năng khiếu (ghi thêm môn đạt giải).",
+      MARGIN,
+      y,
+      fonts.bold,
+      BODY,
+      CONTENT_WIDTH
+    ) - 20;
+  y = drawFilledField(page2, "- Giải nhất (cộng 1,5 điểm):", awardText(application, "GIAI_NHAT"), MARGIN + 14, y, CONTENT_WIDTH - 14, fonts);
+  y = drawFilledField(page2, "- Giải nhì (cộng 1,0 điểm):", awardText(application, "GIAI_NHI"), MARGIN + 14, y, CONTENT_WIDTH - 14, fonts);
+  y = drawFilledField(page2, "- Giải ba (cộng 0,5 điểm):", awardText(application, "GIAI_BA"), MARGIN + 14, y, CONTENT_WIDTH - 14, fonts);
+
+  page2.drawText("3. Đối tượng khác cần lưu ý trong công tác tuyển sinh lớp 10:", {
+    x: MARGIN,
+    y,
+    font: fonts.bold,
+    size: BODY,
+    color: LINE,
+  });
+  y -= 20;
+  const otherOptions = [
+    { label: "Hộ nghèo;", types: ["HO_NGHEO"] },
+    { label: "Hộ cận nghèo;", types: ["HO_CAN_NGHEO"] },
+    { label: "Mồ côi cha hoặc mẹ;", types: ["MO_COI_CHA_HOAC_ME"] },
+    { label: "Mồ côi cha lẫn mẹ.", types: ["MO_COI_CHA_LAN_ME"] },
   ];
-  priorityOptions.forEach((type, index) => {
+  otherOptions.forEach((option, index) => {
     const col = index % 2;
     const row = Math.floor(index / 2);
-    drawCheckbox(page2, PRIORITY_LABELS[type] ?? type, priorityTypes.has(type), MARGIN + col * 260, y - row * 22, regular);
+    const x = MARGIN + 18 + col * 245;
+    const optionY = y - row * 19;
+    drawCheckbox(page2, x, optionY, hasPriority(application, option.types));
+    page2.drawText(option.label, { x: x + 13, y: optionY, font: fonts.regular, size: BODY, color: LINE });
   });
-  y -= 106;
-  const award = application.awards[0];
-  drawCheckbox(page2, "Đạt giải cấp tỉnh trở lên các môn văn hóa, năng khiếu", Boolean(award), MARGIN, y, regular);
-  y -= 16;
-  if (award) {
-    const awardText = `${award.competitionName}${award.field ? ` - ${award.field}` : ""}; ${PRIZE_LABELS[award.prize] ?? award.prize}; cộng ${PRIZE_SCORES[award.prize] ?? award.bonusScore} điểm`;
-    drawText(page2, awardText, MARGIN + 12, y, regular, 9, { maxWidth: 500 });
-  } else {
-    drawText(page2, "Giải nhất: cộng 1,5 điểm; Giải nhì: cộng 1,0 điểm; Giải ba: cộng 0,5 điểm", MARGIN + 12, y, regular, 9);
-  }
+  y -= 55;
 
-  y = drawSection(page2, "V. NGUYỆN VỌNG HỌC CÁC MÔN LỰA CHỌN LỚP 10 NẾU TRÚNG TUYỂN", y - 28, bold);
-  SUBJECT_OPTIONS.forEach((option, index) => {
-    drawCheckbox(
-      page2,
-      `Phương án ${option.optionNumber}: ${option.subjects}`,
-      option.optionNumber === application.selectedOptionNumber,
-      MARGIN,
-      y - index * 20,
-      regular
-    );
-  });
-
-  y -= 148;
-  drawText(
-    page2,
-    "Tôi xin cam đoan những thông tin khai trên là đúng sự thật. Nếu trúng tuyển vào lớp 10 của trường, tôi sẽ chấp hành nghiêm túc các quy định của nhà trường.",
-    MARGIN,
+  y = drawSection(page2, "V. NGUYỆN VỌNG HỌC CÁC MÔN LỰA CHỌN LỚP 10 (nếu trúng tuyển)", y, fonts);
+  page2.drawText("Học sinh chọn môn lựa chọn học ở lớp 10, tích dấu X vào Phương án sau:", {
+    x: MARGIN,
     y,
-    regular,
-    10,
-    { maxWidth: PAGE_WIDTH - MARGIN * 2 }
-  );
-  y -= 48;
-  drawCentered(page2, "Phước Long, ngày .... tháng .... năm 2026", y, regular, 10);
-  y -= 28;
-  drawCentered(page2, "XÁC NHẬN CỦA CHA/MẸ (NGƯỜI GIÁM HỘ)", y, bold, 9.5);
-  page2.drawText("NGƯỜI LÀM ĐƠN", { x: 390, y, font: bold, size: 9.5, color: LINE });
-  drawCentered(page2, "(Ký và ghi rõ họ tên)", y - 14, regular, 9);
-  page2.drawText("(Ký và ghi rõ họ tên)", { x: 372, y: y - 14, font: regular, size: 9, color: LINE });
+    font: fonts.regular,
+    size: BODY,
+    color: LINE,
+  });
+  y -= 22;
+  SUBJECT_OPTIONS.forEach((option) => {
+    drawOption(
+      page2,
+      `${option.optionNumber}. Phương án ${option.optionNumber}: ${option.subjects}:`,
+      option.optionNumber === application.selectedOptionNumber,
+      y,
+      fonts
+    );
+    y -= 20;
+  });
+
+  y -= 4;
+  y =
+    drawWrapped(
+      page2,
+      "Tôi xin cam đoan những thông tin khai trên là đúng sự thật. Nếu trúng tuyển vào lớp 10 của trường, tôi sẽ chấp hành nghiêm túc các quy định của nhà trường.",
+      MARGIN,
+      y,
+      fonts.regular,
+      BODY,
+      CONTENT_WIDTH
+    ) - 35;
+  drawCentered(page2, formatLongDateVi(application.submittedAt), y, fonts.regular, BODY);
+  y -= 34;
+  const leftX = MARGIN + 20;
+  const rightX = PAGE_WIDTH / 2 + 38;
+  page2.drawText("XÁC NHẬN CỦA CHA/MẸ (NGƯỜI GIÁM HỘ)", { x: leftX - 18, y, font: fonts.bold, size: 10.8, color: LINE });
+  page2.drawText("NGƯỜI LÀM ĐƠN", { x: rightX + 32, y, font: fonts.bold, size: 10.8, color: LINE });
+  page2.drawText("(Ký và ghi rõ họ tên)", { x: leftX + 38, y: y - 16, font: fonts.regular, size: SMALL, color: LINE });
+  page2.drawText("(Ký và ghi rõ họ tên)", { x: rightX + 24, y: y - 16, font: fonts.regular, size: SMALL, color: LINE });
 
   return doc.save();
 }
 
 export function registrationFormPdfFilename(applicationCode: string) {
-  return `don-dang-ky-du-tuyen-lop-10-vvk-2026-${applicationCode}.pdf`;
+  return `phieu-dang-ky-du-tuyen-lop-10-vvk-2026-${applicationCode}.pdf`;
 }

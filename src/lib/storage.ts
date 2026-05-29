@@ -66,24 +66,24 @@ function inferredContentType(file: File) {
 
 export function assertAllowedFile(file: File, fileType: string) {
   if (!isAllowedUploadFile(file)) {
-    throw new Error("Định dạng file không hợp lệ. Chỉ chấp nhận JPG, JPEG, PNG, WEBP, HEIC hoặc PDF.");
+    throw new Error("Định dạng tệp không hợp lệ. Chỉ chấp nhận JPG, JPEG, PNG, WEBP, HEIC hoặc PDF.");
   }
 
   if (fileType === "PHOTO_4X6" && !isImageUpload(file)) {
-    throw new Error("Ảnh 4x6 phải là file ảnh JPG, JPEG, PNG, WEBP hoặc HEIC.");
+    throw new Error("Ảnh 4x6 phải là tệp ảnh JPG, JPEG, PNG, WEBP hoặc HEIC.");
   }
 
   if (fileType === "HOC_BA_THCS" && !isPdfUpload(file)) {
-    throw new Error("Học bạ THCS dạng tổng hợp phải là file PDF.");
+    throw new Error("Học bạ THCS dạng tổng hợp phải là tệp PDF.");
   }
 
   if (fileType.startsWith("HOC_BA_LOP_") && !isImageUpload(file)) {
-    throw new Error("Ảnh học bạ từng lớp phải là file ảnh JPG, JPEG, PNG, WEBP hoặc HEIC.");
+    throw new Error("Ảnh học bạ từng lớp phải là tệp ảnh JPG, JPEG, PNG, WEBP hoặc HEIC.");
   }
 
   const maxMb = FILE_SIZE_LIMITS_MB[fileType] ?? Number(process.env.MAX_UPLOAD_MB ?? 25);
   if (file.size > maxMb * 1024 * 1024) {
-    throw new Error(`File vượt quá dung lượng tối đa ${maxMb}MB.`);
+    throw new Error(`Tệp vượt quá dung lượng tối đa ${maxMb}MB.`);
   }
 }
 
@@ -127,7 +127,7 @@ export async function saveLocalFile(file: File, fileType: string): Promise<Saved
   const storageKey = `${fileType}/${storedName}`;
   const target = path.resolve(/*turbopackIgnore: true*/ root, storageKey);
   if (!target.startsWith(root)) {
-    throw new Error("Đường dẫn lưu file không hợp lệ.");
+    throw new Error("Đường dẫn lưu tệp không hợp lệ.");
   }
 
   const buffer = Buffer.from(await file.arrayBuffer());
@@ -179,7 +179,7 @@ export async function readStoredFile(file: StoredFileRef) {
   if (provider === "VERCEL_BLOB") {
     const result = await get(file.storageKey || file.publicUrl || "", { access: "private", useCache: false });
     if (!result || result.statusCode !== 200 || !result.stream) {
-      throw new Error("Không thể đọc file từ Vercel Blob");
+      throw new Error("Không thể đọc tệp từ Vercel Blob.");
     }
     return streamToBuffer(result.stream);
   }
@@ -191,7 +191,7 @@ export async function readStoredFile(file: StoredFileRef) {
         : undefined,
       cache: "no-store"
     });
-    if (!response.ok) throw new Error("Không thể đọc file từ storage");
+    if (!response.ok) throw new Error("Không thể đọc tệp từ nơi lưu trữ.");
     return Buffer.from(await response.arrayBuffer());
   }
 
@@ -215,7 +215,7 @@ export async function readLocalFile(storageKey: string) {
   const root = path.resolve(/*turbopackIgnore: true*/ process.cwd(), DEFAULT_UPLOAD_DIR);
   const target = path.resolve(/*turbopackIgnore: true*/ root, storageKey);
   if (!target.startsWith(root)) {
-    throw new Error("Đường dẫn file không hợp lệ.");
+    throw new Error("Đường dẫn tệp không hợp lệ.");
   }
   return readFile(target);
 }

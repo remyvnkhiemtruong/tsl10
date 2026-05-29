@@ -55,6 +55,21 @@ export async function AdminShell({ children }: { children: React.ReactNode }) {
             <Image src="/LogoVVK.png" alt="Logo Trường THPT Võ Văn Kiệt" width={36} height={36} className="h-9 w-9 rounded-full object-contain" />
             <div className="font-bold text-school-900">Quản trị tuyển sinh</div>
           </div>
+          <nav className="mt-3 flex gap-2 overflow-x-auto pb-1 text-sm">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.href}
+                  className="inline-flex min-h-10 shrink-0 items-center gap-2 rounded-xl bg-slate-50 px-3 font-semibold text-slate-700 transition hover:bg-school-50 hover:text-school-800"
+                  href={item.href}
+                >
+                  <Icon size={16} />
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
         </div>
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">{children}</div>
       </main>

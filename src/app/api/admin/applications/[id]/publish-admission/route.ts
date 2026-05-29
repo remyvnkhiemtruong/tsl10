@@ -21,7 +21,10 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     });
     if (!current) return NextResponse.json({ error: "Không tìm thấy hồ sơ" }, { status: 404 });
     if (!canPublishAdmissionResult(current.admissionResult)) {
-      return NextResponse.json({ error: "Chỉ được công bố hồ sơ có kết quả trúng tuyển" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Không thể công bố hồ sơ này vì kết quả tuyển sinh chưa phải là Trúng tuyển." },
+        { status: 400 }
+      );
     }
 
     const score = calculateAdmissionScoreDetails(current.academicRecords, current.bonusScore);

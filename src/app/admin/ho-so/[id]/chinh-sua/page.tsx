@@ -77,6 +77,7 @@ export default async function EditAdminApplicationPage({ params }: { params: Pro
       conductLevel: record.conductLevel ?? "TOT",
     })),
     status: app.status,
+    registrationFormNumber: app.registrationFormNumber ?? "",
     publicNote: app.publicNote ?? "",
     internalNote: app.internalNote ?? "",
   };

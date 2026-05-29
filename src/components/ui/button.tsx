@@ -13,10 +13,10 @@ const variants: Record<ButtonVariant, string> = {
 };
 
 const sizes: Record<ButtonSize, string> = {
-  sm: "h-9 rounded-lg px-3 text-xs",
-  default: "h-10 rounded-xl px-4 py-2 text-sm",
+  sm: "h-10 rounded-lg px-3 text-xs",
+  default: "h-11 rounded-xl px-4 py-2 text-sm",
   lg: "h-12 rounded-xl px-6 text-base",
-  icon: "h-10 w-10 rounded-xl p-0",
+  icon: "h-11 w-11 rounded-xl p-0",
 };
 
 export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {

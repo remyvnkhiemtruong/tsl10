@@ -78,6 +78,7 @@ export type AdminEditFormValue = {
   additionalAwardsNote: string;
   academicRecords: AcademicRecordForm[];
   status: string;
+  registrationFormNumber: string;
   publicNote: string;
   internalNote: string;
 };
@@ -552,6 +553,15 @@ export function EditApplicationForm({ initial }: { initial: AdminEditFormValue }
                 </option>
               ))}
             </Select>
+          </Field>
+          <Field label="Số phiếu" error={fieldError("registrationFormNumber")}>
+            <Input
+              inputMode="numeric"
+              value={form.registrationFormNumber}
+              onChange={(event) => update("registrationFormNumber", event.target.value.replace(/\D/g, ""))}
+              placeholder="001"
+              className={controlErrorClass(Boolean(fieldError("registrationFormNumber")))}
+            />
           </Field>
           <Field label="Ghi chú công khai" error={fieldError("publicNote")} className="md:col-span-2">
             <Textarea

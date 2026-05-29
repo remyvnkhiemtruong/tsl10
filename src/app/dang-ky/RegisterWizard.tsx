@@ -31,6 +31,7 @@ import {
   ACADEMIC_LEVEL_LABELS,
   ALL_FILE_TYPES,
   FILE_TYPE_LABELS,
+  IDENTITY_DOCUMENT_FILE_TYPES,
   ISSUE_PLACE_OPTIONS,
   PRIZE_LABELS,
   PRIZE_SCORES,
@@ -111,7 +112,7 @@ const steps = [
   { label: "Liên hệ", description: "Địa chỉ thường trú và thông tin phụ huynh/người giám hộ." },
   { label: "Ưu tiên", description: "Diện ưu tiên và điểm khuyến khích nếu có." },
   { label: "Nguyện vọng", description: "Chọn phương án môn học dự tuyển." },
-  { label: "Upload", description: "Tải lên ảnh, học bạ và minh chứng." },
+  { label: "Tệp hồ sơ", description: "Tải lên ảnh, giấy tờ định danh và minh chứng." },
   { label: "Xác nhận", description: "Kiểm tra lại thông tin trước khi nộp." },
 ];
 
@@ -155,20 +156,24 @@ const initialForm: RegisterForm = {
 
 const uploadDescriptions: Record<string, string> = {
   PHOTO_4X6: "Ảnh chân dung rõ mặt, JPG/JPEG/PNG, tối đa 5MB.",
-  HOC_BA_THCS: "Không bắt buộc upload học bạ; khuyến khích tải PDF để nhà trường kiểm tra nhanh hơn.",
+  HOC_BA_THCS: "Không bắt buộc tải lên học bạ; khuyến khích tải PDF để nhà trường kiểm tra nhanh hơn.",
   HOC_BA_LOP_6: "Không bắt buộc; ảnh trang học bạ lớp 6 nếu phụ huynh muốn bổ sung minh chứng.",
   HOC_BA_LOP_7: "Không bắt buộc; ảnh trang học bạ lớp 7 nếu phụ huynh muốn bổ sung minh chứng.",
   HOC_BA_LOP_8: "Không bắt buộc; ảnh trang học bạ lớp 8 nếu phụ huynh muốn bổ sung minh chứng.",
   HOC_BA_LOP_9: "Không bắt buộc; ảnh trang học bạ lớp 9 nếu phụ huynh muốn bổ sung minh chứng.",
-  GIAY_KHAI_SINH: "Ảnh/PDF giấy khai sinh; có thể thay bằng CCCD/số định danh.",
-  CCCD: "Ảnh/PDF CCCD hoặc giấy xác nhận số định danh; có thể thay bằng giấy khai sinh.",
+  GIAY_KHAI_SINH: "Ảnh/PDF giấy khai sinh.",
+  CCCD: "Ảnh/PDF số định danh/CCCD hoặc giấy xác nhận số định danh.",
   MINH_CHUNG_UU_TIEN: "Minh chứng cho diện ưu tiên/đối tượng khác đã chọn.",
   MINH_CHUNG_KHUYEN_KHICH: "Minh chứng giải thưởng/điểm khuyến khích.",
   HO_NGHEO_CAN_NGHEO: "Giấy xác nhận hộ nghèo/cận nghèo.",
   GIAY_TO_KHAC: "Tài liệu bổ sung khác nếu nhà trường yêu cầu.",
 };
 
-const fileTypesInOrder = ALL_FILE_TYPES;
+type IdentityDocumentFileType = (typeof IDENTITY_DOCUMENT_FILE_TYPES)[number];
+
+const fileTypesInOrder = ALL_FILE_TYPES.filter(
+  (fileType) => !IDENTITY_DOCUMENT_FILE_TYPES.includes(fileType as IdentityDocumentFileType)
+);
 
 function uniqueMessages(fieldErrors: FieldErrors) {
   return Array.from(new Set(Object.values(fieldErrors).filter(Boolean)));
@@ -226,6 +231,7 @@ export function RegisterWizard() {
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [uploadErrors, setUploadErrors] = useState<FieldErrors>({});
   const [form, setForm] = useState<RegisterForm>(initialForm);
+  const [selectedIdentityFileType, setSelectedIdentityFileType] = useState<IdentityDocumentFileType>("GIAY_KHAI_SINH");
 
   const scoreDetails = useMemo(
     () => calculateAdmissionScoreWithBonuses(form.academicRecords, form.priorities, form.awards),
@@ -262,6 +268,10 @@ export function RegisterWizard() {
 
   function uploadError(fileType: string) {
     return fieldErrors[`uploadedFiles.${fileType}`] ?? uploadErrors[fileType];
+  }
+
+  function isIdentityDocumentFileType(fileType: string): fileType is IdentityDocumentFileType {
+    return IDENTITY_DOCUMENT_FILE_TYPES.includes(fileType as IdentityDocumentFileType);
   }
 
   function updateAcademic(index: number, key: keyof AcademicRecordForm, value: string | number | undefined) {
@@ -357,9 +367,8 @@ export function RegisterWizard() {
     const fileTypes = new Set(files.map((file) => file.fileType));
     const nextErrors: FieldErrors = {};
     if (!fileTypes.has("PHOTO_4X6")) nextErrors["uploadedFiles.PHOTO_4X6"] = "Cần tải ảnh 4x6.";
-    if (!fileTypes.has("GIAY_KHAI_SINH") && !fileTypes.has("CCCD")) {
-      nextErrors["uploadedFiles.GIAY_KHAI_SINH"] = "Cần tải giấy khai sinh hoặc CCCD/số định danh.";
-      nextErrors["uploadedFiles.CCCD"] = "Cần tải CCCD/số định danh hoặc giấy khai sinh.";
+    if (!IDENTITY_DOCUMENT_FILE_TYPES.some((fileType) => fileTypes.has(fileType))) {
+      nextErrors["uploadedFiles.IDENTITY_DOCUMENT"] = "Cần tải giấy khai sinh hoặc số định danh/CCCD.";
     }
     return nextErrors;
   }
@@ -369,11 +378,15 @@ export function RegisterWizard() {
     setUploadErrors((prev) => {
       const next = { ...prev };
       delete next[fileType];
+      if (isIdentityDocumentFileType(fileType)) {
+        for (const identityFileType of IDENTITY_DOCUMENT_FILE_TYPES) delete next[identityFileType];
+      }
       return next;
     });
     setFieldErrors((prev) => {
       const next = { ...prev };
       delete next[`uploadedFiles.${fileType}`];
+      if (isIdentityDocumentFileType(fileType)) delete next["uploadedFiles.IDENTITY_DOCUMENT"];
       return next;
     });
     setErrors([]);
@@ -383,10 +396,17 @@ export function RegisterWizard() {
       data.append("file", file);
       const res = await fetch("/api/uploads", { method: "POST", body: data });
       const json = (await res.json()) as { file?: UploadedFileInput; error?: string };
-      if (!res.ok || !json.file) throw new Error(json.error ?? "Upload thất bại");
+      if (!res.ok || !json.file) {
+        throw new Error(
+          json.error ?? "Không thể tải tệp lên. Vui lòng kiểm tra định dạng JPG/JPEG/PNG/PDF và dung lượng tệp."
+        );
+      }
       setFiles((prev) => [...prev, json.file as UploadedFileInput]);
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Upload thất bại";
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Không thể tải tệp lên. Vui lòng kiểm tra định dạng JPG/JPEG/PNG/PDF và dung lượng tệp.";
       setUploadErrors((prev) => ({ ...prev, [fileType]: message }));
       setErrors([message]);
     } finally {
@@ -438,6 +458,18 @@ export function RegisterWizard() {
         }
         throw new Error(json.error ?? "Không thể nộp hồ sơ");
       }
+      try {
+        sessionStorage.setItem(
+          "vvk_registration_lookup",
+          JSON.stringify({
+            applicationCode: json.applicationCode,
+            citizenId: form.citizenId,
+            dateOfBirth: form.dateOfBirth,
+          })
+        );
+      } catch {
+        // The success page falls back to the lookup page if sessionStorage is unavailable.
+      }
       router.push(`/nop-thanh-cong/${json.applicationCode}`);
     } catch (error) {
       setErrors([error instanceof Error ? error.message : "Không thể nộp hồ sơ"]);
@@ -447,7 +479,7 @@ export function RegisterWizard() {
   }
 
   function markedRequired(fileType: string) {
-    if (["PHOTO_4X6", "GIAY_KHAI_SINH", "CCCD"].includes(fileType)) return true;
+    if (fileType === "PHOTO_4X6") return true;
     if (fileType === "MINH_CHUNG_UU_TIEN" && form.priorities.length > 0) return true;
     if (fileType === "HO_NGHEO_CAN_NGHEO" && (form.priorities.includes("HO_NGHEO") || form.priorities.includes("HO_CAN_NGHEO"))) return true;
     if (fileType === "MINH_CHUNG_KHUYEN_KHICH" && form.awards.length > 0) return true;
@@ -468,7 +500,17 @@ export function RegisterWizard() {
             <div className="h-full rounded-full bg-school-700 transition-all" style={{ width: `${progress}%` }} />
           </div>
         </div>
-        <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-7">
+        <label className="mt-5 block md:hidden">
+          <span className="form-label">Bước hiện tại</span>
+          <Select value={String(step)} onChange={(event) => setStep(Number(event.target.value))}>
+            {steps.map((item, index) => (
+              <option key={item.label} value={index}>
+                Bước {index + 1}: {item.label}
+              </option>
+            ))}
+          </Select>
+        </label>
+        <div className="mt-5 hidden gap-2 md:grid md:grid-cols-3 lg:grid-cols-7">
           {steps.map((item, index) => {
             const active = index === step;
             const completed = index < step;
@@ -510,7 +552,7 @@ export function RegisterWizard() {
         </CardHeader>
 
         {errors.length > 0 && (
-          <Alert variant="destructive" className="mb-5">
+          <Alert variant="destructive" className="mb-5" role="alert">
             <ul className="list-inside list-disc space-y-1">
               {errors.map((error) => (
                 <li key={error}>{error}</li>
@@ -913,11 +955,24 @@ export function RegisterWizard() {
         {step === 5 && (
           <section className="space-y-5">
             <Alert>
-              <b>File bắt buộc:</b> ảnh 4x6; giấy khai sinh hoặc CCCD/số định danh. Không bắt buộc upload học bạ.
-              Tuy nhiên, nhà trường khuyến khích upload học bạ/ảnh minh chứng kết quả học tập để quá trình kiểm tra và xử lý hồ sơ nhanh hơn.
+              <b>Tệp bắt buộc:</b> ảnh 4x6; giấy khai sinh hoặc số định danh/CCCD. Không bắt buộc tải lên học bạ.
+              Tuy nhiên, nhà trường khuyến khích tải học bạ/ảnh minh chứng kết quả học tập để quá trình kiểm tra và xử lý hồ sơ nhanh hơn.
               Minh chứng ưu tiên/khuyến khích có thể bổ sung để nhà trường đối chiếu. Chỉ nhận JPG/JPEG/PNG/PDF.
             </Alert>
             <div className="grid gap-4 md:grid-cols-2">
+              <IdentityDocumentUploader
+                files={files.filter((file) => isIdentityDocumentFileType(file.fileType))}
+                selectedFileType={selectedIdentityFileType}
+                onSelectedFileTypeChange={setSelectedIdentityFileType}
+                onUpload={uploadFile}
+                onRemove={removeFile}
+                uploading={uploadingType === selectedIdentityFileType}
+                error={
+                  fieldErrors["uploadedFiles.IDENTITY_DOCUMENT"] ??
+                  uploadErrors.GIAY_KHAI_SINH ??
+                  uploadErrors.CCCD
+                }
+              />
               {fileTypesInOrder.map((fileType) => {
                 const fileError = uploadError(fileType);
                 const uploading = uploadingType === fileType;
@@ -955,10 +1010,10 @@ export function RegisterWizard() {
                       <span className="inline-flex h-10 items-center justify-center rounded-xl bg-slate-900 px-4 text-sm font-semibold text-white">
                         {uploading ? (
                           <>
-                            <Loader2 size={16} className="mr-2 animate-spin" /> Đang tải
+                            <Loader2 size={16} className="mr-2 animate-spin" /> Đang tải tệp...
                           </>
                         ) : (
-                          "Chọn file"
+                          "Chọn tệp"
                         )}
                       </span>
                       <Badge variant={fileError ? "destructive" : uploaded.length > 0 ? "success" : uploading ? "warning" : "secondary"}>
@@ -1009,13 +1064,13 @@ export function RegisterWizard() {
               <Summary label="Số điện thoại thí sinh" value={normalizePhone(form.studentPhone)} />
               <Summary label="Email thí sinh" value={form.email.trim().toLowerCase()} />
               <Summary label="Phụ huynh/người giám hộ" value={form.guardianName} />
-              <Summary label="SĐT phụ huynh/người giám hộ" value={normalizePhone(form.guardianPhone)} />
+              <Summary label="Số điện thoại phụ huynh/người giám hộ" value={normalizePhone(form.guardianPhone)} />
               <Summary label="Phương án" value={`${form.selectedOptionNumber} - ${form.selectedSubjects}`} className="sm:col-span-2" />
               <Summary label="A - Tổng điểm TB môn THCS" value={formatScore(scoreDetails.academicAverageSum)} />
               <Summary label="B - Điểm quy đổi học tập/rèn luyện" value={formatScore(scoreDetails.convertedScoreSum)} />
               <Summary label="C - Điểm ưu tiên/khuyến khích" value={formatScore(scoreDetails.bonusScore)} />
               <Summary label="Tổng điểm xét tuyển dự kiến" value={formatScore(scoreDetails.totalScore)} />
-              <Summary label="Số file upload" value={`${files.length}`} />
+              <Summary label="Số tệp đã tải lên" value={`${files.length}`} />
               <Summary
                 label="Diện ưu tiên"
                 value={
@@ -1066,11 +1121,11 @@ export function RegisterWizard() {
             <Button disabled={loading || !form.commitmentAccepted} onClick={submit} className="w-full sm:w-auto">
               {loading ? (
                 <>
-                  <Loader2 size={16} className="animate-spin" /> Đang nộp...
+                  <Loader2 size={16} className="animate-spin" /> Đang nộp hồ sơ...
                 </>
               ) : (
                 <>
-                  <CheckCircle2 size={16} /> Nộp hồ sơ
+                  <CheckCircle2 size={16} /> Nộp hồ sơ trực tuyến
                 </>
               )}
             </Button>
@@ -1116,15 +1171,130 @@ function LevelSelect({ value, onChange }: { value: AcademicLevelValue; onChange:
   );
 }
 
+function IdentityDocumentUploader({
+  files,
+  selectedFileType,
+  onSelectedFileTypeChange,
+  onUpload,
+  onRemove,
+  uploading,
+  error,
+}: {
+  files: UploadedFileInput[];
+  selectedFileType: IdentityDocumentFileType;
+  onSelectedFileTypeChange: (fileType: IdentityDocumentFileType) => void;
+  onUpload: (fileType: IdentityDocumentFileType, file: File) => void;
+  onRemove: (storageKey: string) => void;
+  uploading: boolean;
+  error?: string;
+}) {
+  return (
+    <div
+      data-upload-error={error ? "true" : undefined}
+      className={cn(
+        "rounded-2xl border border-dashed bg-white p-4 transition md:col-span-2",
+        error ? "border-red-400 bg-red-50/70 ring-2 ring-red-100" : "border-slate-300"
+      )}
+    >
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <div className="flex flex-wrap items-center gap-2 text-sm font-bold text-slate-950">
+            <Upload size={16} className="text-school-700" />
+            Giấy khai sinh hoặc CCCD/Số định danh
+          </div>
+          <p className="mt-2 text-sm leading-6 text-slate-600">
+            Tải ảnh/PDF giấy khai sinh, CCCD hoặc giấy xác nhận số định danh. Chỉ cần nộp một trong các loại giấy tờ này.
+          </p>
+        </div>
+        <Badge variant="warning">Bắt buộc</Badge>
+      </div>
+
+      <div className="mt-4 grid gap-3 sm:grid-cols-[260px_1fr] sm:items-end">
+        <label className="block">
+          <span className="form-label">Loại giấy tờ tải lên</span>
+          <Select
+            value={selectedFileType}
+            onChange={(event) => onSelectedFileTypeChange(event.target.value as IdentityDocumentFileType)}
+            disabled={uploading}
+          >
+            {IDENTITY_DOCUMENT_FILE_TYPES.map((fileType) => (
+              <option key={fileType} value={fileType}>
+                {FILE_TYPE_LABELS[fileType]}
+              </option>
+            ))}
+          </Select>
+        </label>
+        <div className="flex flex-wrap items-center gap-2">
+          <input
+            id="identity-document-upload"
+            type="file"
+            accept=".jpg,.jpeg,.png,.pdf"
+            className="sr-only"
+            disabled={uploading}
+            onChange={(event) => {
+              const file = event.target.files?.[0];
+              if (file) void onUpload(selectedFileType, file);
+              event.currentTarget.value = "";
+            }}
+          />
+          <label
+            htmlFor="identity-document-upload"
+            className={cn(
+              "inline-flex min-h-11 cursor-pointer items-center justify-center rounded-xl bg-slate-900 px-4 text-sm font-semibold text-white",
+              uploading && "pointer-events-none opacity-60"
+            )}
+          >
+            {uploading ? (
+              <>
+                <Loader2 size={16} className="mr-2 animate-spin" /> Đang tải tệp...
+              </>
+            ) : (
+              "Chọn tệp"
+            )}
+          </label>
+          <Badge variant={error ? "destructive" : files.length > 0 ? "success" : uploading ? "warning" : "secondary"}>
+            {error ? "Lỗi" : files.length > 0 ? "Đã tải" : uploading ? "Đang tải" : "Chưa tải"}
+          </Badge>
+        </div>
+      </div>
+
+      {files.length > 0 && (
+        <div className="mt-3 space-y-2">
+          {files.map((file) => (
+            <div key={file.storageKey} className="flex items-center justify-between gap-2 rounded-xl bg-slate-50 px-3 py-2 text-xs text-slate-700">
+              <span className="min-w-0 truncate">
+                <span className="font-semibold">{FILE_TYPE_LABELS[file.fileType] ?? file.fileType}</span> · {file.originalName} ·{" "}
+                {formatBytes(file.size)}
+              </span>
+              <button
+                type="button"
+                className="min-h-10 shrink-0 px-2 font-semibold text-red-700 hover:text-red-900"
+                onClick={() => onRemove(file.storageKey)}
+              >
+                Xóa
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+      {error && (
+        <p className="mt-3 text-xs font-semibold leading-5 text-red-700" role="alert">
+          {error}
+        </p>
+      )}
+    </div>
+  );
+}
+
 function UploadedFiles({ files, onRemove }: { files: UploadedFileInput[]; onRemove: (storageKey: string) => void }) {
   return (
     <div className="rounded-2xl border border-slate-200 bg-slate-50/70 p-4">
       <div className="flex items-center justify-between gap-3">
-        <h3 className="font-bold text-slate-950">File đã tải lên</h3>
-        <Badge variant="secondary">{files.length} file</Badge>
+        <h3 className="font-bold text-slate-950">Tệp đã tải lên</h3>
+        <Badge variant="secondary">{files.length} tệp</Badge>
       </div>
       {files.length === 0 ? (
-        <p className="mt-3 text-sm text-slate-500">Chưa có file.</p>
+        <p className="mt-3 text-sm text-slate-500">Chưa có tệp nào được tải lên.</p>
       ) : (
         <ul className="mt-4 space-y-3 text-sm">
           {files.map((file) => (
@@ -1138,7 +1308,7 @@ function UploadedFiles({ files, onRemove }: { files: UploadedFileInput[]; onRemo
                   </span>
                 </span>
               </span>
-              <Button variant="destructive" size="sm" onClick={() => onRemove(file.storageKey)} aria-label="Xóa file">
+              <Button variant="destructive" size="sm" onClick={() => onRemove(file.storageKey)} aria-label="Xóa tệp">
                 <Trash2 size={15} /> Xóa
               </Button>
             </li>

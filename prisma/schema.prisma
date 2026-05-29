@@ -169,6 +169,7 @@ model Application {
   physicalDossierCheckedById  String?
   physicalDossierPublicNote   String?
   physicalDossierInternalNote String?
+  registrationFormNumber      String?  @unique
   registrationFormPdfPrintedAt DateTime?
 
   deletedAt          DateTime?

@@ -28,6 +28,12 @@ function optionalDate(value?: string) {
   return value ? new Date(value) : null;
 }
 
+async function registrationFormNumberBelongsToAnotherApplication(registrationFormNumber: string | undefined, applicationId: string) {
+  if (!registrationFormNumber) return false;
+  const duplicate = await prisma.application.findUnique({ where: { registrationFormNumber } });
+  return Boolean(duplicate && duplicate.id !== applicationId);
+}
+
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const user = await requireAdmin();
@@ -38,11 +44,15 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     const parsed = applicationUpdateSchema.parse(body);
     const current = await prisma.application.findFirst({ where: { id, deletedAt: null } });
     if (!current) return NextResponse.json({ error: "Không tìm thấy hồ sơ" }, { status: 404 });
+    if (await registrationFormNumberBelongsToAnotherApplication(parsed.registrationFormNumber, id)) {
+      return NextResponse.json({ error: "Số phiếu này đã được cấp cho hồ sơ khác." }, { status: 409 });
+    }
 
     const app = await prisma.application.update({
       where: { id },
       data: {
         status: parsed.status,
+        registrationFormNumber: parsed.registrationFormNumber ?? null,
         publicNote: parsed.publicNote ?? null,
         internalNote: parsed.internalNote ?? current.internalNote,
         logs: {
@@ -62,6 +72,9 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   } catch (error) {
     if (error instanceof ZodError) {
       return NextResponse.json({ error: error.issues[0]?.message ?? "Dữ liệu cập nhật chưa hợp lệ" }, { status: 400 });
+    }
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+      return NextResponse.json({ error: "Số phiếu hoặc số định danh đã được sử dụng cho hồ sơ khác." }, { status: 409 });
     }
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Không thể cập nhật hồ sơ" },
@@ -90,6 +103,9 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
         return NextResponse.json({ error: "Số định danh này đã có hồ sơ đăng ký" }, { status: 409 });
       }
     }
+    if (await registrationFormNumberBelongsToAnotherApplication(parsed.registrationFormNumber, id)) {
+      return NextResponse.json({ error: "Số phiếu này đã được cấp cho hồ sơ khác." }, { status: 409 });
+    }
 
     const selected = SUBJECT_OPTIONS.find((item) => item.optionNumber === parsed.selectedOptionNumber);
     const finalWard = parsed.ward === WARD_OTHER_VALUE ? parsed.wardOther : parsed.ward;
@@ -110,6 +126,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
         where: { id },
         data: {
           status: parsed.status,
+          registrationFormNumber: parsed.registrationFormNumber ?? null,
           fullName: parsed.fullName,
           dateOfBirth: new Date(parsed.dateOfBirth),
           gender: parsed.gender,
@@ -194,7 +211,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       );
     }
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
-      return NextResponse.json({ error: "Số định danh này đã có hồ sơ đăng ký" }, { status: 409 });
+      return NextResponse.json({ error: "Số phiếu hoặc số định danh đã được sử dụng cho hồ sơ khác." }, { status: 409 });
     }
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Không thể cập nhật hồ sơ" },
@@ -254,16 +271,21 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   const formData = await request.formData();
   const parsed = applicationUpdateSchema.parse({
     status: String(formData.get("status") ?? ""),
+    registrationFormNumber: String(formData.get("registrationFormNumber") ?? ""),
     publicNote: String(formData.get("publicNote") ?? ""),
     internalNote: String(formData.get("internalNote") ?? "")
   });
   const current = await prisma.application.findFirst({ where: { id, deletedAt: null } });
   if (!current) return NextResponse.json({ error: "Không tìm thấy hồ sơ" }, { status: 404 });
+  if (await registrationFormNumberBelongsToAnotherApplication(parsed.registrationFormNumber, id)) {
+    return NextResponse.json({ error: "Số phiếu này đã được cấp cho hồ sơ khác." }, { status: 409 });
+  }
 
   await prisma.application.update({
     where: { id },
     data: {
       status: parsed.status,
+      registrationFormNumber: parsed.registrationFormNumber ?? null,
       publicNote: parsed.publicNote ?? null,
       internalNote: parsed.internalNote ?? null,
       logs: {

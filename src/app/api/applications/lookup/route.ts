@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSchoolSettings } from "@/lib/school-settings";
+import { isRegistrationFormPrintable } from "@/lib/registration-form-access";
 import { lookupSchema } from "@/lib/validation";
 
 export const runtime = "nodejs";
@@ -37,6 +38,7 @@ export async function GET(request: Request) {
         selectedOptionNumber: true,
         selectedSubjects: true,
         status: true,
+        registrationFormNumber: true,
         publicNote: true,
         submittedAt: true,
         physicalDossierStatus: true,
@@ -54,9 +56,12 @@ export async function GET(request: Request) {
   if (!app) return NextResponse.json({ error: "Không tìm thấy hồ sơ phù hợp" }, { status: 404 });
   const showPersonalAdmissionResult =
     settings.personalResultLookupEnabled && (app.admissionPublished || app.admissionResult !== "CHUA_XET");
+  const registrationFormPdfAvailable = isRegistrationFormPrintable(app.status, app.registrationFormNumber);
   return NextResponse.json({
     application: {
       ...app,
+      registrationFormPdfAvailable,
+      registrationFormNumber: registrationFormPdfAvailable ? app.registrationFormNumber : null,
       admissionResult: showPersonalAdmissionResult ? app.admissionResult : "CHUA_XET",
       admissionPublicNote: showPersonalAdmissionResult ? app.admissionPublicNote : null,
       admissionScoreSnapshot: showPersonalAdmissionResult ? app.admissionScoreSnapshot : null,

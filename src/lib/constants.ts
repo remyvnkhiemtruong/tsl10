@@ -59,6 +59,8 @@ export const PRIORITY_SCORES: Record<string, number> = {
   MO_COI_CHA_LAN_ME: 0,
 };
 
+export const IDENTITY_DOCUMENT_FILE_TYPES = ["GIAY_KHAI_SINH", "CCCD"] as const;
+
 export const FILE_TYPE_LABELS: Record<string, string> = {
   PHOTO_4X6: "Ảnh 4x6",
   HOC_BA_THCS: "Học bạ THCS bản PDF",
@@ -66,7 +68,8 @@ export const FILE_TYPE_LABELS: Record<string, string> = {
   HOC_BA_LOP_7: "Ảnh học bạ lớp 7",
   HOC_BA_LOP_8: "Ảnh học bạ lớp 8",
   HOC_BA_LOP_9: "Ảnh học bạ lớp 9",
-  GIAY_KHAI_SINH: "Giấy khai sinh hoặc CCCD/Số định danh",
+  GIAY_KHAI_SINH: "Giấy khai sinh",
+  CCCD: "Số định danh/CCCD",
   MINH_CHUNG_UU_TIEN: "Minh chứng ưu tiên/đối tượng khác",
   MINH_CHUNG_KHUYEN_KHICH: "Minh chứng khuyến khích",
   HO_NGHEO_CAN_NGHEO: "Giấy xác nhận hộ nghèo/cận nghèo",
@@ -82,6 +85,8 @@ export const STATUS_LABELS: Record<string, string> = {
   KHONG_HOP_LE: "Không hợp lệ",
   DA_DUYET_XET_TUYEN: "Đã duyệt xét tuyển",
 };
+
+export const REGISTRATION_FORM_PRINTABLE_STATUSES = ["HOP_LE", "DA_DUYET_XET_TUYEN"] as const;
 
 export const FILE_STATUS_LABELS: Record<string, string> = {
   CHUA_KIEM_TRA: "Chưa kiểm tra",

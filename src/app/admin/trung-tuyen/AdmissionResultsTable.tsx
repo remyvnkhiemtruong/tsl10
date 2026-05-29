@@ -64,7 +64,7 @@ export function AdmissionResultsTable({ rows }: { rows: AdmissionResultRow[] }) 
         snapshotScore: true,
       }),
     });
-    setMessage(res.ok ? "Đã lưu kết quả tuyển sinh." : ((await res.json()) as { error?: string }).error ?? "Không thể lưu.");
+    setMessage(res.ok ? "Đã lưu kết quả tuyển sinh." : ((await res.json()) as { error?: string }).error ?? "Không thể lưu kết quả tuyển sinh.");
     if (res.ok) window.location.reload();
   }
 
@@ -74,7 +74,13 @@ export function AdmissionResultsTable({ rows }: { rows: AdmissionResultRow[] }) 
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ snapshotScore: true }),
     });
-    setMessage(res.ok ? (publishValue ? "Đã công bố." : "Đã gỡ công bố.") : ((await res.json()) as { error?: string }).error ?? "Không thể cập nhật.");
+    setMessage(
+      res.ok
+        ? publishValue
+          ? "Đã công bố trúng tuyển."
+          : "Đã gỡ công bố."
+        : ((await res.json()) as { error?: string }).error ?? "Không thể cập nhật trạng thái công bố."
+    );
     if (res.ok) window.location.reload();
   }
 
@@ -92,7 +98,9 @@ export function AdmissionResultsTable({ rows }: { rows: AdmissionResultRow[] }) 
     const json = (await res.json()) as { publishedCount?: number; skippedNonAdmittedCount?: number; skippedUnreviewedCount?: number; error?: string };
     setMessage(
       res.ok
-        ? `Đã xử lý ${json.publishedCount ?? 0} hồ sơ. Bỏ qua không trúng tuyển: ${json.skippedNonAdmittedCount ?? 0}, chưa xét: ${json.skippedUnreviewedCount ?? 0}.`
+        ? `Đã xử lý ${selectedRows.length} hồ sơ. ${publishValue ? "Công bố thành công" : "Gỡ công bố thành công"} ${
+            json.publishedCount ?? 0
+          } hồ sơ, bỏ qua ${(json.skippedNonAdmittedCount ?? 0) + (json.skippedUnreviewedCount ?? 0)} hồ sơ chưa đủ điều kiện công bố.`
         : json.error ?? "Không thể xử lý hàng loạt."
     );
     if (res.ok) window.location.reload();
@@ -100,7 +108,11 @@ export function AdmissionResultsTable({ rows }: { rows: AdmissionResultRow[] }) 
 
   return (
     <div className="space-y-4">
-      {message && <div className="rounded-xl border border-blue-200 bg-blue-50 p-3 text-sm font-semibold text-blue-900">{message}</div>}
+      {message && (
+        <div className="rounded-xl border border-blue-200 bg-blue-50 p-3 text-sm font-semibold text-blue-900" role="status" aria-live="polite">
+          {message}
+        </div>
+      )}
       <div className="flex flex-col gap-2 sm:flex-row">
         <Button variant="secondary" onClick={() => bulkPublish(true)} disabled={selected.length === 0}>
           <Megaphone size={16} /> Công bố hàng loạt
@@ -109,7 +121,7 @@ export function AdmissionResultsTable({ rows }: { rows: AdmissionResultRow[] }) 
           <RotateCcw size={16} /> Gỡ công bố hàng loạt
         </Button>
       </div>
-      <div className="overflow-x-auto">
+      <div className="hidden overflow-x-auto md:block">
         <table className="w-full min-w-[1280px] text-sm">
           <thead className="bg-slate-50 text-left text-slate-600">
             <tr>
@@ -195,19 +207,19 @@ export function AdmissionResultsTable({ rows }: { rows: AdmissionResultRow[] }) 
                   <td className="p-3">
                     <div className="flex flex-wrap gap-2">
                       <Button size="sm" onClick={() => saveResult(row)}>
-                        <Save size={14} /> Lưu
+                        <Save size={14} /> Lưu kết quả
                       </Button>
                       {row.admissionPublished ? (
                         <Button size="sm" variant="outline" onClick={() => publish(row, false)}>
-                          Gỡ
+                          Gỡ công bố
                         </Button>
                       ) : (
                         <Button size="sm" variant="secondary" onClick={() => publish(row, true)} disabled={(draft.admissionResult ?? row.admissionResult) !== "TRUNG_TUYEN"}>
-                          Công bố
+                          Công bố trúng tuyển
                         </Button>
                       )}
                       <Link href={`/admin/ho-so/${row.id}`} className="inline-flex h-9 items-center gap-1 rounded-lg px-2 font-semibold text-school-700 hover:bg-school-50">
-                        <Eye size={14} /> Xem
+                        <Eye size={14} /> Xem hồ sơ
                       </Link>
                     </div>
                   </td>
@@ -217,13 +229,131 @@ export function AdmissionResultsTable({ rows }: { rows: AdmissionResultRow[] }) 
             {rows.length === 0 && (
               <tr>
                 <td className="p-8 text-center text-slate-500" colSpan={14}>
-                  Không có hồ sơ phù hợp.
+                  Không tìm thấy hồ sơ phù hợp. Vui lòng điều chỉnh bộ lọc và thử lại.
                 </td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
+      <div className="grid gap-3 p-4 md:hidden">
+        {rows.map((row) => {
+          const draft = drafts[row.id] ?? {};
+          const currentResult = String(draft.admissionResult ?? row.admissionResult);
+          return (
+            <article key={row.id} className="rounded-2xl border border-slate-200 bg-white p-4 text-sm">
+              <div className="flex items-start gap-3">
+                <input
+                  type="checkbox"
+                  className="mt-1 h-5 w-5 shrink-0 rounded border-slate-300 text-school-700 focus:ring-school-700"
+                  checked={selected.includes(row.id)}
+                  aria-label={`Chọn hồ sơ ${row.applicationCode}`}
+                  onChange={(event) =>
+                    setSelected((current) => (event.target.checked ? [...current, row.id] : current.filter((id) => id !== row.id)))
+                  }
+                />
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="truncate font-bold text-school-800">{row.applicationCode}</p>
+                      <h2 className="mt-1 text-base font-black text-slate-950">{row.fullName}</h2>
+                    </div>
+                    <Badge variant={row.admissionPublished ? "default" : resultVariant(row.admissionResult)}>
+                      {row.admissionPublished ? "Đã công bố" : ADMISSION_RESULT_LABELS[row.admissionResult] ?? row.admissionResult}
+                    </Badge>
+                  </div>
+                  <div className="mt-4 grid gap-3 text-slate-700">
+                    <MobileInfo label="Ngày sinh" value={formatDate(row.dateOfBirth)} />
+                    <MobileInfo label="Trường THCS" value={row.secondarySchool} />
+                    <MobileInfo label="Điểm A" value={String(row.scoreA)} />
+                    <MobileInfo label="Điểm B" value={String(row.scoreB)} />
+                    <MobileInfo label="Điểm C" value={String(row.scoreC)} />
+                    <MobileInfo label="Tổng điểm xét tuyển dự kiến" value={String(row.totalScore)} />
+                  </div>
+                  <div className="mt-4 grid gap-3">
+                    <label className="block">
+                      <span className="form-label">Kết quả tuyển sinh</span>
+                      <Select
+                        value={currentResult}
+                        onChange={(event) => patchDraft(row.id, { admissionResult: event.target.value })}
+                      >
+                        {ADMISSION_RESULT_STATUSES.map((status) => (
+                          <option key={status} value={status}>
+                            {ADMISSION_RESULT_LABELS[status]}
+                          </option>
+                        ))}
+                      </Select>
+                    </label>
+                    <label className="block">
+                      <span className="form-label">Thứ hạng</span>
+                      <Input
+                        inputMode="numeric"
+                        value={draft.admissionRank ?? row.admissionRank ?? ""}
+                        onChange={(event) => patchDraft(row.id, { admissionRank: event.target.value ? Number(event.target.value) : null })}
+                      />
+                    </label>
+                    <label className="block">
+                      <span className="form-label">Đợt xét tuyển</span>
+                      <Select
+                        value={String(draft.admissionBatch ?? row.admissionBatch ?? "")}
+                        onChange={(event) => patchDraft(row.id, { admissionBatch: event.target.value })}
+                      >
+                        <option value="">Chọn đợt</option>
+                        {ADMISSION_BATCH_OPTIONS.map((batch) => (
+                          <option key={batch} value={batch}>
+                            {batch}
+                          </option>
+                        ))}
+                      </Select>
+                    </label>
+                    <MobileInfo label="Trạng thái công bố" value={row.admissionPublished ? "Đã công bố" : "Chưa công bố"} />
+                    {row.admissionPublishedAt && <MobileInfo label="Ngày công bố" value={formatDate(row.admissionPublishedAt)} />}
+                  </div>
+                  <div className="mt-4 grid gap-2">
+                    <Button onClick={() => saveResult(row)} className="w-full">
+                      <Save size={16} /> Lưu kết quả
+                    </Button>
+                    {row.admissionPublished ? (
+                      <Button variant="outline" onClick={() => publish(row, false)} className="w-full">
+                        Gỡ công bố
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="secondary"
+                        onClick={() => publish(row, true)}
+                        disabled={currentResult !== "TRUNG_TUYEN"}
+                        className="w-full"
+                      >
+                        Công bố trúng tuyển
+                      </Button>
+                    )}
+                    <Link
+                      href={`/admin/ho-so/${row.id}`}
+                      className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 text-sm font-semibold text-school-700 transition hover:bg-school-50"
+                    >
+                      <Eye size={16} /> Xem hồ sơ
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </article>
+          );
+        })}
+        {rows.length === 0 && (
+          <p className="rounded-2xl bg-slate-50 p-4 text-center text-sm text-slate-600">
+            Không tìm thấy hồ sơ phù hợp. Vui lòng điều chỉnh bộ lọc và thử lại.
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function MobileInfo({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{label}</p>
+      <p className="mt-1 font-semibold text-slate-900">{value || "-"}</p>
     </div>
   );
 }

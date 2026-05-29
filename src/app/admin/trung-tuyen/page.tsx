@@ -94,51 +94,75 @@ export default async function AdminAdmissionResultsPage({
         <h1 className="mt-2 text-3xl font-black text-slate-950">Danh sách xét/công bố trúng tuyển</h1>
       </div>
       <Alert variant="warning" className="mt-6">
-        Hệ thống chỉ hỗ trợ công bố theo quyết định của Hội đồng tuyển sinh. Chỉ các hồ sơ có kết quả TRÚNG TUYỂN mới xuất hiện trên bảng xếp hạng công khai.
+        Hệ thống chỉ hỗ trợ công bố theo quyết định của Hội đồng tuyển sinh. Chỉ hồ sơ có kết quả Trúng tuyển mới được công bố công khai.
       </Alert>
       <Card className="mt-6">
-        <form className="grid gap-3 md:grid-cols-4">
-          <Input name="q" defaultValue={q} placeholder="Tên, mã hồ sơ, CCCD, trường THCS" />
-          <Select name="status" defaultValue={params.status ?? ""}>
-            <option value="">Tất cả trạng thái hồ sơ</option>
-            {Object.entries(STATUS_LABELS).map(([value, label]) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </Select>
-          <Select name="admissionResult" defaultValue={params.admissionResult ?? ""}>
-            <option value="">Tất cả kết quả</option>
-            {Object.entries(ADMISSION_RESULT_LABELS).map(([value, label]) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </Select>
-          <Select name="published" defaultValue={params.published ?? ""}>
-            <option value="">Tất cả công bố</option>
-            <option value="true">Đã công bố</option>
-            <option value="false">Chưa công bố</option>
-          </Select>
-          <Select name="admissionBatch" defaultValue={params.admissionBatch ?? ""}>
-            <option value="">Tất cả đợt</option>
-            {ADMISSION_BATCH_OPTIONS.map((batch) => (
-              <option key={batch} value={batch}>
-                {batch}
-              </option>
-            ))}
-          </Select>
-          <Select name="selectedOptionNumber" defaultValue={params.selectedOptionNumber ?? ""}>
-            <option value="">Tất cả phương án</option>
-            {SUBJECT_OPTIONS.map((item) => (
-              <option key={item.optionNumber} value={item.optionNumber}>
-                Phương án {item.optionNumber}
-              </option>
-            ))}
-          </Select>
-          <Input name="secondarySchool" defaultValue={params.secondarySchool ?? ""} placeholder="Trường THCS" />
-          <Input name="ward" defaultValue={params.ward ?? ""} placeholder="Xã/phường" />
-          <button className="rounded-xl bg-school-700 px-4 py-2 text-sm font-semibold text-white" type="submit">
+        <form className="grid gap-3 md:grid-cols-4 md:items-end">
+          <label className="block">
+            <span className="form-label">Từ khóa</span>
+            <Input name="q" defaultValue={q} placeholder="Tên, mã hồ sơ, số định danh/CCCD, trường THCS" />
+          </label>
+          <label className="block">
+            <span className="form-label">Trạng thái hồ sơ</span>
+            <Select name="status" defaultValue={params.status ?? ""}>
+              <option value="">Tất cả trạng thái hồ sơ</option>
+              {Object.entries(STATUS_LABELS).map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </Select>
+          </label>
+          <label className="block">
+            <span className="form-label">Kết quả tuyển sinh</span>
+            <Select name="admissionResult" defaultValue={params.admissionResult ?? ""}>
+              <option value="">Tất cả kết quả</option>
+              {Object.entries(ADMISSION_RESULT_LABELS).map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </Select>
+          </label>
+          <label className="block">
+            <span className="form-label">Công bố</span>
+            <Select name="published" defaultValue={params.published ?? ""}>
+              <option value="">Tất cả công bố</option>
+              <option value="true">Đã công bố</option>
+              <option value="false">Chưa công bố</option>
+            </Select>
+          </label>
+          <label className="block">
+            <span className="form-label">Đợt xét tuyển</span>
+            <Select name="admissionBatch" defaultValue={params.admissionBatch ?? ""}>
+              <option value="">Tất cả đợt</option>
+              {ADMISSION_BATCH_OPTIONS.map((batch) => (
+                <option key={batch} value={batch}>
+                  {batch}
+                </option>
+              ))}
+            </Select>
+          </label>
+          <label className="block">
+            <span className="form-label">Phương án</span>
+            <Select name="selectedOptionNumber" defaultValue={params.selectedOptionNumber ?? ""}>
+              <option value="">Tất cả phương án</option>
+              {SUBJECT_OPTIONS.map((item) => (
+                <option key={item.optionNumber} value={item.optionNumber}>
+                  Phương án {item.optionNumber}
+                </option>
+              ))}
+            </Select>
+          </label>
+          <label className="block">
+            <span className="form-label">Trường THCS</span>
+            <Input name="secondarySchool" defaultValue={params.secondarySchool ?? ""} placeholder="Tên trường THCS" />
+          </label>
+          <label className="block">
+            <span className="form-label">Xã/phường</span>
+            <Input name="ward" defaultValue={params.ward ?? ""} placeholder="Xã/phường thường trú" />
+          </label>
+          <button className="min-h-11 rounded-xl bg-school-700 px-4 py-2 text-sm font-semibold text-white" type="submit">
             Lọc danh sách
           </button>
         </form>

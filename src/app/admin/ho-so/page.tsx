@@ -65,16 +65,22 @@ export default async function AdminApplicationsPage({
       </div>
 
       <Card className="mt-6">
-        <form className="grid gap-3 md:grid-cols-[1fr_240px_auto]">
-          <Input name="q" defaultValue={q} placeholder="Tìm theo mã hồ sơ, họ tên, số định danh, trường THCS" />
-          <Select name="status" defaultValue={status}>
-            <option value="">Tất cả trạng thái</option>
-            {Object.entries(STATUS_LABELS).map(([value, label]) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </Select>
+        <form className="grid gap-3 md:grid-cols-[1fr_240px_auto] md:items-end">
+          <label className="block">
+            <span className="form-label">Từ khóa</span>
+            <Input name="q" defaultValue={q} placeholder="Mã hồ sơ, họ tên, số định danh, trường THCS" />
+          </label>
+          <label className="block">
+            <span className="form-label">Trạng thái</span>
+            <Select name="status" defaultValue={status}>
+              <option value="">Tất cả trạng thái</option>
+              {Object.entries(STATUS_LABELS).map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </Select>
+          </label>
           <Button type="submit" variant="secondary">
             <Search size={16} /> Lọc
           </Button>
@@ -82,7 +88,7 @@ export default async function AdminApplicationsPage({
       </Card>
 
       <Card className="mt-6 overflow-hidden p-0">
-        <div className="overflow-x-auto">
+        <div className="hidden overflow-x-auto md:block">
           <table className="w-full min-w-[980px] text-sm">
             <thead className="bg-slate-50 text-left text-slate-600">
               <tr>
@@ -111,7 +117,7 @@ export default async function AdminApplicationsPage({
                       className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1 font-semibold text-school-700 transition hover:bg-school-50"
                       href={`/admin/ho-so/${app.id}`}
                     >
-                      <Eye size={15} /> Xem
+                      <Eye size={15} /> Xem chi tiết
                     </Link>
                   </td>
                 </tr>
@@ -126,7 +132,47 @@ export default async function AdminApplicationsPage({
             </tbody>
           </table>
         </div>
+        <div className="grid gap-3 p-4 md:hidden">
+          {applications.map((app) => (
+            <article key={app.id} className="rounded-2xl border border-slate-200 bg-white p-4 text-sm">
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="truncate font-bold text-school-800">{app.applicationCode}</p>
+                  <h2 className="mt-1 text-base font-black text-slate-950">{app.fullName}</h2>
+                </div>
+                <Badge variant={statusVariant(app.status)}>{STATUS_LABELS[app.status]}</Badge>
+              </div>
+              <div className="mt-4 grid gap-3 text-slate-700">
+                <AdminApplicationInfo label="Ngày sinh" value={formatDate(app.dateOfBirth)} />
+                <AdminApplicationInfo label="Trường THCS" value={app.secondarySchool} />
+                <AdminApplicationInfo label="Số định danh/CCCD" value={app.citizenId} />
+                <AdminApplicationInfo label="Phương án" value={`Phương án ${app.selectedOptionNumber}`} />
+                <AdminApplicationInfo label="Ngày nộp" value={formatDate(app.submittedAt)} />
+              </div>
+              <Link
+                className="mt-4 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-school-700 px-4 text-sm font-semibold text-white transition hover:bg-school-900"
+                href={`/admin/ho-so/${app.id}`}
+              >
+                <Eye size={16} /> Xem chi tiết
+              </Link>
+            </article>
+          ))}
+          {applications.length === 0 && (
+            <p className="rounded-2xl bg-slate-50 p-4 text-center text-sm text-slate-600">
+              Không tìm thấy hồ sơ phù hợp. Vui lòng điều chỉnh bộ lọc và thử lại.
+            </p>
+          )}
+        </div>
       </Card>
     </AdminShell>
+  );
+}
+
+function AdminApplicationInfo({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{label}</p>
+      <p className="mt-1 font-semibold text-slate-900">{value || "-"}</p>
+    </div>
   );
 }

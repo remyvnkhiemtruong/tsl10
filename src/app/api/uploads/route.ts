@@ -16,12 +16,20 @@ export async function POST(request: Request) {
     }
 
     if (!(file instanceof File)) {
-      return NextResponse.json({ error: "Không có file được tải lên" }, { status: 400 });
+      return NextResponse.json({ error: "Không có tệp được tải lên" }, { status: 400 });
     }
 
     const saved = await saveUploadedFile(file, fileType);
     return NextResponse.json({ file: saved });
   } catch (error) {
-    return NextResponse.json({ error: error instanceof Error ? error.message : "Upload thất bại" }, { status: 400 });
+    return NextResponse.json(
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : "Không thể tải tệp lên. Vui lòng kiểm tra định dạng JPG/JPEG/PNG/PDF và dung lượng tệp.",
+      },
+      { status: 400 }
+    );
   }
 }

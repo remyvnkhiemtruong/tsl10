@@ -51,6 +51,7 @@ export default async function AdminApplicationDetailPage({ params }: { params: P
   if (!app) notFound();
   const scoreDetails = calculateAdmissionScoreDetails(app.academicRecords, app.bonusScore);
   const hasTranscript = app.files.some((file) => file.fileType === "HOC_BA_THCS" || file.fileType.startsWith("HOC_BA_LOP_"));
+  const canExportRegistrationForm = Boolean(app.registrationFormNumber);
 
   return (
     <AdminShell>
@@ -60,6 +61,7 @@ export default async function AdminApplicationDetailPage({ params }: { params: P
           <h1 className="mt-2 text-3xl font-black text-slate-950">Hồ sơ {app.applicationCode}</h1>
           <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-slate-600">
             <span>{app.fullName}</span>
+            {app.registrationFormNumber && <Badge variant="secondary">Số phiếu {app.registrationFormNumber}</Badge>}
             <Badge variant={statusVariant(app.status)}>{STATUS_LABELS[app.status] ?? app.status}</Badge>
           </div>
         </div>
@@ -70,12 +72,18 @@ export default async function AdminApplicationDetailPage({ params }: { params: P
           >
             <Pencil size={16} /> Chỉnh sửa hồ sơ
           </Link>
-          <Link
-            className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800"
-            href={`/api/admin/applications/${app.id}/registration-form-pdf`}
-          >
-            <Download size={16} /> Tải đơn PDF
-          </Link>
+          {canExportRegistrationForm ? (
+            <Link
+              className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800"
+              href={`/api/admin/applications/${app.id}/registration-form-pdf`}
+            >
+              <Download size={16} /> Xuất phiếu đăng ký PDF
+            </Link>
+          ) : (
+            <span className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-slate-200 px-4 text-sm font-semibold text-slate-500">
+              <Download size={16} /> Chưa có số phiếu
+            </span>
+          )}
           <DeleteApplicationButton applicationId={app.id} />
         </div>
       </div>
@@ -101,7 +109,9 @@ export default async function AdminApplicationDetailPage({ params }: { params: P
 
         <Card>
           <CardTitle>Cập nhật trạng thái</CardTitle>
-          <CardDescription className="mt-1">Ghi chú công khai sẽ hiển thị cho thí sinh khi tra cứu.</CardDescription>
+          <CardDescription className="mt-1">
+            Admin nhập số phiếu khi duyệt hồ sơ. Thí sinh chỉ tải được phiếu PDF sau khi hồ sơ được duyệt và đã có số phiếu.
+          </CardDescription>
           <form className="mt-4 space-y-3" action={`/api/admin/applications/${app.id}`} method="post">
             <Select name="status" defaultValue={app.status}>
               {Object.entries(STATUS_LABELS).map(([value, label]) => (
@@ -110,6 +120,10 @@ export default async function AdminApplicationDetailPage({ params }: { params: P
                 </option>
               ))}
             </Select>
+            <label className="block">
+              <span className="form-label">Số phiếu</span>
+              <Input name="registrationFormNumber" inputMode="numeric" pattern="[0-9]*" defaultValue={app.registrationFormNumber ?? ""} placeholder="001" />
+            </label>
             <Textarea name="publicNote" defaultValue={app.publicNote ?? ""} placeholder="Ghi chú gửi học sinh" />
             <Textarea name="internalNote" defaultValue={app.internalNote ?? ""} placeholder="Ghi chú nội bộ" />
             <Button type="submit">Lưu cập nhật</Button>
@@ -185,7 +199,7 @@ export default async function AdminApplicationDetailPage({ params }: { params: P
             <Info label="Xã/phường" value={app.ward ?? ""} />
             <Info label="Tỉnh/thành phố" value={app.province ?? ""} />
             <Info label="Địa chỉ thường trú ghép" value={app.permanentAddress} />
-            <Info label="SĐT học sinh" value={app.studentPhone ?? ""} />
+            <Info label="Số điện thoại thí sinh" value={app.studentPhone ?? ""} />
             <Info label="Email" value={app.email ?? ""} />
             <Info label="Phụ huynh/người giám hộ" value={app.guardianName} />
             <Info label="Điện thoại liên hệ" value={app.guardianPhone} />
@@ -237,9 +251,9 @@ export default async function AdminApplicationDetailPage({ params }: { params: P
 
       <Card className="mt-6 overflow-hidden p-0">
         <div className="p-6 pb-0">
-          <CardTitle>Kết quả học tập</CardTitle>
+        <CardTitle>Kết quả học tập</CardTitle>
         </div>
-        <div className="overflow-x-auto p-6">
+        <div className="hidden overflow-x-auto p-6 md:block">
           <table className="w-full min-w-[980px] text-sm">
             <thead className="bg-slate-50 text-left text-slate-600">
               <tr>
@@ -269,10 +283,29 @@ export default async function AdminApplicationDetailPage({ params }: { params: P
             </tbody>
           </table>
         </div>
+        <div className="grid gap-3 p-6 md:hidden">
+          {app.academicRecords.map((record) => (
+            <article key={record.id} className="rounded-2xl border border-slate-200 bg-white p-4 text-sm">
+              <h3 className="text-base font-black text-slate-950">Lớp {record.grade}</h3>
+              <div className="mt-4 grid grid-cols-2 gap-3">
+                <Info label="Ngữ văn" value={record.literature != null ? String(record.literature) : ""} />
+                <Info label="Toán" value={record.math != null ? String(record.math) : ""} />
+                <Info label="Tiếng Anh" value={record.english != null ? String(record.english) : ""} />
+                <Info label="KHTN" value={record.naturalScience != null ? String(record.naturalScience) : ""} />
+                <Info label="LS&ĐL" value={record.historyGeography != null ? String(record.historyGeography) : ""} />
+                <Info label="GDCD" value={record.civicEducation != null ? String(record.civicEducation) : ""} />
+                <Info label="Công nghệ" value={record.technology != null ? String(record.technology) : ""} />
+                <Info label="Tin học" value={record.informatics != null ? String(record.informatics) : ""} />
+                <Info label="Học tập" value={record.academicLevel ? ACADEMIC_LEVEL_LABELS[record.academicLevel] : ""} />
+                <Info label="Rèn luyện" value={record.conductLevel ? ACADEMIC_LEVEL_LABELS[record.conductLevel] : ""} />
+              </div>
+            </article>
+          ))}
+        </div>
       </Card>
 
       <Card className="mt-6">
-        <CardTitle>File đã tải lên</CardTitle>
+        <CardTitle>Tệp đã tải lên</CardTitle>
         <div className="mt-4 grid gap-3 lg:grid-cols-2">
           {app.files.map((file) => (
             <div key={file.id} className="rounded-2xl border border-slate-200 p-4 text-sm">
@@ -297,7 +330,7 @@ export default async function AdminApplicationDetailPage({ params }: { params: P
                   href={`/api/files/${file.id}`}
                   target="_blank"
                 >
-                  <Eye size={14} /> Xem file
+                  <Eye size={14} /> Xem tệp
                 </Link>
               </div>
               <form className="mt-4 grid gap-2 md:grid-cols-[180px_1fr_auto]" action={`/api/admin/files/${file.id}/review`} method="post">
@@ -308,14 +341,14 @@ export default async function AdminApplicationDetailPage({ params }: { params: P
                     </option>
                   ))}
                 </Select>
-                <Input name="note" defaultValue={file.note ?? ""} placeholder="Ghi chú file" />
+                <Input name="note" defaultValue={file.note ?? ""} placeholder="Ghi chú tệp" />
                 <Button type="submit" size="sm">
-                  Lưu
+                  Lưu thay đổi
                 </Button>
               </form>
             </div>
           ))}
-          {app.files.length === 0 && <p className="text-sm text-slate-500">Chưa có file.</p>}
+          {app.files.length === 0 && <p className="text-sm text-slate-500">Chưa có tệp nào được tải lên.</p>}
         </div>
       </Card>
 

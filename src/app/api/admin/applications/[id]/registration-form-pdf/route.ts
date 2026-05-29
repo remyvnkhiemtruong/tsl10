@@ -16,6 +16,9 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
     include: { academicRecords: true, priorities: true, awards: true, files: true },
   });
   if (!app) return NextResponse.json({ error: "Không tìm thấy hồ sơ" }, { status: 404 });
+  if (!app.registrationFormNumber) {
+    return NextResponse.json({ error: "Vui lòng nhập số phiếu trước khi xuất phiếu đăng ký PDF." }, { status: 400 });
+  }
 
   const pdf = await buildRegistrationFormPdf(app);
   await prisma.application.update({
@@ -23,7 +26,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
     data: {
       registrationFormPdfPrintedAt: new Date(),
       logs: {
-        create: [{ userId: user.id, action: "REGISTRATION_FORM_PDF_EXPORTED", note: "Admin tải đơn đăng ký PDF" }],
+        create: [{ userId: user.id, action: "REGISTRATION_FORM_PDF_EXPORTED", note: "Admin tải phiếu đăng ký dự tuyển PDF" }],
       },
     },
   });

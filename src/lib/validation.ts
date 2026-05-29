@@ -6,10 +6,12 @@ import {
   ALL_FILE_TYPES,
   ALL_PRIORITY_TYPES,
   FILE_SIZE_LIMITS_MB,
+  IDENTITY_DOCUMENT_FILE_TYPES,
   ISSUE_PLACE_OPTIONS,
   PHYSICAL_DOSSIER_STATUSES,
   PHYSICAL_DOSSIER_VALIDITY_STATUSES,
   PRIZE_SCORES,
+  REGISTRATION_FORM_PRINTABLE_STATUSES,
   SCHOOL_YEAR_OPTIONS,
   SUBJECT_OPTIONS,
 } from "@/lib/constants";
@@ -43,6 +45,14 @@ const optionalText = z
   .trim()
   .optional()
   .transform((value) => value || undefined);
+const registrationFormNumberSchema = z.preprocess(
+  (value) => (value == null ? "" : value),
+  z
+    .string()
+    .trim()
+    .regex(/^\d*$/, "Số phiếu chỉ gồm chữ số.")
+    .transform((value) => (value ? value.padStart(3, "0") : undefined))
+);
 
 const optionalDateString = z
   .string()
@@ -91,11 +101,11 @@ const requiredEmail = z
 export const uploadedFileInputSchema = z
   .object({
     fileType: fileTypeSchema,
-    originalName: requiredText("Tên file"),
+    originalName: requiredText("Tên tệp"),
     storedName: requiredText("Tên lưu trữ"),
-    mimeType: requiredText("Định dạng file"),
+    mimeType: requiredText("Định dạng tệp"),
     size: z.number().int().positive(),
-    storageKey: requiredText("Mã lưu trữ file"),
+    storageKey: requiredText("Mã lưu trữ tệp"),
     storageProvider: z.enum(["LOCAL", "VERCEL_BLOB"]).optional(),
     publicUrl: z.string().url().optional().or(z.literal("")),
   })
@@ -104,7 +114,7 @@ export const uploadedFileInputSchema = z
       ctx.addIssue({
         code: "custom",
         path: ["mimeType"],
-        message: "Định dạng file không hợp lệ. Chỉ chấp nhận JPG, JPEG, PNG hoặc PDF.",
+        message: "Định dạng tệp không hợp lệ. Chỉ chấp nhận JPG, JPEG, PNG hoặc PDF.",
       });
     }
 
@@ -113,7 +123,7 @@ export const uploadedFileInputSchema = z
       ctx.addIssue({
         code: "custom",
         path: ["size"],
-        message: `File vượt quá dung lượng tối đa ${maxMb}MB.`,
+        message: `Tệp vượt quá dung lượng tối đa ${maxMb}MB.`,
       });
     }
 
@@ -121,10 +131,10 @@ export const uploadedFileInputSchema = z
       ctx.addIssue({ code: "custom", path: ["mimeType"], message: "Ảnh 4x6 phải là JPG, JPEG hoặc PNG." });
     }
     if (file.fileType === "HOC_BA_THCS" && file.mimeType !== "application/pdf") {
-      ctx.addIssue({ code: "custom", path: ["mimeType"], message: "Học bạ THCS tổng hợp phải là file PDF." });
+      ctx.addIssue({ code: "custom", path: ["mimeType"], message: "Học bạ THCS tổng hợp phải là tệp PDF." });
     }
     if (file.fileType.startsWith("HOC_BA_LOP_") && !file.mimeType.startsWith("image/")) {
-      ctx.addIssue({ code: "custom", path: ["mimeType"], message: "Học bạ từng lớp phải là file ảnh." });
+      ctx.addIssue({ code: "custom", path: ["mimeType"], message: "Học bạ từng lớp phải là tệp ảnh." });
     }
   });
 
@@ -240,11 +250,12 @@ export const applicationCreateSchema = z
     if (!fileTypes.has("PHOTO_4X6")) {
       ctx.addIssue({ code: "custom", path: ["uploadedFiles", "PHOTO_4X6"], message: "Cần tải lên ảnh 4x6" });
     }
-    if (!fileTypes.has("GIAY_KHAI_SINH") && !fileTypes.has("CCCD")) {
+    const hasIdentityDocument = IDENTITY_DOCUMENT_FILE_TYPES.some((fileType) => fileTypes.has(fileType));
+    if (!hasIdentityDocument) {
       ctx.addIssue({
         code: "custom",
-        path: ["uploadedFiles", "GIAY_KHAI_SINH"],
-        message: "Cần tải lên giấy khai sinh hoặc CCCD/số định danh",
+        path: ["uploadedFiles", "IDENTITY_DOCUMENT"],
+        message: "Cần tải lên giấy khai sinh hoặc số định danh/CCCD.",
       });
     }
   });
@@ -283,10 +294,21 @@ export const adminApplicationUpdateSchema = z
     selectedOptionNumber: z.number().int().min(1).max(6),
     selectedSubjects: requiredText("Phương án môn học"),
     status: applicationStatusSchema,
+    registrationFormNumber: registrationFormNumberSchema,
     publicNote: optionalText,
     internalNote: optionalText,
   })
   .superRefine((value, ctx) => {
+    if (
+      REGISTRATION_FORM_PRINTABLE_STATUSES.includes(value.status as (typeof REGISTRATION_FORM_PRINTABLE_STATUSES)[number]) &&
+      !value.registrationFormNumber
+    ) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["registrationFormNumber"],
+        message: "Cần nhập số phiếu khi hồ sơ đã được duyệt để thí sinh có thể in phiếu.",
+      });
+    }
     if (value.issueDate && !value.issuePlace) {
       ctx.addIssue({ code: "custom", path: ["issuePlace"], message: "Nếu có ngày cấp thì cần chọn nơi cấp" });
     }
@@ -336,11 +358,25 @@ export const loginSchema = z.object({
   password: z.string().min(1, "Mật khẩu là thông tin bắt buộc"),
 });
 
-export const applicationUpdateSchema = z.object({
-  status: applicationStatusSchema,
-  publicNote: z.string().trim().optional(),
-  internalNote: z.string().trim().optional(),
-});
+export const applicationUpdateSchema = z
+  .object({
+    status: applicationStatusSchema,
+    registrationFormNumber: registrationFormNumberSchema,
+    publicNote: z.string().trim().optional(),
+    internalNote: z.string().trim().optional(),
+  })
+  .superRefine((value, ctx) => {
+    if (
+      REGISTRATION_FORM_PRINTABLE_STATUSES.includes(value.status as (typeof REGISTRATION_FORM_PRINTABLE_STATUSES)[number]) &&
+      !value.registrationFormNumber
+    ) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["registrationFormNumber"],
+        message: "Cần nhập số phiếu khi hồ sơ đã được duyệt để thí sinh có thể in phiếu.",
+      });
+    }
+  });
 
 export const fileReviewSchema = z.object({
   status: fileStatusSchema,

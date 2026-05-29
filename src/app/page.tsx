@@ -10,7 +10,7 @@ import { SCHOOL_NAME, SCHOOL_YEAR } from "@/lib/constants";
 const preparationItems = [
   "Ảnh học sinh 4x6.",
   "Học bạ THCS dạng PDF hoặc ảnh học bạ lớp 6, 7, 8, 9.",
-  "Giấy khai sinh hoặc CCCD/số định danh.",
+  "Giấy khai sinh hoặc số định danh/CCCD.",
   "Minh chứng ưu tiên/khuyến khích nếu có.",
   "Thông tin liên hệ phụ huynh/người giám hộ.",
 ];
@@ -49,7 +49,7 @@ export default function HomePage() {
               Cổng đăng ký dự tuyển vào lớp 10
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-8 text-blue-50 sm:text-lg">
-              {SCHOOL_NAME} tiếp nhận hồ sơ trực tuyến, upload học bạ, ảnh, PDF và minh chứng ưu tiên/khuyến khích
+              {SCHOOL_NAME} tiếp nhận hồ sơ trực tuyến, tải lên học bạ, ảnh, PDF và minh chứng ưu tiên/khuyến khích
               cho năm học mới.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">

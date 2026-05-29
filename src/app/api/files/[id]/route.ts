@@ -16,7 +16,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
 
   const { id } = await params;
   const file = await prisma.uploadedFile.findUnique({ where: { id } });
-  if (!file) return NextResponse.json({ error: "Không tìm thấy file" }, { status: 404 });
+  if (!file) return NextResponse.json({ error: "Không tìm thấy tệp" }, { status: 404 });
 
   const buffer = await readStoredFile(file);
   return new NextResponse(buffer, {

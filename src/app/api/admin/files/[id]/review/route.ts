@@ -16,7 +16,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     const body: unknown = await request.json();
     const parsed = fileReviewSchema.parse(body);
     const current = await prisma.uploadedFile.findUnique({ where: { id } });
-    if (!current) return NextResponse.json({ error: "Không tìm thấy file" }, { status: 404 });
+    if (!current) return NextResponse.json({ error: "Không tìm thấy tệp" }, { status: 404 });
 
     const file = await prisma.uploadedFile.update({
       where: { id },
@@ -44,10 +44,10 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     return NextResponse.json({ file });
   } catch (error) {
     if (error instanceof ZodError) {
-      return NextResponse.json({ error: error.issues[0]?.message ?? "Dữ liệu duyệt file chưa hợp lệ" }, { status: 400 });
+      return NextResponse.json({ error: error.issues[0]?.message ?? "Dữ liệu duyệt tệp chưa hợp lệ" }, { status: 400 });
     }
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Không thể duyệt file" },
+      { error: error instanceof Error ? error.message : "Không thể duyệt tệp" },
       { status: 400 }
     );
   }
@@ -64,7 +64,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     note: String(formData.get("note") ?? "")
   });
   const current = await prisma.uploadedFile.findUnique({ where: { id } });
-  if (!current) return NextResponse.json({ error: "Không tìm thấy file" }, { status: 404 });
+  if (!current) return NextResponse.json({ error: "Không tìm thấy tệp" }, { status: 404 });
 
   const file = await prisma.uploadedFile.update({
     where: { id },

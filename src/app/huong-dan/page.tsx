@@ -7,7 +7,7 @@ const steps = [
     icon: FileUp,
     title: "1. Chuẩn bị hồ sơ",
     description:
-      "Chuẩn bị ảnh 4x6, học bạ, giấy khai sinh hoặc CCCD/số định danh và minh chứng ưu tiên/khuyến khích nếu có.",
+      "Chuẩn bị ảnh 4x6, học bạ, giấy khai sinh hoặc số định danh/CCCD và minh chứng ưu tiên/khuyến khích nếu có.",
   },
   {
     icon: ClipboardCheck,

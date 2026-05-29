@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 import { prisma } from "@/lib/prisma";
+import { isRegistrationFormPrintable } from "@/lib/registration-form-access";
 import { buildRegistrationFormPdf, registrationFormPdfFilename } from "@/lib/registration-form-pdf";
 import { registrationFormPdfRequestSchema, zodFieldErrors } from "@/lib/validation";
 
@@ -20,13 +21,19 @@ export async function POST(request: Request) {
       include: { academicRecords: true, priorities: true, awards: true, files: true },
     });
     if (!app) return NextResponse.json({ error: "Không tìm thấy hồ sơ phù hợp" }, { status: 404 });
+    if (!isRegistrationFormPrintable(app.status, app.registrationFormNumber)) {
+      return NextResponse.json(
+        { error: "Phiếu đăng ký dự tuyển PDF chỉ được tải sau khi nhà trường duyệt hồ sơ trực tuyến và cấp số phiếu." },
+        { status: 403 }
+      );
+    }
 
     const pdf = await buildRegistrationFormPdf(app);
     await prisma.application.update({
       where: { id: app.id },
       data: {
         registrationFormPdfPrintedAt: new Date(),
-        logs: { create: [{ action: "REGISTRATION_FORM_PDF_EXPORTED", note: "Thí sinh tải đơn đăng ký PDF" }] },
+        logs: { create: [{ action: "REGISTRATION_FORM_PDF_EXPORTED", note: "Thí sinh tải phiếu đăng ký dự tuyển PDF" }] },
       },
     });
 
