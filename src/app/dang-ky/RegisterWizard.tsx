@@ -93,6 +93,12 @@ type RegisterForm = {
   commitmentAccepted: boolean;
 };
 
+type SubjectOptionChoice = {
+  optionNumber: number;
+  subjects: string;
+  name?: string | null;
+};
+
 type FieldErrors = Record<string, string>;
 
 const scoreFields: Array<{ key: AcademicScoreKey; label: string }> = [
@@ -221,8 +227,9 @@ function focusFirstError() {
   });
 }
 
-export function RegisterWizard() {
+export function RegisterWizard({ subjectOptions = SUBJECT_OPTIONS }: { subjectOptions?: ReadonlyArray<SubjectOptionChoice> }) {
   const router = useRouter();
+  const subjectOptionChoices = subjectOptions.length > 0 ? subjectOptions : SUBJECT_OPTIONS;
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [uploadingType, setUploadingType] = useState<string | null>(null);
@@ -230,7 +237,11 @@ export function RegisterWizard() {
   const [errors, setErrors] = useState<string[]>([]);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [uploadErrors, setUploadErrors] = useState<FieldErrors>({});
-  const [form, setForm] = useState<RegisterForm>(initialForm);
+  const [form, setForm] = useState<RegisterForm>(() => ({
+    ...initialForm,
+    selectedOptionNumber: subjectOptionChoices[0]?.optionNumber ?? initialForm.selectedOptionNumber,
+    selectedSubjects: subjectOptionChoices[0]?.subjects ?? initialForm.selectedSubjects,
+  }));
   const [selectedIdentityFileType, setSelectedIdentityFileType] = useState<IdentityDocumentFileType>("GIAY_KHAI_SINH");
 
   const scoreDetails = useMemo(
@@ -351,7 +362,7 @@ export function RegisterWizard() {
       });
     }
     if (targetStep === 4) {
-      const selected = SUBJECT_OPTIONS.find((option) => option.optionNumber === form.selectedOptionNumber);
+      const selected = subjectOptionChoices.find((option) => option.optionNumber === form.selectedOptionNumber);
       if (!selected || selected.subjects !== form.selectedSubjects) nextErrors.selectedOptionNumber = "Phương án môn học không hợp lệ.";
     }
     if (targetStep === 5) {
@@ -920,7 +931,7 @@ export function RegisterWizard() {
 
         {step === 4 && (
           <section className="grid gap-4 md:grid-cols-2">
-            {SUBJECT_OPTIONS.map((option) => {
+            {subjectOptionChoices.map((option) => {
               const selected = form.selectedOptionNumber === option.optionNumber;
               return (
                 <button

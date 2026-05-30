@@ -4,7 +4,7 @@ import { Alert } from "@/components/ui/alert";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
-import { calculateAdmissionScoreDetails } from "@/lib/admission-score";
+import { calculateAdmissionScoreFromConfig } from "@/lib/admission-score";
 import {
   ADMISSION_BATCH_OPTIONS,
   ADMISSION_RESULT_LABELS,
@@ -12,6 +12,7 @@ import {
   SUBJECT_OPTIONS,
 } from "@/lib/constants";
 import { prisma } from "@/lib/prisma";
+import { getActiveScoreFormula } from "@/lib/score-formula";
 import { AdmissionResultsTable, type AdmissionResultRow } from "./AdmissionResultsTable";
 
 export const dynamic = "force-dynamic";
@@ -58,14 +59,24 @@ export default async function AdminAdmissionResultsPage({
 
   const applications = await prisma.application.findMany({
     where,
-    include: { academicRecords: true },
+    include: { academicRecords: true, priorities: true, awards: true },
     orderBy: [{ admissionScoreSnapshot: "desc" }, { fullName: "asc" }],
     take: 500,
   });
 
-  const rows: AdmissionResultRow[] = applications
-    .map((app) => {
-      const score = calculateAdmissionScoreDetails(app.academicRecords, app.bonusScore);
+  const formulaCache = new Map<string, Awaited<ReturnType<typeof getActiveScoreFormula>>>();
+  const rows: AdmissionResultRow[] = (await Promise.all(
+    applications.map(async (app) => {
+      const cacheKey = app.admissionSeasonId ?? "fallback";
+      const activeFormula = formulaCache.get(cacheKey) ?? (await getActiveScoreFormula(app.admissionSeasonId));
+      formulaCache.set(cacheKey, activeFormula);
+      const score = calculateAdmissionScoreFromConfig(
+        app.academicRecords,
+        app.priorities.map((priority) => priority.type),
+        app.awards.map((award) => ({ prize: award.prize })),
+        activeFormula.config,
+        activeFormula.id
+      );
       return {
         id: app.id,
         applicationCode: app.applicationCode,
@@ -74,9 +85,9 @@ export default async function AdminAdmissionResultsPage({
         secondarySchool: app.secondarySchool,
         selectedOptionNumber: app.selectedOptionNumber,
         selectedSubjects: app.selectedSubjects,
-        scoreA: score.academicAverageSum,
+        scoreA: score.subjectScoreSum,
         scoreB: score.convertedScoreSum,
-        scoreC: score.bonusScore,
+        scoreC: score.priorityScore + score.awardBonusScore,
         totalScore: score.totalScore,
         admissionResult: app.admissionResult,
         admissionRank: app.admissionRank,
@@ -84,7 +95,7 @@ export default async function AdminAdmissionResultsPage({
         admissionPublished: app.admissionPublished,
         admissionPublishedAt: app.admissionPublishedAt?.toISOString() ?? null,
       };
-    })
+    })))
     .sort((a, b) => b.totalScore - a.totalScore || a.fullName.localeCompare(b.fullName, "vi"));
 
   return (

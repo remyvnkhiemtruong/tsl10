@@ -98,6 +98,29 @@ enum LogAction {
   REGISTRATION_FORM_PDF_EXPORTED
   PHYSICAL_DOSSIER_RECEIVED
   PHYSICAL_DOSSIER_STATUS_UPDATED
+  EDIT_REQUEST_CREATED
+  EDIT_REQUEST_UPDATED
+  EDIT_REQUEST_SUBMITTED
+  EDIT_REQUEST_CANCELLED
+  EDIT_REQUEST_APPROVED
+  EDIT_REQUEST_REJECTED
+  EDIT_REQUEST_SUPPLEMENT_REQUESTED
+  APPLICATION_UPDATED_FROM_EDIT_REQUEST
+  CONFIG_UPDATED
+  SEASON_CREATED
+  SEASON_UPDATED
+  SEASON_ACTIVATED
+  SCORE_FORMULA_UPDATED
+  SCORE_RECALCULATED
+}
+
+enum EditRequestStatus {
+  NHAP
+  CHO_DUYET
+  CAN_BO_SUNG
+  DA_DUYET
+  TU_CHOI
+  DA_HUY
 }
 
 model User {
@@ -110,19 +133,283 @@ model User {
   updatedAt    DateTime         @updatedAt
   reviewedFiles UploadedFile[]  @relation("ReviewedBy")
   logs         ApplicationLog[]
+  editRequestsReviewed ApplicationEditRequest[] @relation("ReviewedEditRequests")
 }
+
+// ── Multi-year / Season models ──────────────────────────────────────────────
+
+model AcademicYear {
+  id           String   @id @default(cuid())
+  code         String   @unique
+  name         String
+  startDate    DateTime?
+  endDate      DateTime?
+  /// NHAP | DANG_MO | DANG_TUYEN_SINH | DA_KHOA | LUU_TRU
+  status       String   @default("NHAP")
+  isActive     Boolean  @default(false)
+  publicNote   String?
+  internalNote String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  seasons AdmissionSeason[]
+}
+
+model AdmissionSeason {
+  id                String   @id @default(cuid())
+  academicYearId    String
+  code              String   @unique
+  slug              String   @unique
+  name              String
+  gradeLevel        Int      @default(10)
+  quota             Int?
+  /// XET_TUYEN | THI_TUYEN | KET_HOP
+  method            String   @default("XET_TUYEN")
+  principle         String?
+  description       String?
+  announcementHtml  String?
+  registrationOpen  Boolean  @default(false)
+  resultsPublished  Boolean  @default(false)
+  isDefault         Boolean  @default(false)
+  /// NHAP | DANG_MO | DA_KHOA | LUU_TRU
+  status            String   @default("NHAP")
+  publicNote        String?
+  internalNote      String?
+  applicationCodePrefix String? @default("VK")
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  academicYear        AcademicYear           @relation(fields: [academicYearId], references: [id], onDelete: Cascade)
+  rounds              AdmissionRound[]
+  subjectOptions      SubjectOption[]
+  legalDocuments      AdmissionLegalDocument[]
+  dossierRequirements DossierRequirement[]
+  applications        Application[]
+  contentBlocks       ContentBlock[]
+  configOptions       ConfigOption[]
+  scoreFormulas       ScoreFormulaVersion[]
+
+  @@index([academicYearId])
+  @@index([isDefault])
+  @@index([status])
+}
+
+model AdmissionRound {
+  id              String   @id @default(cuid())
+  seasonId        String
+  name            String
+  description     String?
+  receiveStartAt  DateTime?
+  receiveEndAt    DateTime?
+  resultPublishAt DateTime?
+  quota           Int?
+  conditionNote   String?
+  /// CHUA_MO | DANG_MO | DA_DONG | DA_CONG_BO
+  status          String   @default("CHUA_MO")
+  sortOrder       Int      @default(0)
+  publicNote      String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  season AdmissionSeason @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  applications Application[]
+
+  @@index([seasonId])
+  @@index([status])
+}
+
+model SecondarySchool {
+  id          String   @id @default(cuid())
+  code        String   @unique
+  name        String
+  oldAddress  String?
+  newAddress  String?
+  province    String?
+  ward        String?
+  isActive    Boolean  @default(true)
+  isSeedData  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([name])
+  @@index([isActive])
+  @@index([isSeedData])
+}
+
+model SubjectOption {
+  id           String   @id @default(cuid())
+  seasonId     String
+  optionNumber Int
+  name         String?
+  subjects     String
+  description  String?
+  capacity     Int?
+  isActive     Boolean  @default(true)
+  sortOrder    Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  season AdmissionSeason @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+
+  @@unique([seasonId, optionNumber])
+  @@index([seasonId])
+}
+
+model AdmissionLegalDocument {
+  id             String    @id @default(cuid())
+  seasonId       String?
+  documentType   String
+  documentNumber String
+  issuedDate     DateTime?
+  issuingAgency  String?
+  summary        String
+  url            String?
+  fileStorageKey String?
+  isPublic       Boolean   @default(true)
+  sortOrder      Int       @default(0)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  season AdmissionSeason? @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+
+  @@index([seasonId])
+  @@index([isPublic])
+}
+
+model DossierRequirement {
+  id            String   @id @default(cuid())
+  seasonId      String
+  title         String
+  description   String?
+  quantity      String?
+  specification String?
+  isRequired    Boolean  @default(true)
+  conditionNote String?
+  showOnPublic  Boolean  @default(true)
+  showOnPdf     Boolean  @default(true)
+  sortOrder     Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  season AdmissionSeason @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+
+  @@index([seasonId])
+}
+
+/// Generic content blocks for public pages
+model ContentBlock {
+  id           String   @id @default(cuid())
+  seasonId     String?
+  pageKey      String
+  blockKey     String
+  title        String?
+  subtitle     String?
+  body         String?
+  metadata     Json?
+  displayOrder Int      @default(0)
+  isEnabled    Boolean  @default(true)
+  updatedById  String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  season AdmissionSeason? @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+
+  @@unique([seasonId, pageKey, blockKey])
+  @@index([pageKey])
+  @@index([seasonId])
+}
+
+/// Generic config options (dropdowns, labels, priorities, awards, file types, etc.)
+model ConfigOption {
+  id           String   @id @default(cuid())
+  seasonId     String?
+  groupKey     String
+  value        String
+  label        String
+  shortLabel   String?
+  description  String?
+  helpText     String?
+  metadata     Json?
+  displayOrder Int      @default(0)
+  isEnabled    Boolean  @default(true)
+  isDefault    Boolean  @default(false)
+  isSystem     Boolean  @default(false)
+  updatedById  String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  season AdmissionSeason? @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+
+  @@unique([seasonId, groupKey, value])
+  @@index([groupKey])
+  @@index([seasonId])
+}
+
+/// Site-wide appearance/branding settings
+model SiteSetting {
+  id                String   @id @default("default")
+  schoolName        String   @default("Trường THPT Võ Văn Kiệt")
+  schoolShortName   String?
+  schoolAddress     String?
+  schoolPhone       String?
+  schoolEmail       String?
+  schoolWebsite     String?
+  principalName     String?
+  principalTitle    String?
+  logoUrl           String?
+  primaryColor      String?
+  secondaryColor    String?
+  footerJson        Json?
+  navItemsJson      Json?
+  publicThemeJson   Json?
+  updatedById       String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+/// Score formula version for a season/round
+model ScoreFormulaVersion {
+  id               String   @id @default(cuid())
+  seasonId         String?
+  name             String
+  description      String?
+  version          Int      @default(1)
+  /// DRAFT | ACTIVE | ARCHIVED | LOCKED
+  status           String   @default("DRAFT")
+  configJson       Json
+  isDefault        Boolean  @default(false)
+  effectiveFrom    DateTime?
+  effectiveTo      DateTime?
+  createdById      String?
+  updatedById      String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  season AdmissionSeason? @relation(fields: [seasonId], references: [id], onDelete: SetNull)
+  applications Application[]
+
+  @@index([seasonId])
+  @@index([status])
+}
+
+// ── Application model ───────────────────────────────────────────────────────
 
 model Application {
   id                 String            @id @default(cuid())
   applicationCode    String            @unique
   status             ApplicationStatus @default(CHO_KIEM_TRA)
 
+  /// Link to the admission season this application belongs to
+  admissionSeasonId  String?
+  admissionRoundId   String?
+  scoreFormulaVersionId String?
+
   fullName           String
   dateOfBirth        DateTime
   gender             Gender
   ethnicity          String
   birthPlace         String
-  citizenId          String            @unique
+  citizenId          String
   issueDate          DateTime?
   issuePlace         String?
 
@@ -144,6 +431,7 @@ model Application {
   selectedOptionNumber Int
   selectedSubjects   String
   bonusScore         Float             @default(0)
+  scoreBreakdownJson Json?
   additionalAwardsNote String?
   commitmentAccepted Boolean           @default(false)
   publicNote         String?
@@ -169,21 +457,31 @@ model Application {
   physicalDossierCheckedById  String?
   physicalDossierPublicNote   String?
   physicalDossierInternalNote String?
-  registrationFormNumber      String?  @unique
+  registrationFormNumber      String?
   registrationFormPdfPrintedAt DateTime?
+
+  /// Lock student from submitting edit requests
+  studentEditLocked    Boolean   @default(false)
+  lastEditRequestAt    DateTime?
+  lastEditApprovedAt   DateTime?
 
   deletedAt          DateTime?
   deletedById        String?
   deleteReason       String?
+  isSeedData         Boolean           @default(false)
   submittedAt        DateTime          @default(now())
   createdAt          DateTime          @default(now())
   updatedAt          DateTime          @updatedAt
 
+  admissionSeason    AdmissionSeason?  @relation(fields: [admissionSeasonId], references: [id], onDelete: SetNull)
+  admissionRound     AdmissionRound?   @relation(fields: [admissionRoundId], references: [id], onDelete: SetNull)
+  scoreFormulaVersion ScoreFormulaVersion? @relation(fields: [scoreFormulaVersionId], references: [id], onDelete: SetNull)
   academicRecords    AcademicRecord[]
   priorities         PriorityRecord[]
   awards             AwardRecord[]
   files              UploadedFile[]
   logs               ApplicationLog[]
+  editRequests       ApplicationEditRequest[]
 
   @@index([status])
   @@index([admissionResult])
@@ -195,6 +493,12 @@ model Application {
   @@index([secondarySchool])
   @@index([selectedOptionNumber])
   @@index([deletedAt])
+  @@index([admissionSeasonId])
+  @@index([admissionRoundId])
+  @@index([scoreFormulaVersionId])
+  @@index([isSeedData])
+  @@unique([admissionSeasonId, citizenId])
+  @@unique([admissionSeasonId, registrationFormNumber])
 }
 
 model AcademicRecord {
@@ -255,6 +559,7 @@ model UploadedFile {
   uploadedAt     DateTime    @default(now())
   reviewedAt     DateTime?
   reviewedById   String?
+  isSeedData      Boolean     @default(false)
 
   application    Application? @relation(fields: [applicationId], references: [id], onDelete: Cascade)
   awardRecord    AwardRecord? @relation(fields: [awardRecordId], references: [id], onDelete: SetNull)
@@ -292,4 +597,39 @@ model SchoolSetting {
   updatedById                String?
   createdAt                  DateTime @default(now())
   updatedAt                  DateTime @updatedAt
+}
+
+// ── Student edit request workflow ───────────────────────────────────────────
+
+model ApplicationEditRequest {
+  id                 String            @id @default(cuid())
+  applicationId      String
+  requestCode        String            @unique
+  status             EditRequestStatus @default(NHAP)
+
+  snapshotBeforeJson Json?
+  proposedDataJson   Json?
+  proposedFilesJson  Json?
+  changedFieldsJson  Json?
+
+  studentNote        String?
+  officerNote        String?
+  rejectionReason    String?
+
+  submittedAt        DateTime?
+  reviewedAt         DateTime?
+  reviewedById       String?
+  isSeedData          Boolean           @default(false)
+
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+
+  application        Application       @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  reviewedBy         User?             @relation("ReviewedEditRequests", fields: [reviewedById], references: [id], onDelete: SetNull)
+
+  @@index([applicationId])
+  @@index([status])
+  @@index([submittedAt])
+  @@index([reviewedAt])
+  @@index([isSeedData])
 }

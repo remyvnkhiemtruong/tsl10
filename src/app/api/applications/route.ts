@@ -1,12 +1,14 @@
 import { NextResponse } from "next/server";
 import { Prisma, FileType, PriorityType, Prize } from "@prisma/client";
 import { ZodError } from "zod";
-import { calculateAdmissionScoreWithBonuses } from "@/lib/admission-score";
+import { calculateAdmissionScoreFromConfig } from "@/lib/admission-score";
 import { WARD_OTHER_VALUE } from "@/lib/administrative-units";
 import { composePermanentAddress } from "@/lib/address";
 import { generateApplicationCode } from "@/lib/application-code";
 import { SUBJECT_OPTIONS } from "@/lib/constants";
 import { prisma } from "@/lib/prisma";
+import { getActiveScoreFormula } from "@/lib/score-formula";
+import { getActiveSeason } from "@/lib/season";
 import { getSchoolSettings } from "@/lib/school-settings";
 import { applicationCreateSchema, prizeScore, zodFieldErrors } from "@/lib/validation";
 
@@ -20,6 +22,10 @@ function optionalDate(value?: string) {
   return value ? new Date(value) : null;
 }
 
+function jsonValue<T>(value: T) {
+  return JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
+}
+
 export async function POST(request: Request) {
   try {
     const json: unknown = await request.json();
@@ -28,13 +34,25 @@ export async function POST(request: Request) {
     if (new Date() > new Date(settings.registrationDeadline)) {
       return NextResponse.json({ error: settings.registrationLockedNote }, { status: 403 });
     }
+    const season = await getActiveSeason();
+    const activeFormula = await getActiveScoreFormula(season.id !== "fallback" ? season.id : undefined);
 
-    const duplicate = await prisma.application.findUnique({ where: { citizenId: parsed.citizenId } });
+    const duplicate = await prisma.application.findFirst({
+      where: {
+        citizenId: parsed.citizenId,
+        deletedAt: null,
+        ...(season.id !== "fallback" ? { admissionSeasonId: season.id } : {}),
+      },
+    });
     if (duplicate) {
-      return NextResponse.json({ error: "Số định danh này đã có hồ sơ đăng ký" }, { status: 409 });
+      return NextResponse.json({ error: "Số định danh/CCCD này đã có hồ sơ đăng ký trong kỳ tuyển sinh hiện tại." }, { status: 409 });
     }
 
-    const selected = SUBJECT_OPTIONS.find((item) => item.optionNumber === parsed.selectedOptionNumber);
+    const subjectOptions = season.subjectOptions.length > 0 ? season.subjectOptions : SUBJECT_OPTIONS;
+    const selected = subjectOptions.find((item) => item.optionNumber === parsed.selectedOptionNumber);
+    if (!selected) {
+      return NextResponse.json({ error: "Phương án môn học không hợp lệ trong kỳ tuyển sinh hiện tại." }, { status: 400 });
+    }
     const finalWard = parsed.ward === WARD_OTHER_VALUE ? parsed.wardOther : parsed.ward;
     const permanentAddress = composePermanentAddress({
       houseNumber: parsed.houseNumber,
@@ -42,14 +60,29 @@ export async function POST(request: Request) {
       ward: finalWard,
       province: parsed.province,
     });
-    const scoreDetails = calculateAdmissionScoreWithBonuses(parsed.academicRecords, parsed.priorities, parsed.awards);
+    const scoreDetails = calculateAdmissionScoreFromConfig(
+      parsed.academicRecords,
+      parsed.priorities,
+      parsed.awards,
+      activeFormula.config,
+      activeFormula.id
+    );
 
     for (let attempt = 0; attempt < 3; attempt += 1) {
-      const code = await generateApplicationCode();
+      const code = await generateApplicationCode(
+        season.id !== "fallback"
+          ? {
+              id: season.id,
+              applicationCodePrefix: season.applicationCodePrefix,
+              academicYear: { code: season.academicYear.name },
+            }
+          : undefined
+      );
       try {
         const created = await prisma.application.create({
           data: {
             applicationCode: code,
+            admissionSeasonId: season.id !== "fallback" ? season.id : null,
             fullName: parsed.fullName,
             dateOfBirth: new Date(parsed.dateOfBirth),
             gender: parsed.gender,
@@ -73,7 +106,10 @@ export async function POST(request: Request) {
             guardianPhone: parsed.guardianPhone,
             selectedOptionNumber: parsed.selectedOptionNumber,
             selectedSubjects: selected?.subjects ?? parsed.selectedSubjects,
-            bonusScore: scoreDetails.bonusScore,
+            bonusScore: scoreDetails.priorityScore + scoreDetails.awardBonusScore,
+            admissionScoreSnapshot: scoreDetails.totalScore,
+            scoreFormulaVersionId: activeFormula.id ?? null,
+            scoreBreakdownJson: jsonValue(scoreDetails),
             additionalAwardsNote: parsed.additionalAwardsNote ?? null,
             commitmentAccepted: parsed.commitmentAccepted,
             priorities: {
@@ -86,7 +122,7 @@ export async function POST(request: Request) {
                 level: award.level,
                 year: award.year,
                 prize: award.prize as Prize,
-                bonusScore: prizeScore(award.prize),
+                bonusScore: activeFormula.config.awardScores[award.prize] ?? prizeScore(award.prize),
               })),
             },
             academicRecords: {
@@ -122,6 +158,10 @@ export async function POST(request: Request) {
                 {
                   action: "CREATED",
                   note: `Học sinh nộp hồ sơ trực tuyến. Điểm xét tuyển dự kiến: ${scoreDetails.totalScore}`,
+                  metadata: jsonValue({
+                    scoreFormulaVersionId: activeFormula.id,
+                    scoreWarnings: scoreDetails.warnings,
+                  }),
                 },
               ],
             },
@@ -132,7 +172,7 @@ export async function POST(request: Request) {
       } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
           if (error.code === "P2002" && String(error.meta?.target).includes("citizenId")) {
-            return NextResponse.json({ error: "Số định danh này đã có hồ sơ đăng ký" }, { status: 409 });
+            return NextResponse.json({ error: "Số định danh/CCCD này đã có hồ sơ đăng ký trong kỳ tuyển sinh hiện tại." }, { status: 409 });
           }
           if (error.code === "P2002" && attempt < 2) continue;
         }

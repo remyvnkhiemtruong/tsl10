@@ -9,7 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { prisma } from "@/lib/prisma";
-import { calculateAdmissionScoreDetails } from "@/lib/admission-score";
+import { calculateAdmissionScoreFromConfig } from "@/lib/admission-score";
+import { getActiveScoreFormula } from "@/lib/score-formula";
 import {
   ACADEMIC_LEVEL_LABELS,
   ADMISSION_PUBLICATION_LABELS,
@@ -49,7 +50,14 @@ export default async function AdminApplicationDetailPage({ params }: { params: P
     },
   });
   if (!app) notFound();
-  const scoreDetails = calculateAdmissionScoreDetails(app.academicRecords, app.bonusScore);
+  const activeFormula = await getActiveScoreFormula(app.admissionSeasonId);
+  const scoreDetails = calculateAdmissionScoreFromConfig(
+    app.academicRecords,
+    app.priorities.map((priority) => priority.type),
+    app.awards.map((award) => ({ prize: award.prize })),
+    activeFormula.config,
+    activeFormula.id
+  );
   const hasTranscript = app.files.some((file) => file.fileType === "HOC_BA_THCS" || file.fileType.startsWith("HOC_BA_LOP_"));
   const canExportRegistrationForm = Boolean(app.registrationFormNumber);
 
@@ -242,10 +250,12 @@ export default async function AdminApplicationDetailPage({ params }: { params: P
           Điểm dự kiến phục vụ hội đồng tuyển sinh; hệ thống không tự kết luận trúng tuyển.
         </CardDescription>
         <div className="mt-4 grid gap-3 text-sm sm:grid-cols-4">
-          <Info label="A - Tổng điểm TB môn THCS" value={`${scoreDetails.academicAverageSum}`} />
+          <Info label="Công thức" value={`${activeFormula.name} v${activeFormula.version}`} />
+          <Info label="A - Tổng điểm TB môn THCS" value={`${scoreDetails.subjectScoreSum}`} />
           <Info label="B - Điểm quy đổi" value={`${scoreDetails.convertedScoreSum}`} />
-          <Info label="C - Điểm ưu tiên/khuyến khích" value={`${scoreDetails.bonusScore}`} />
+          <Info label="C - Điểm ưu tiên/khuyến khích" value={`${scoreDetails.priorityScore + scoreDetails.awardBonusScore}`} />
           <Info label="Tổng điểm xét tuyển dự kiến" value={`${scoreDetails.totalScore}`} />
+          {scoreDetails.warnings.length > 0 && <Info label="Cảnh báo tính điểm" value={scoreDetails.warnings.join("; ")} />}
         </div>
       </Card>
 

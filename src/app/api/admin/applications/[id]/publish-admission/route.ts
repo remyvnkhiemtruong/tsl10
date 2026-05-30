@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
-import { calculateAdmissionScoreDetails } from "@/lib/admission-score";
+import { calculateAdmissionScoreFromConfig } from "@/lib/admission-score";
 import { requireAdmin } from "@/lib/auth";
 import { canPublishAdmissionResult } from "@/lib/admission-result";
 import { prisma } from "@/lib/prisma";
+import { getActiveScoreFormula } from "@/lib/score-formula";
 import { admissionPublicationSchema, zodFieldErrors } from "@/lib/validation";
 
 export const runtime = "nodejs";
@@ -17,7 +18,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     const parsed = admissionPublicationSchema.parse(await request.json().catch(() => ({})));
     const current = await prisma.application.findFirst({
       where: { id, deletedAt: null },
-      include: { academicRecords: true },
+      include: { academicRecords: true, priorities: true, awards: true },
     });
     if (!current) return NextResponse.json({ error: "Không tìm thấy hồ sơ" }, { status: 404 });
     if (!canPublishAdmissionResult(current.admissionResult)) {
@@ -27,7 +28,14 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       );
     }
 
-    const score = calculateAdmissionScoreDetails(current.academicRecords, current.bonusScore);
+    const activeFormula = await getActiveScoreFormula(current.admissionSeasonId);
+    const score = calculateAdmissionScoreFromConfig(
+      current.academicRecords,
+      current.priorities.map((priority) => priority.type),
+      current.awards.map((award) => ({ prize: award.prize })),
+      activeFormula.config,
+      activeFormula.id
+    );
     const updated = await prisma.application.update({
       where: { id },
       data: {
@@ -37,6 +45,10 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
         admissionPublicNote: parsed.publicNote ?? current.admissionPublicNote,
         admissionScoreSnapshot:
           parsed.snapshotScore || current.admissionScoreSnapshot === null ? score.totalScore : current.admissionScoreSnapshot,
+        scoreFormulaVersionId:
+          parsed.snapshotScore || current.admissionScoreSnapshot === null ? activeFormula.id ?? current.scoreFormulaVersionId : current.scoreFormulaVersionId,
+        scoreBreakdownJson:
+          parsed.snapshotScore || current.admissionScoreSnapshot === null ? JSON.parse(JSON.stringify(score)) : current.scoreBreakdownJson,
         logs: {
           create: [
             {
@@ -45,7 +57,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
               oldValue: String(current.admissionPublished),
               newValue: "true",
               note: parsed.publicNote,
-              metadata: { scoreSnapshot: score.totalScore },
+              metadata: { scoreFormulaVersionId: activeFormula.id, scoreSnapshot: score.totalScore },
             },
           ],
         },

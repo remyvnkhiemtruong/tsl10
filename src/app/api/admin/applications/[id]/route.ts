@@ -28,10 +28,21 @@ function optionalDate(value?: string) {
   return value ? new Date(value) : null;
 }
 
-async function registrationFormNumberBelongsToAnotherApplication(registrationFormNumber: string | undefined, applicationId: string) {
+async function registrationFormNumberBelongsToAnotherApplication(
+  registrationFormNumber: string | undefined,
+  applicationId: string,
+  admissionSeasonId: string | null
+) {
   if (!registrationFormNumber) return false;
-  const duplicate = await prisma.application.findUnique({ where: { registrationFormNumber } });
-  return Boolean(duplicate && duplicate.id !== applicationId);
+  const duplicate = await prisma.application.findFirst({
+    where: {
+      registrationFormNumber,
+      id: { not: applicationId },
+      admissionSeasonId,
+    },
+    select: { id: true },
+  });
+  return Boolean(duplicate);
 }
 
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -44,7 +55,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     const parsed = applicationUpdateSchema.parse(body);
     const current = await prisma.application.findFirst({ where: { id, deletedAt: null } });
     if (!current) return NextResponse.json({ error: "Không tìm thấy hồ sơ" }, { status: 404 });
-    if (await registrationFormNumberBelongsToAnotherApplication(parsed.registrationFormNumber, id)) {
+    if (await registrationFormNumberBelongsToAnotherApplication(parsed.registrationFormNumber, id, current.admissionSeasonId)) {
       return NextResponse.json({ error: "Số phiếu này đã được cấp cho hồ sơ khác." }, { status: 409 });
     }
 
@@ -98,12 +109,19 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     if (!current) return NextResponse.json({ error: "Không tìm thấy hồ sơ" }, { status: 404 });
 
     if (parsed.citizenId !== current.citizenId) {
-      const duplicate = await prisma.application.findUnique({ where: { citizenId: parsed.citizenId } });
-      if (duplicate && duplicate.id !== id) {
+      const duplicate = await prisma.application.findFirst({
+        where: {
+          citizenId: parsed.citizenId,
+          id: { not: id },
+          admissionSeasonId: current.admissionSeasonId,
+        },
+        select: { id: true },
+      });
+      if (duplicate) {
         return NextResponse.json({ error: "Số định danh này đã có hồ sơ đăng ký" }, { status: 409 });
       }
     }
-    if (await registrationFormNumberBelongsToAnotherApplication(parsed.registrationFormNumber, id)) {
+    if (await registrationFormNumberBelongsToAnotherApplication(parsed.registrationFormNumber, id, current.admissionSeasonId)) {
       return NextResponse.json({ error: "Số phiếu này đã được cấp cho hồ sơ khác." }, { status: 409 });
     }
 
@@ -277,7 +295,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   });
   const current = await prisma.application.findFirst({ where: { id, deletedAt: null } });
   if (!current) return NextResponse.json({ error: "Không tìm thấy hồ sơ" }, { status: 404 });
-  if (await registrationFormNumberBelongsToAnotherApplication(parsed.registrationFormNumber, id)) {
+  if (await registrationFormNumberBelongsToAnotherApplication(parsed.registrationFormNumber, id, current.admissionSeasonId)) {
     return NextResponse.json({ error: "Số phiếu này đã được cấp cho hồ sơ khác." }, { status: 409 });
   }
 

@@ -13,7 +13,6 @@ import {
   PRIZE_SCORES,
   REGISTRATION_FORM_PRINTABLE_STATUSES,
   SCHOOL_YEAR_OPTIONS,
-  SUBJECT_OPTIONS,
 } from "@/lib/constants";
 import { PROVINCES_2025, WARD_OTHER_VALUE, isKnownProvinceName } from "@/lib/administrative-units";
 import { isKnownWardName } from "@/lib/administrative-wards";
@@ -200,7 +199,7 @@ export const applicationCreateSchema = z
     awards: z.array(awardInputSchema).max(1, "Chỉ được chọn tối đa 01 giải thưởng để cộng điểm khuyến khích").default([]),
     additionalAwardsNote: optionalText,
     academicRecords: z.array(academicRecordInputSchema).length(4, "Cần đủ điểm lớp 6, 7, 8, 9"),
-    selectedOptionNumber: z.number().int().min(1).max(6),
+    selectedOptionNumber: z.number().int().min(1).max(99),
     selectedSubjects: requiredText("Phương án môn học"),
     uploadedFiles: z.array(uploadedFileInputSchema).default([]),
     commitmentAccepted: z.literal(true, { error: "Cần xác nhận cam kết trước khi nộp" }),
@@ -225,8 +224,7 @@ export const applicationCreateSchema = z
       ctx.addIssue({ code: "custom", path: ["ward"], message: "Xã/phường không thuộc tỉnh/thành phố đã chọn" });
     }
 
-    const selected = SUBJECT_OPTIONS.find((option) => option.optionNumber === value.selectedOptionNumber);
-    if (!selected || selected.subjects !== value.selectedSubjects) {
+    if (value.selectedOptionNumber < 1) {
       ctx.addIssue({
         code: "custom",
         path: ["selectedOptionNumber"],
@@ -291,7 +289,7 @@ export const adminApplicationUpdateSchema = z
     awards: z.array(awardInputSchema).max(1, "Chỉ được chọn tối đa 01 giải thưởng để cộng điểm khuyến khích").default([]),
     additionalAwardsNote: optionalText,
     academicRecords: z.array(academicRecordInputSchema).length(4, "Cần đủ điểm lớp 6, 7, 8, 9"),
-    selectedOptionNumber: z.number().int().min(1).max(6),
+    selectedOptionNumber: z.number().int().min(1).max(99),
     selectedSubjects: requiredText("Phương án môn học"),
     status: applicationStatusSchema,
     registrationFormNumber: registrationFormNumberSchema,
@@ -325,8 +323,7 @@ export const adminApplicationUpdateSchema = z
     } else if (!isKnownWardName(value.province, value.ward)) {
       ctx.addIssue({ code: "custom", path: ["ward"], message: "Xã/phường không thuộc tỉnh/thành phố đã chọn" });
     }
-    const selected = SUBJECT_OPTIONS.find((option) => option.optionNumber === value.selectedOptionNumber);
-    if (!selected || selected.subjects !== value.selectedSubjects) {
+    if (value.selectedOptionNumber < 1) {
       ctx.addIssue({
         code: "custom",
         path: ["selectedOptionNumber"],

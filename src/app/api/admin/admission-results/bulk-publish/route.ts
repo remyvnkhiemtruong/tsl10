@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
-import { calculateAdmissionScoreDetails } from "@/lib/admission-score";
+import { calculateAdmissionScoreFromConfig } from "@/lib/admission-score";
 import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { getActiveScoreFormula } from "@/lib/score-formula";
 import { adminAdmissionPublishSchema, zodFieldErrors } from "@/lib/validation";
 
 export const runtime = "nodejs";
@@ -15,7 +16,7 @@ export async function POST(request: Request) {
     const parsed = adminAdmissionPublishSchema.parse(await request.json());
     const applications = await prisma.application.findMany({
       where: { id: { in: parsed.applicationIds }, deletedAt: null },
-      include: { academicRecords: true },
+      include: { academicRecords: true, priorities: true, awards: true },
     });
 
     let publishedCount = 0;
@@ -33,7 +34,14 @@ export async function POST(request: Request) {
           continue;
         }
 
-        const score = calculateAdmissionScoreDetails(app.academicRecords, app.bonusScore);
+        const activeFormula = await getActiveScoreFormula(app.admissionSeasonId);
+        const score = calculateAdmissionScoreFromConfig(
+          app.academicRecords,
+          app.priorities.map((priority) => priority.type),
+          app.awards.map((award) => ({ prize: award.prize })),
+          activeFormula.config,
+          activeFormula.id
+        );
         await tx.application.update({
           where: { id: app.id },
           data: {
@@ -45,6 +53,14 @@ export async function POST(request: Request) {
               parsed.publish && (parsed.snapshotScore || app.admissionScoreSnapshot === null)
                 ? score.totalScore
                 : app.admissionScoreSnapshot,
+            scoreFormulaVersionId:
+              parsed.publish && (parsed.snapshotScore || app.admissionScoreSnapshot === null)
+                ? activeFormula.id ?? app.scoreFormulaVersionId
+                : app.scoreFormulaVersionId,
+            scoreBreakdownJson:
+              parsed.publish && (parsed.snapshotScore || app.admissionScoreSnapshot === null)
+                ? JSON.parse(JSON.stringify(score))
+                : app.scoreBreakdownJson,
             logs: {
               create: [
                 {
@@ -53,7 +69,7 @@ export async function POST(request: Request) {
                   oldValue: String(app.admissionPublished),
                   newValue: String(parsed.publish),
                   note: parsed.publicNote,
-                  metadata: { bulk: true, scoreSnapshot: score.totalScore },
+                  metadata: { bulk: true, scoreFormulaVersionId: activeFormula.id, scoreSnapshot: score.totalScore },
                 },
               ],
             },

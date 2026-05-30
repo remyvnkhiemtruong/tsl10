@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
-import { calculateAdmissionScoreDetails } from "@/lib/admission-score";
+import { calculateAdmissionScoreFromConfig } from "@/lib/admission-score";
 import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { getActiveScoreFormula } from "@/lib/score-formula";
 import { admissionResultSchema, zodFieldErrors } from "@/lib/validation";
 
 export const runtime = "nodejs";
@@ -16,11 +17,18 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     const parsed = admissionResultSchema.parse(await request.json());
     const current = await prisma.application.findFirst({
       where: { id, deletedAt: null },
-      include: { academicRecords: true },
+      include: { academicRecords: true, priorities: true, awards: true },
     });
     if (!current) return NextResponse.json({ error: "Không tìm thấy hồ sơ" }, { status: 404 });
 
-    const score = calculateAdmissionScoreDetails(current.academicRecords, current.bonusScore);
+    const activeFormula = await getActiveScoreFormula(current.admissionSeasonId);
+    const score = calculateAdmissionScoreFromConfig(
+      current.academicRecords,
+      current.priorities.map((priority) => priority.type),
+      current.awards.map((award) => ({ prize: award.prize })),
+      activeFormula.config,
+      activeFormula.id
+    );
     const updated = await prisma.application.update({
       where: { id },
       data: {
@@ -32,6 +40,8 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
         admissionDecisionAt: new Date(),
         admissionDecisionById: user.id,
         admissionScoreSnapshot: parsed.snapshotScore ? score.totalScore : current.admissionScoreSnapshot,
+        scoreFormulaVersionId: parsed.snapshotScore ? activeFormula.id ?? current.scoreFormulaVersionId : current.scoreFormulaVersionId,
+        scoreBreakdownJson: parsed.snapshotScore ? JSON.parse(JSON.stringify(score)) : current.scoreBreakdownJson,
         status: parsed.admissionResult === "TRUNG_TUYEN" ? "DA_DUYET_XET_TUYEN" : current.status,
         logs: {
           create: [
@@ -44,6 +54,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
               metadata: {
                 admissionRank: parsed.admissionRank,
                 admissionBatch: parsed.admissionBatch,
+                scoreFormulaVersionId: activeFormula.id,
                 scoreSnapshot: parsed.snapshotScore ? score.totalScore : current.admissionScoreSnapshot,
               },
             },

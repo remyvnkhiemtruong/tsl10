@@ -1,10 +1,18 @@
 import { PublicFooter } from "@/components/PublicFooter";
 import { PublicHeader } from "@/components/PublicHeader";
+import { getActiveSeason } from "@/lib/season";
 import { RegisterWizard } from "./RegisterWizard";
 
 export const dynamic = "force-dynamic";
 
-export default function RegisterPage() {
+export default async function RegisterPage() {
+  const season = await getActiveSeason();
+  const subjectOptions = season.subjectOptions.map((option) => ({
+    optionNumber: option.optionNumber,
+    subjects: option.subjects,
+    name: option.name,
+  }));
+
   return (
     <main className="min-h-screen">
       <PublicHeader />
@@ -16,7 +24,7 @@ export default function RegisterPage() {
             Vui lòng nhập đầy đủ thông tin và tải lên hồ sơ minh chứng trước khi nộp.
           </p>
         </div>
-        <RegisterWizard />
+        <RegisterWizard subjectOptions={subjectOptions} />
       </section>
       <PublicFooter />
     </main>

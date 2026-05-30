@@ -12,7 +12,8 @@
   }
 
   html {
-    scroll-behavior: smooth;
+    /* scroll-behavior: smooth removed per Next.js recommendation.
+       Use scroll-behavior on individual elements where needed. */
   }
 
   body {
